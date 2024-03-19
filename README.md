@@ -77,4 +77,4 @@ Please visit [hardware](/hardware/) section for board schematics and PCB designs
 
 ## Where to buy
 
-You may support our work by ordering this product at Tindie (coming soon)
+You may support our work by ordering this product at [Tindie](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
