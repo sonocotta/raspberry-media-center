@@ -49,13 +49,13 @@ This is still a work in progress. Spoiler alert: it uses TI TAS5805M DAC with du
 
 |       | I2S CLK | I2S DATA | I2S WS | 
 |-------|---------|----------|--------|
-| Raspberry Pi Zero | 18      | 21       | 19     | 
+| Raspberry Pi Zero (BCM) | 18      | 21       | 19     | 
 
 ### Peripheral
 
 |       | SPI CLK  |SPI MOSI| SPI MISO | LAN RES   | LAN CS   | LAN INT  |  WS2812 RGB LED |  RELAY EN | IR INPUT |
 |-------|----------|--------|----------|-----------|-----------|-----------|---------|----------|----------|
-| ESP32 |  11      |  10    |   9      |   24      | 8         | 25        |     12  |  7      | 23        |
+| Raspberry Pi Zero (BCM) |  11      |  10    |   9      |   24      | 8         | 25        |     12  |  7      | 23        |
 
 ## Software samples
 
