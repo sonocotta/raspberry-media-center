@@ -110,4 +110,4 @@ Please visit [hardware](/hardware/) section for board schematics and PCB designs
 
 You may support our work by ordering this product at Tindie
 - [HiFi Raspberry Pi](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
-- Louder Raspberry Pi (coming soon)
+- [Louder Raspberry Pi](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/)
