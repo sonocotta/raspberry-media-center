@@ -74,9 +74,11 @@ Louder Raspberry Pi is a top-of-the-range model that uses a modern highly capabl
 | Raspberry Pi Zero (BCM) | 3      | 2       | 4     |   26  |   16
 
 
-## Software samples
+## Software
 
-### HiFi and Loud Raspberry Pi
+Being a Raspberry Pi software selection is a vast space for experimentation. First things first, for any OS you need to configure DAC. Then we talk about different OS options.
+
+### DAC Configuration - HiFi and Loud Raspberry Pi
 
 You can use any distribution you like. The only change you need to make to enable hardware is to add 3 lines to the `/boot/config.txt`
 
@@ -86,9 +88,63 @@ dtoverlay=w5500
 dtoverlay=hifiberry-dac
 ```
 
-### Louder Raspberry Pi
+### DAC Configuration - Louder Raspberry Pi
 
 TAS5805M DAC is not supported by default Raspbian distribution, therefore some work needs to be done to enable it. [Linked repo](https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero) contains code and instruction on how to configure it. It will take you 5 minutes and one reboot.
+
+### Bare OS Options
+
+With the bare OS you're in full control of what to install and configure. IT is totally up to your use case. 
+
+|          | Raspbian                       | DietPi                             | PostmarketOS                               |
+|----------|--------------------------------|------------------------------------|--------------------------------------------|
+| Link     | [link](https://www.raspbian.org/)      | [link](https://dietpi.com/#download)       | [link](https://wiki.postmarketos.org/wiki/Devices) |
+| Code     | [link](https://github.com/raspberrypi) | [link](https://github.com/MichaIng/DietPi) | [link](https://github.com/postmarketOS)            |
+| Based on | Debian                         | Debian                             | Alpine                                     |
+| Type     | Bare OS                        | Base OS                            | Bare OS                                    |
+
+### Bare OS + Standard client services
+
+This is a work in progress and the idea is to have a bare minimum OS (be it Raspbian, DietPi, or Armbian) and install the most used client services via the Ansible playbook. I will add more details, as soon as I have working samples, but planned things to add are
+
+- [ ] Spotify Connect
+- [ ] Apple Airplay
+- [ ] Mpd
+- [ ] Network Pulsesink
+- [ ] UPNP sink
+- [ ] Snapcast client
+- [ ] Slimproto client
+- [ ] Basic UI with configuration
+
+This will allow to integrate into existing media sources with Home Assistant, LMS, or Mopidy instance, including multi-room sync.
+
+### Third-party Media Software
+
+|  | HifiBerry OS | PiCorePlayer | MupiBox | Mopidy | Volumio | Moode | Balena Audio |
+|---|---|---|---|---|---|---|---|
+| Link | [link](https://www.hifiberry.com/hifiberryos) | [link](https://www.picoreplayer.org/) | [link](https://mupibox.de/anleitungen/installationsanleitung/einfache-installation/) | [link](https://mopidy.com/) | [link](https://volumio.com/get-started/) | [link](https://moodeaudio.org/) | [link](https://balena.io/) |
+| Code | [link](https://github.com/hifiberry/hifiberry-os) | [link](https://github.com/piCorePlayer) | [link](https://github.com/splitti/MuPiBox?tab=readme-ov-file) | [link](https://github.com/mopidy/mopidy) | [link](https://github.com/volumio) | [link](https://github.com/moode-player) | [link](https://github.com/balena-io) |
+| Based on | Debian | Tiny Core Linux | DietPi | Debian | Debian | Debian | Balena |
+| Type | OS + Services | OS + Services | OS + Services | Services only | OS + Services | OS + Services | OS + Services |
+| Remote management | No | No | No | No | No | No | Yes |
+| **SW support** |  |  |  |  |  |  |  |
+| **UI/UX features** |  |  |  |  |  |  |  |
+| Web UI | Yes | Yes | Yes | Yes | Yes | Yes |  |
+| Mobile App/UI | Yes | Yes |  | Yes | Yes | Yes |  |
+| IR Remote | ? | Yes | ? | ? | ? | ? | Custom |
+| **Server features** |  |  |  |  |  |  |  |
+| LMS server |  | Yes | ? | No | ? | ? | ? |
+| Local library | Yes |  | Yes | Yes | Yes | Yes |  |
+| Radio providers | Yes | Yes |  | Yes | Yes | Yes |  |
+| Snapcast server | ? | ? | ? | ? | ? | ? | Yes |
+| **Client features** |  |  |  |  |  |  |  |
+| LMS Client/Squeezelite | Yes | Yes | ? | No | Yes | Yes | ? |
+| Airplay | Yes | Yes | ? | No | Yes | Yes | Yes |
+| Spotify | Yes | Yes | Yes | No | Yes | Yes | Yes |
+| Snapcast client (HA) | Yes | ? | ? | ? | ? | ? | Yes |
+| Pulseaudio sink | ? | ? | ? | ? | ? | ? | Yes |
+| UPNP/DLNA client |  | Yes |  |  | Yes | Yes |  |
+| MPD |  |  |  |  |  | Yes |  |
 
 ## Hardware
 
@@ -104,7 +160,7 @@ TAS5805M DAC is not supported by default Raspbian distribution, therefore some w
 |---|---|---|
 |![DSC_0730 (copy 1) JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/c281dab2-9842-4760-be31-8ad52d836f4d) | ![DSC_0011-copy JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/913adcb9-b5fe-4ffa-b443-bdbba04693bc) | ![DSC_0004-copy JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/adebf060-a3bd-45b9-8474-9397e695b0d7)
 
-Please visit [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs as well as Gerber archives.
+Please visit the [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs as well as Gerber archives.
 
 ## Where to buy
 
