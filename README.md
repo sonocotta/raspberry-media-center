@@ -166,4 +166,11 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 You may support our work by ordering this product at Tindie
 - [HiFi Raspberry Pi](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
-- [Louder Raspberry Pi](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/)
+- Loud Raspberry - coming soon
+- [Louder Raspberry Pi](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/) 
+
+## Press mentions
+
+- [Louder Raspberry Pi is an open-source home media center that is powered by Raspberry Pi Zero and a TI TAS5805M DAC](https://www.cnx-software.com/2024/04/22/louder-raspberry-pi-open-source-home-media-center-raspberry-pi-zero-2-w-ti-tas5805m-dac/)
+- [Sonocotta's Raspberry Pi Media Center Is a Sleek Compact Streaming Box for Your Hi-Fi Setup](https://www.hackster.io/news/sonocotta-s-raspberry-pi-media-center-is-a-sleek-compact-streaming-box-for-your-hi-fi-setup-460d2170c156)
+- [Open Hi-Fi Devices Developed Through The Raspberry Pi Media Center Project](https://www.gamingdeputy.com/open-hi-fi-devices-developed-through-the-raspberry-pi-media-center-project/)
