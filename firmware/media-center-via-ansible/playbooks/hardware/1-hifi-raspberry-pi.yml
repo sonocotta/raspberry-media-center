@@ -1,0 +1,29 @@
+- name: Hardware
+  hosts: raspberry
+  become: true
+
+  tasks:
+
+  - name: Patch config.txt
+    lineinfile:
+      dest: "{{ config_path }}"
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+    - { regexp: '^dtoverlay=w5500', line: 'dtoverlay=w5500' }
+    - { regexp: '^dtoverlay=hifiberry-dac', line: 'dtoverlay=hifiberry-dac' }
+
+  # Disable HDMI audio output
+  - name: Disable HDMI audio
+    replace:
+      dest: "{{ config_path }}"
+      regexp: "{{ item.regexp }}"
+      replace: "{{ item.line }}"
+    loop:
+    - { regexp: '^dtparam=audio=on', line: '#dtparam=audio=on' }
+
+
+  # Requires reboot due to hardaware configuration changes
+  - name: Reboot the machine (Wait for 5 min)
+    reboot:
+      reboot_timeout: 300

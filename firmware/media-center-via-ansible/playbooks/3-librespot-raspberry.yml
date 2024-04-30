@@ -1,0 +1,22 @@
+- name: install librespot
+  hosts: raspberry
+  become: true
+  
+  tasks:
+  - name: Check if raspotify is installed
+    command: dpkg-query -W raspotify
+    register: my_package_check_deb
+    failed_when: my_package_check_deb.rc > 1
+    changed_when: my_package_check_deb.rc == 1
+
+  - name: Download raspotify
+    get_url: 
+      url="{{ raspi_pkg }}"
+      dest="/tmp/raspotify-latest_armhf.deb"
+    when: my_package_check_deb.rc == 1
+
+  - name: Install raspotify on raspberry
+    run_once: true
+    ansible.builtin.shell:
+      cmd: "dpkg -i /tmp/raspotify-latest_armhf.deb"
+    when: my_package_check_deb.rc == 1

@@ -1,0 +1,35 @@
+- name: install gmediarender
+  hosts: raspberry, orangepi
+  become: true
+  
+  tasks:
+  - name: apt install packages
+    apt:
+      name: 
+        - gmediarender 
+        - gstreamer1.0-plugins-base 
+        - gstreamer1.0-plugins-good 
+        - gstreamer1.0-plugins-ugly 
+        - gstreamer1.0-pulseaudio
+      state: present
+
+  - name: gmediarender system service
+    copy:
+      dest: "/etc/systemd/system/gmediarender.service"
+      content: |
+        [Unit]
+        Description=gmediarender system service
+
+        [Service]
+        Type=simple
+        ExecStart=/usr/bin/gmediarender --friendly-name=$HOSTNAME --logfile=stdout --port=49494
+
+        [Install]
+        WantedBy=multi-user.target
+  
+  - name: Start gmediarender service
+    ansible.builtin.systemd:
+      name: gmediarender
+      state: restarted
+      enabled: yes
+      daemon_reload: yes

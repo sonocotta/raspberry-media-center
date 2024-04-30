@@ -1,0 +1,51 @@
+- name: install pulseaudio
+  hosts: orangepi, raspberry
+  become: true
+  
+  tasks:
+  - name: apt install packages
+    apt:
+      name: 
+      - pulseaudio
+      - pulseaudio-module-zeroconf
+      state: present
+
+  - name: Patch Pulseaudio default.pa config
+    lineinfile:
+      dest: /etc/pulse/default.pa
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+      - { regexp: '^set-default-sink', line: 'set-default-sink alsa_output.platform-sound_i2s.stereo-fallback' }
+  
+
+  - name: Patch Pulseaudio system.pa config
+    lineinfile:
+      dest: /etc/pulse/system.pa
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+      - { regexp: '^load-module module-native-protocol-unix', line: 'load-module module-native-protocol-unix auth-anonymous=1' }
+      - { regexp: '^load-module module-native-protocol-tcp', line: 'load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;192.168.0.0/23 auth-anonymous=1' }
+      - { regexp: '^load-module module-zeroconf-publish', line: 'load-module module-zeroconf-publish' }
+  
+  - name: Pulseaudio system service
+    copy:
+      dest: "/etc/systemd/system/pulseaudio.service"
+      content: |
+        [Unit]
+        Description=PulseAudio system server
+
+        [Service]
+        Type=notify
+        ExecStart=/usr/bin/pulseaudio -v --daemonize=no --system --realtime --log-target=journal
+
+        [Install]
+        WantedBy=multi-user.target
+  
+  - name: Start Pulseaudio service
+    ansible.builtin.systemd:
+      name: pulseaudio
+      state: restarted
+      enabled: yes
+      daemon_reload: yes

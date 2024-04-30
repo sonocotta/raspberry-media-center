@@ -1,0 +1,24 @@
+- name: Librespot
+  hosts: raspberry, orangepi
+  become: true
+  tasks:
+
+  - name: apt install packages
+    apt:
+      name: 
+        - overlayroot
+      state: present
+
+  - name: Patch udev.rules
+    lineinfile: 
+      dest: /etc/overlayroot.conf
+      create: yes
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+    - { regexp: '^overlayroot_cfgdisk=', line: 'overlayroot_cfgdisk="enabled"' }
+    - { regexp: '^overlayroot=', line: 'overlayroot="tmpfs"' }
+
+  - name: Reboot the machine (Wait for 5 min)
+    reboot:
+      reboot_timeout: 300

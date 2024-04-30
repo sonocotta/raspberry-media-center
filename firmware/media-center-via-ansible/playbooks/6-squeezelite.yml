@@ -1,0 +1,10 @@
+- name: install squeezelite
+  hosts: raspberry, orangepi
+  become: true
+  
+  tasks:
+  - name: apt install squeezelite
+    apt:
+      name: 
+      - squeezelite
+      state: present

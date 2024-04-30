@@ -1,0 +1,69 @@
+- name: Hardware
+  hosts: orangepi
+  become: true
+
+  tasks:
+
+  - name: Device tree overlay
+    copy:
+      dest: "/tmp/i2s-sound.dts"
+      content: |
+        /dts-v1/;
+        /plugin/;
+
+        / {
+          compatible = "allwinner,sun8i-h2-plus";
+
+          fragment@0 { 
+            target-path = "/"; 
+            __overlay__ { 
+              pcm5102a: pcm5102a {
+              #sound-dai-cells = <0>;
+              compatible = "ti,pcm5102a";
+              pcm510x,format = "i2s";
+              };
+            }; 
+          }; 
+
+          fragment@1 {
+            target = <&i2s0>;
+            __overlay__ {
+              status = "okay";
+              pinctrl-0 = <&i2s0_pins>;
+              sound-dai = <&pcm5102a>;
+              pinctrl-names = "default";
+            };
+          };
+
+          fragment@2 {
+            target-path = "/";
+            __overlay__ {
+              sound_i2s {
+                compatible = "simple-audio-card";
+                simple-audio-card,name = "hifi-orange-pi";
+                simple-audio-card,mclk-fs = <256>;
+                simple-audio-card,format = "i2s";
+                            status = "okay";
+
+                simple-audio-card,cpu {
+                  sound-dai = <&i2s0>;
+                };
+
+                simple-audio-card,codec {
+                  sound-dai = <&pcm5102a>;
+                };
+              };
+            };
+          };
+        };
+
+  - name: Install device tree overlay
+    ansible.builtin.shell:
+      cmd: armbian-add-overlay i2s-sound.dts
+      chdir: /tmp
+
+
+  #Requires reboot due to hardaware configuration changes
+  - name: Reboot the machine (Wait for 5 min)
+    reboot:
+      reboot_timeout: 300

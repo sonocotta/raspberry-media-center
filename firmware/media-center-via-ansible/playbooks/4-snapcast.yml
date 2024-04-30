@@ -1,0 +1,10 @@
+- name: install snapclient
+  hosts: raspberry, orangepi
+  become: true
+  
+  tasks:
+  - name: apt install snapclient
+    apt:
+      name: 
+      - snapclient
+      state: present

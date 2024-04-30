@@ -1,0 +1,29 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "0. install host prerequisites",
+            "type": "shell",
+            "command": "sudo apt install -y ansible sshpass yamllint && ansible-galaxy collection install community.general",
+            "problemMatcher": []
+        },
+        {
+            "label": "1. apply with root password",
+            "type": "shell",
+            "command": "ansible-playbook ${file} -k -i hosts.yml",
+            "problemMatcher": [],
+            "group": "build"
+            
+        },
+        {
+            "label": "2. apply without password",
+            "type": "shell",
+            "command": "ansible-playbook ${file} -i hosts.yml",
+            "problemMatcher": [],
+            "group": "build"
+            
+        }
+    ]
+}
