@@ -50,7 +50,7 @@ Louder Raspberry Pi is a top-of-the-range model that uses a modern highly capabl
 | RGB LED                       | yes                                                                                                                 | yes                                                                                                  | yes                                                                                      |
 | External relay driver         | yes                                                                                                                 | no                                                                                                   | yes                                                                                       |
 | Ethernet                      | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet                                              | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet                               | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet                   |
-| Powers from                   | 5V USB-C power adapter <br/>Triple [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO | 25W USB-C PD power adapter                                                                           | 65W USB-C PD power adapter                                                               |
+| Powers from                   | 5V USB-C power adapter <br/>Triple [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO | 5V USB-C power adapter                                                                          | 65W USB-C PD power adapter                                                               |
 | Mechanical dimensions (WxHxD) | 88mm x 38mm x 100mm                                                                                                 | 88mm x 38mm x 100mm                                                                                  | 88mm x 38mm x 100mm                                                                      |
 
 ## Board Pinout
@@ -148,6 +148,8 @@ This will allow to integrate into existing media sources with Home Assistant, LM
 
 ## Hardware
 
+Please visit the [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs as well as Gerber archives.
+
 ### HiFi Raspberry Pi
 
 | Front | Back | PCB |
@@ -159,8 +161,6 @@ This will allow to integrate into existing media sources with Home Assistant, LM
 | Front | Back | PCB |
 |---|---|---|
 |![DSC_0730 (copy 1) JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/c281dab2-9842-4760-be31-8ad52d836f4d) | ![DSC_0011-copy JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/913adcb9-b5fe-4ffa-b443-bdbba04693bc) | ![DSC_0004-copy JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/adebf060-a3bd-45b9-8474-9397e695b0d7)
-
-Please visit the [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs as well as Gerber archives.
 
 ## Where to buy
 
