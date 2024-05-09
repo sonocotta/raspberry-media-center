@@ -38,7 +38,7 @@
 
         [Service]
         Type=notify
-        ExecStart=/usr/bin/pulseaudio -v --daemonize=no --system --realtime --log-target=journal
+        ExecStart=/usr/bin/pulseaudio --daemonize=no --system --realtime --log-target=journal
 
         [Install]
         WantedBy=multi-user.target

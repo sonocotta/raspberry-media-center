@@ -1,5 +1,5 @@
 - name: Librespot
-  hosts: raspberry, orangepi
+  hosts: orangepi
   become: true
   tasks:
 
