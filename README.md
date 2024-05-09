@@ -5,7 +5,31 @@
 
 ![DSC_0015](https://github.com/sonocotta/raspberry-media-center/assets/5459747/a7240800-ea4e-4be0-8ec3-488d34f0cbdf)
 
-Raspberry Pi Media Center is a series of Raspberry Pi Zero based media center devices. They share a similar look, and compared to my earlier designs, they have a great-looking aluminum case.
+Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center devices. They share a similar look, and compared to my earlier designs, they have a great-looking aluminum case.
+
+## Table of Contents
+
+- [Raspberry Pi Media Center](#raspberry-pi-media-center)
+  - [Motivation](#motivation)
+  - [Raspberry Pi HiFi](#raspberry-pi-hifi)
+  - [Loud Raspberry Pi](#loud-raspberry-pi)
+  - [Louder Raspberry Pi](#louder-raspberry-pi)
+  - [Features](#features)
+  - [Board Pinout](#board-pinout)
+    - [Audio](#audio)
+    - [Peripheral](#peripheral)
+    - [Peripheral (Louder)](#peripheral-louder)
+  - [Software](#software)
+    - [DAC Configuration - HiFi and Loud Raspberry Pi](#dac-configuration---hifi-and-loud-raspberry-pi)
+    - [DAC Configuration - Louder Raspberry Pi](#dac-configuration---louder-raspberry-pi)
+    - [Bare OS Options](#bare-os-options)
+    - [Bare OS + Standard client services](#bare-os--standard-client-services)
+    - [Third-party Media Software](#third-party-media-software)
+  - [Hardware](#hardware)
+    - [HiFi Raspberry Pi](#hifi-raspberry-pi)
+    - [Louder Raspberry Pi](#louder-raspberry-pi-1)
+  - [Where to buy](#where-to-buy)
+  - [Press mentions](#press-mentions)
 
 ## Motivation
 
