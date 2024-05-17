@@ -32,6 +32,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
     - [Loud Raspberry Pi](#loud-raspberry-pi-1)
     - [Louder Raspberry Pi](#louder-raspberry-pi-1)
     - [Power considerations](#power-considerations)
+	- [Demo](#demo)
   - [Where to buy](#where-to-buy)
   - [Press mentions](#press-mentions)
 
@@ -221,6 +222,10 @@ Tested and perfectly working models are (others may be available)
 | [65W 45W 20V 3.25A Type-C PD Laptop Charger](https://www.aliexpress.com/item/1005006086701848.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/266a9bed-dde5-4869-aa31-84176b0a6608)
 | [120W Gan Type-C PD Charger](https://www.aliexpress.com/item/1005006806666186.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/f42d4c8c-879b-494c-ac18-dd18ace322e7)
 | [45W Type-C PD Mobile Phone Wall Adapter](https://www.aliexpress.com/item/1005006713008533.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/110bb6f9-7014-4dfc-8fd8-3bc99b269e9c)
+
+## Demo
+
+[![Loud Raspberry Pi Media Center audio test](http://img.youtube.com/vi/PloeejWgDLs/0.jpg)](http://www.youtube.com/watch?v=PloeejWgDLs "Loud Raspberry Pi Media Center audio test")
 
 ## Where to buy
 
