@@ -10,6 +10,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
 ## Table of Contents
 
 - [Raspberry Pi Media Center](#raspberry-pi-media-center)
+  - [Table of Contents](#table-of-contents)
   - [Motivation](#motivation)
   - [Raspberry Pi HiFi](#raspberry-pi-hifi)
   - [Loud Raspberry Pi](#loud-raspberry-pi)
@@ -20,14 +21,17 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
     - [Peripheral](#peripheral)
     - [Peripheral (Louder)](#peripheral-louder)
   - [Software](#software)
-    - [DAC Configuration - HiFi and Loud Raspberry Pi](#dac-configuration---hifi-and-loud-raspberry-pi)
+    - [DAC Configuration - HiFi Raspberry Pi](#dac-configuration---hifi-raspberry-pi)
+    - [DAC Configuration - HiFi Raspberry Pi](#dac-configuration---hifi-raspberry-pi-1)
     - [DAC Configuration - Louder Raspberry Pi](#dac-configuration---louder-raspberry-pi)
     - [Bare OS Options](#bare-os-options)
     - [Bare OS + Standard client services](#bare-os--standard-client-services)
     - [Third-party Media Software](#third-party-media-software)
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi](#hifi-raspberry-pi)
+    - [Loud Raspberry Pi](#loud-raspberry-pi-1)
     - [Louder Raspberry Pi](#louder-raspberry-pi-1)
+    - [Power considerations](#power-considerations)
   - [Where to buy](#where-to-buy)
   - [Press mentions](#press-mentions)
 
