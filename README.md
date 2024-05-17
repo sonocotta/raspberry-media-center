@@ -231,7 +231,7 @@ Tested and perfectly working models are (others may be available)
 
 You may support our work by ordering this product at Tindie
 - [HiFi Raspberry Pi](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
-- Loud Raspberry - coming soon
+- [Loud Raspberry](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/)
 - [Louder Raspberry Pi](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/) 
 
 ## Press mentions
