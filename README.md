@@ -3,7 +3,7 @@
 ![Open Source Hardware](/images/open-source-hardware-logo.png)
 ![Open Source Software](/images/open-source-software-logo.png)
 
-![DSC_0015](https://github.com/sonocotta/raspberry-media-center/assets/5459747/a7240800-ea4e-4be0-8ec3-488d34f0cbdf)
+![DSC_0005](https://github.com/sonocotta/raspberry-media-center/assets/5459747/37bf52d2-3fde-4fbb-b98e-35fb1b48ebe4)
 
 Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center devices. They share a similar look, and compared to my earlier designs, they have a great-looking aluminum case.
 
@@ -33,7 +33,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
 
 ## Motivation
 
-I did few audio projects in the past, some using [ESP32](https://hackaday.io/project/173620-loud-esp), some using larger [Orange Pi](https://hackaday.io/project/191936-orange-pi-home-media-center) and [Raspberry Pi](https://hackaday.io/project/162373-orangepi-zero-pulse-music-server-using-i2s-dac) devices. Each has its pros and cons, and with each iteration I'm trying to focus on the details that were working best for me, while actually using them. 
+I did few audio projects in the past, some using [ESP32](https://hackaday.io/project/173620-loud-esp), some using larger [Orange Pi](https://hackaday.io/project/191936-orange-pi-home-media-center) and [Raspberry Pi](https://hackaday.io/project/162373-orangepi-zero-pulse-music-server-using-i2s-dac) devices. Each has its pros and cons, and with each iteration, I'm trying to focus on the details that were working best for me, while actually using them. 
 
 What is special about the Raspberry eco-system is of course its community support. Being a not-so-strong software developer, I often have to rely on the work that other people did and baked into the base Raspbian image. Attaching a DAC, Ethernet, and IR reader is as simple as adding 3 lines into the `config.txt` file
 
@@ -55,7 +55,9 @@ Raspberry Pi HiFi is a first-in-line product that uses the legendary PCM5100 ser
 
 ## Loud Raspberry Pi
 
-Work in progress. Spoiler alert, it uses dual MAX98357 DACs with a built-in amp. It is not too loud, but also very simple to use and fun to play with.
+Loud Raspberry Pi uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. It powers from a standard USB-C power source, like a phone charger, etc.
+
+![DSC_0013](https://github.com/sonocotta/raspberry-media-center/assets/5459747/a998abe0-6069-443d-b7e2-b12694eca55d)
 
 ## Louder Raspberry Pi
 
@@ -67,23 +69,22 @@ Louder Raspberry Pi is a top-of-the-range model that uses a modern highly capabl
 
 |                               | HiFi Raspberry                                                                                                      | Loud Raspberry                                                                                       | Louder Raspberry                                                                         |
 |-------------------------------|---------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| Image                         |      ![DSC_0733 (copy 1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/990da9e7-b8fd-400c-b818-cb9352fd10a3) | WIP |  ![DSC_0011-copy](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fbedd926-8ff9-4f8a-8948-a3f96b013a6f) |
+| Image                         |      ![DSC_0733 (copy 1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/990da9e7-b8fd-400c-b818-cb9352fd10a3) | ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8846389c-f06c-4c36-88a7-63c0c789e944) |  ![DSC_0011-copy](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fbedd926-8ff9-4f8a-8948-a3f96b013a6f) |
 | DAC                           | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC                                                    | Dual I2S DAC [MAX98357](https://www.analog.com/en/products/max98357a.html) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp |
-| Output                        | 2.1 VRMS Line level output <br/> -100 dB typical noise level                                                        | 2x 3W                                                                                                | 2x 22W at 20V over USB-PD                                                                |
-| IR reader                     | yes                                                                                                                 | yes                                                                                                  | yes                                                                                      |
+| Output                        | 2.1 VRMS Line level output <br/> -100 dB typical noise level                                                        | 2x 3W (8Ω),   2x 5W (4Ω),                                   | yes                                                                                      |
 | RGB LED                       | yes                                                                                                                 | yes                                                                                                  | yes                                                                                      |
 | External relay driver         | yes                                                                                                                 | no                                                                                                   | yes                                                                                       |
 | Ethernet                      | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet                                              | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet                               | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet                   |
-| Powers from                   | 5V USB-C power adapter <br/>Triple [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO | 5V USB-C power adapter                                                                          | 65W USB-C PD power adapter                                                               |
+| Powers from                   | 5V USB-C power adapter (up to 1 A)<br/>Triple [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO | 5V USB-C power adapter (up to 3 A)                                                                          | 65W USB-C PD power adapter (25W/45W with limited power)                                                             |
 | Mechanical dimensions (WxHxD) | 88mm x 38mm x 100mm                                                                                                 | 88mm x 38mm x 100mm                                                                                  | 88mm x 38mm x 100mm                                                                      |
 
 ## Board Pinout
 
 ### Audio
 
-|       | I2S CLK | I2S DATA | I2S WS | 
-|-------|---------|----------|--------|
-| Raspberry Pi Zero (BCM) | 18      | 21       | 19     | 
+|       | I2S CLK | I2S DATA | I2S WS | MAX98357A EN (Loud only)
+|-------|---------|----------|--------|--------|
+| Raspberry Pi Zero (BCM) | 18      | 21       | 19     |   4
 
 ### Peripheral
 
@@ -102,7 +103,7 @@ Louder Raspberry Pi is a top-of-the-range model that uses a modern highly capabl
 
 Being a Raspberry Pi software selection is a vast space for experimentation. First things first, for any OS you need to configure DAC. Then we talk about different OS options.
 
-### DAC Configuration - HiFi and Loud Raspberry Pi
+### DAC Configuration - HiFi Raspberry Pi
 
 You can use any distribution you like. The only change you need to make to enable hardware is to add 3 lines to the `/boot/config.txt`
 
@@ -110,6 +111,16 @@ You can use any distribution you like. The only change you need to make to enabl
 dtoverlay=gpio-ir,gpio_pin=23
 dtoverlay=w5500
 dtoverlay=hifiberry-dac
+```
+
+### DAC Configuration - HiFi Raspberry Pi
+
+As simple as HiFi model, just add 3 lines to the `/boot/config.txt`
+
+```
+dtoverlay=gpio-ir,gpio_pin=23
+dtoverlay=w5500
+dtoverlay=max98357a-overlay
 ```
 
 ### DAC Configuration - Louder Raspberry Pi
@@ -180,11 +191,32 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 |---|---|---|
 | ![DSC_0730 (copy 1) JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/c281dab2-9842-4760-be31-8ad52d836f4d) | ![DSC_0733 (copy 1) JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/ba11555c-9e0c-47eb-b77e-4ac4b4ca1a99) | ![DSC_0739 (copy 1) JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/b438fd68-108c-42b6-b3b1-4c2507fbd568)
 
+### Loud Raspberry Pi
+
+| Front | Back | PCB |
+|---|---|---|
+| ![DSC_0730 (copy 1) JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/c281dab2-9842-4760-be31-8ad52d836f4d) | ![DSC_0008_small JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/7c939831-95e4-467d-874e-b2a65ba0960c) | ![DSC_0016_small JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/999abf17-8c0b-464a-b1b0-50d00ee8cb4b)
+
 ### Louder Raspberry Pi
 
 | Front | Back | PCB |
 |---|---|---|
 |![DSC_0730 (copy 1) JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/c281dab2-9842-4760-be31-8ad52d836f4d) | ![DSC_0011-copy JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/913adcb9-b5fe-4ffa-b443-bdbba04693bc) | ![DSC_0004-copy JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/adebf060-a3bd-45b9-8474-9397e695b0d7)
+
+### Power considerations
+
+According to the manufacturer Raspberry Pi Zero requires at least 1 Amp of 5V line, and each of the Loud Raspberry DAC needs at least 1 Amp extra. With the total budget requirement of 3 Amps, it is within specs for a non-PD USB-C 5V power line. I've decided not to use USB-PD for The Loud model. Just make sure your power adapter is capable of 3 Amps (or keep a reasonable volume if it is not)
+
+For Louder Raspberry, it is clearly not an option. You'd need a PD-enabled power adapter to run the board. Ideally, you should supply a 20V 3.25 Amp capable power source, common for modern laptops (Dell, HP, and Lenovo all tested and work perfectly). However, pretty much any 9V/12V/20V PD-enabled power adapter will work, most typically phone chargers with a quick charge option. The smallest of the family is 25W models, which is plenty enough for both Raspberry Pi and DAC.
+
+Tested and perfectly working models are (others may be available)
+
+| Model   | Image   |
+|-------------------------------|---------------------------------|
+| [65W USB-C Lenovo ThinkPad Laptop Charger Replacement Power Adapter](https://www.aliexpress.com/item/1005005994445557.html)  | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/27614db3-de35-4054-8450-9845a09f6381)
+| [65W 45W 20V 3.25A Type-C PD Laptop Charger](https://www.aliexpress.com/item/1005006086701848.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/266a9bed-dde5-4869-aa31-84176b0a6608)
+| [120W Gan Type-C PD Charger](https://www.aliexpress.com/item/1005006806666186.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/f42d4c8c-879b-494c-ac18-dd18ace322e7)
+| [45W Type-C PD Mobile Phone Wall Adapter](https://www.aliexpress.com/item/1005006713008533.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/110bb6f9-7014-4dfc-8fd8-3bc99b269e9c)
 
 ## Where to buy
 
