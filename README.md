@@ -32,7 +32,10 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
     - [Loud Raspberry Pi](#loud-raspberry-pi-1)
     - [Louder Raspberry Pi](#louder-raspberry-pi-1)
     - [Power considerations](#power-considerations)
-	- [Demo](#demo)
+      - [Hifi and Loud Raspberry](#hifi-and-loud-raspberry)
+      - [Louder Raspberry](#louder-raspberry)
+      - [Serial and USB-PD](#serial-and-usb-pd)
+  - [Demo](#demo)
   - [Where to buy](#where-to-buy)
   - [Press mentions](#press-mentions)
 
