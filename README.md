@@ -31,6 +31,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
     - [Bare OS Options](#bare-os-options)
     - [Bare OS + Standard client services](#bare-os--standard-client-services)
     - [Third-party Media Software](#third-party-media-software)
+    - [Rotating the MAC address on the W5500](#rotating-mac-address-on-the-w5500)
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi](#hifi-raspberry-pi)
     - [Loud Raspberry Pi](#loud-raspberry-pi-1)
@@ -192,6 +193,18 @@ This will allow to integrate into existing media sources with Home Assistant, LM
 | Pulseaudio sink | ? | ? | ? | ? | ? | ? | Yes |
 | UPNP/DLNA client |  | Yes |  |  | Yes | Yes |  |
 | MPD |  |  |  |  |  | Yes |  |
+
+### Rotating MAC address on the W5500
+
+On some systems W5500 driver will rotatre the chip's MAC address on each boot, which is quite annoying if you're binding DHCP server to them. There is a manual fix that can help with that
+
+- Downloaded the [w5500 overlay](https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.6.y/arch/arm/boot/dts/overlays/w5500-overlay.dts) file
+- uncomment this line and change the MAC to your liking //				local-mac-address = [aa bb cc dd ee ff];
+- save the file as w5500-overlay-custom.dts
+- create the binary with the following command: `dtc -I dts -O dtb -o w5500-custom.dtbo w5500-overlay-custom.dts`
+- backup the original w5500.dtbo: `sudo mv /boot/overlays/w5500.dtbo /boot/overlays/w5500.dtboBACKUP`
+- move the new .dtbo into the overlays directory: `sudo cp w5500-custom.dtbo /boot/overlays/w5500.dtbo`
+- reboot and ip a will report the new MAC address
 
 ## Hardware
 
