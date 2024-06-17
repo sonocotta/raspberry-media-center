@@ -40,6 +40,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
       - [Hifi and Loud Raspberry](#hifi-and-loud-raspberry)
       - [Louder Raspberry](#louder-raspberry)
       - [Serial and USB-PD](#serial-and-usb-pd)
+    - [Relay Driver](#relay-driver)
   - [Demo](#demo)
   - [Where to buy](#where-to-buy)
   - [Press mentions](#press-mentions)
@@ -258,6 +259,21 @@ One caveat is that, since Raspberry Pi requires 5V to run and the input voltage 
 Now, you have USB power delivery and the Serial on the same bus, how should this work then? When you're developing, you may not require the full power of the DAC, and it will happily work with 5V input (limited to something like 5W of music power per channel). you just supply 5V to the Raspberry using a micro-USB cable, while USB-C will power the DAC with 5V and give you a Serial console at the same time
 
 ![image](https://github.com/sonocotta/raspberry-media-center/assets/5459747/05784784-128f-443f-b0fc-9a4ee6f2eae1)
+
+### Relay Driver
+
+HiFi version of the Raspberry Media Center has an internal driver for the external relay. It has a back-facing diode to shunt any coil-inducted currents. Driver is an open-drain output with the following states
+
+| Driver Pin State (IO7)  | Output state  | Relay connected between OUT and +5V |
+|---|---|---|
+| Floating (pulled low with 100K resistor) or <br/> LOW | High impedance | INACTIVE (switched OFF)
+| HIGH | Pulled to GND | ACTIVE (switched ON)
+
+Schematics:
+
+![image](https://github.com/sonocotta/raspberry-media-center/assets/5459747/4b81a844-ba2f-48d4-a5e8-0c9e91e6573d)
+
+External relay can be connected directly between OUT and +5V pins (1st and 3rd pins, mid pin being GND)
 
 ## Demo
 
