@@ -41,6 +41,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
       - [Louder Raspberry](#louder-raspberry)
       - [Serial and USB-PD](#serial-and-usb-pd)
     - [Relay Driver](#relay-driver)
+    - [IR reader](#ir-reader)
   - [Demo](#demo)
   - [Where to buy](#where-to-buy)
   - [Press mentions](#press-mentions)
@@ -274,6 +275,54 @@ Schematics:
 ![image](https://github.com/sonocotta/raspberry-media-center/assets/5459747/4b81a844-ba2f-48d4-a5e8-0c9e91e6573d)
 
 External relay can be connected directly between OUT and +5V pins (1st and 3rd pins, mid pin being GND)
+
+### IR reader
+
+Start by configuring IR device-tree overlay in the `/boot/config.txt` file
+
+```
+# Enable IR reader on GPIO23
+dtoverlay=gpio-ir,gpio_pin=23
+```
+
+After reboot, you should be able to see `/dev/lirc0` device
+
+```
+$ ls -al /dev/lirc0 
+crw-rw---- 1 root video 251, 0 Jun 17 21:51 /dev/lirc0
+
+```
+
+There are multiple ways you can capture IR signals using `/dev/lirc0` device, one of them is to use `lirc` utilities by installing them via 
+
+```
+$ sudo apt install lirc -y
+```
+
+Next we need to pull the remote configuration or create new one by training `lirc`. First path is much easier, you may find your remote in the library [here](https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/). Pull it into lirc config by running
+
+```
+$ cd /etc/lirc/lircd.conf.d/ 
+$ sudo wget -O aa59-00741a.lircd.conf https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/aa59-00741a.lircd.conf?format=raw
+$ sudo service lircd restart
+```
+
+To be sure, I've updated also `/etc/lirc/lirc_options.conf` changing 2 lines
+```
+driver          = default
+device          = /dev/lirc0
+```
+
+Next capture incoming IR codes by running 
+
+```
+$ irw
+00000000e0e0e01f 00 KEY_VOLUMEUP Samsung_TV
+00000000e0e0e01f 01 KEY_VOLUMEUP Samsung_TV
+00000000e0e0e01f 00 KEY_VOLUMEUP Samsung_TV
+00000000e0e0d02f 00 KEY_VOLUMEDOWN Samsung_TV
+00000000e0e0d02f 01 KEY_VOLUMEDOWN Samsung_TV
+```
 
 ## Demo
 
