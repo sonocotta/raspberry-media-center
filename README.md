@@ -42,6 +42,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
       - [Serial and USB-PD](#serial-and-usb-pd)
     - [Relay Driver](#relay-driver)
     - [IR reader](#ir-reader)
+    - [RGB Led](#rgb-led)
   - [Demo](#demo)
   - [Where to buy](#where-to-buy)
   - [Press mentions](#press-mentions)
@@ -323,6 +324,23 @@ $ irw
 00000000e0e0d02f 00 KEY_VOLUMEDOWN Samsung_TV
 00000000e0e0d02f 01 KEY_VOLUMEDOWN Samsung_TV
 ```
+
+### RGB Led
+
+The tested method of controlling RGB LED is to use [rpi_ws281x](https://github.com/jgarff/rpi_ws281x) library, available as [rpi-ws281x-python](https://github.com/rpi-ws281x/rpi-ws281x-python/tree/master) module. You can install it with `pip`. This library uses PWN capabilities of the GPIO and does not require any specific device tree configuration. The only configuration that you'd need in any of the [provided examples](https://github.com/rpi-ws281x/rpi-ws281x-python/tree/master/examples) is below
+
+```
+# LED strip configuration:
+LED_COUNT = 1         
+LED_PIN = 12          
+LED_FREQ_HZ = 800000  
+LED_DMA = 10          
+LED_BRIGHTNESS = 255  
+LED_INVERT = False    
+LED_CHANNEL = 0       
+```
+
+Unfortunately, this library uses direct access to memory, so you need to run it as `root`. 
 
 ## Demo
 
