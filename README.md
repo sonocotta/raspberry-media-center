@@ -31,6 +31,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
     - [Bare OS Options](#bare-os-options)
     - [Bare OS + Standard client services](#bare-os--standard-client-services)
     - [Third-party Media Software](#third-party-media-software)
+    - [Volumio](#volumio)
     - [Rotating the MAC address on the W5500](#rotating-mac-address-on-the-w5500)
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi](#hifi-raspberry-pi)
@@ -196,6 +197,92 @@ This will allow to integrate into existing media sources with Home Assistant, LM
 | Pulseaudio sink | ? | ? | ? | ? | ? | ? | Yes |
 | UPNP/DLNA client |  | Yes |  |  | Yes | Yes |  |
 | MPD |  |  |  |  |  | Yes |  |
+
+### Volumio
+
+[Volumio](https://volumio.com/get-started/) is a great piece of software, extremely popular with media center devices like Raspberry Media Center. With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are supported out of the box. Select `HiFiBerry DAC` and `Adafruit MAX98357` in the DAC Model settings accordingly. Optionally you may also create a `/boot/userconfig.txt` file and add the following config to enable W5500 Ethernet
+```
+[all]
+dtoverlay=w5500
+```
+
+For Louder Raspberry, you'd need to perform a few more steps to configure a custom DAC.
+
+First, get access to the terminal either from USB-Serial or from SSH. To enter the Serial terminal you'd need to add this line to `/boot/volumioconfig.txt`
+```
+enable_uart=1
+```
+You can enable SSH at [volumio.local/dev](http://volumio.local/dev) and log in using user `volumio` and password `volumio`
+
+Assuming you're in, first install build prerequisites (this will take a while, grab a coffee)
+```
+volumio kernelsource
+```
+
+Next, pull the DAC driver from the GitHub
+```
+cd ~
+git clone https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero
+cd tas5805m-for-raspbian-paspberry-pi-zero
+```
+
+Build kernel driver
+```
+cd /usr/src/rpi-linux && sudo find . -type d -exec chmod 755 {} \;  # no idea why permissions are not right, but this should fix it
+make all
+```
+If all goes well you should see no errors in the console
+```
+make -C /lib/modules/6.1.77+/build M=/home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero modules
+make[1]: Entering directory '/usr/src/rpi-linux'
+  CC [M]  /home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero/tas5805m.o
+  MODPOST /home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero/Module.symvers
+  CC [M]  /home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero/tas5805m.mod.o
+  LD [M]  /home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero/tas5805m.ko
+make[1]: Leaving directory '/usr/src/rpi-linux'
+```
+
+Copy over kernel drivers to filesystem
+```
+sudo make install
+```
+
+Now let's compile and copy device tree
+```
+sudo apt install device-tree-compiler -y
+sudo ./compile-overlay.sh
+```
+
+Next, we need to update the Volumio settings. Navigate to `/volumio/app/plugins/system_controller/i2s_dacs/dacs.json` file and add this line as the first choice in the Raspberry PI section
+```
+{"id":"louder-raspberry","name":"Louder Raspberry","overlay":"tas5805m,i2creg=0x2d","alsanum":"2","alsacard":"LouderRaspberry","mixer":"Master","modules":"tas5805m","script":"","needsreboot":"yes"},
+```
+![image](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fdc339ac-3382-4a62-b817-cde6c5b81145)
+
+Restart the Volumio service 
+
+```
+sudo systemctl restart volumio.service
+```
+
+Now you should be able to select Louder Raspberry in the DAC list, which will restart the Raspberry
+
+![image](https://github.com/sonocotta/raspberry-media-center/assets/5459747/32c4cfeb-9b0b-4580-9f74-4d01c7ff4fa1)
+
+At this stage it is not changing DT overlay automatically, I need to figure out why, but for now let's add it manually to the end of the `/boot/config.txt` file
+```
+#### Volumio i2s setting below: do not alter ####
+dtoverlay=tas5805m,i2creg=0x2d
+```
+
+After reboot, you should be able to see new sound card via `aplay -l`
+```
+card 2: LouderRaspberry [Louder-Raspberry], device 0: bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0 [bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0] ^F Forward
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+```
+
+Volumio will start playing using the right DAC on its own. Congratulations!
 
 ### Rotating MAC address on the W5500
 
