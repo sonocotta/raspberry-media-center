@@ -214,6 +214,12 @@ enable_uart=1
 ```
 You can enable SSH at [volumio.local/dev](http://volumio.local/dev) and log in using user `volumio` and password `volumio`
 
+We're about to build kernel modules, so we need to install a few dependencies first (all commands going forward are running on the target host, ie Raspberry Pi)
+
+```
+sudo apt update && sudo apt install git raspberrypi-kernel-headers build-essential -y
+```
+
 Assuming you're in, first install build prerequisites (this will take a while, grab a coffee)
 ```
 volumio kernelsource
@@ -229,6 +235,7 @@ cd tas5805m-for-raspbian-paspberry-pi-zero
 Build kernel driver
 ```
 cd /usr/src/rpi-linux && sudo find . -type d -exec chmod 755 {} \;  # no idea why permissions are not right, but this should fix it
+cd ~/tas5805m-for-raspbian-paspberry-pi-zero
 make all
 ```
 If all goes well you should see no errors in the console
