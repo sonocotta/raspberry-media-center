@@ -1,0 +1,10 @@
+- name: install shairport-sync
+  hosts: raspberry
+  become: true
+  
+  tasks:
+  - name: apt install shairport-sync
+    apt:
+      name: 
+      - shairport-sync
+      state: present

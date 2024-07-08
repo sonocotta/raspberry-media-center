@@ -1,0 +1,25 @@
+- name: install snapclient
+  hosts: raspberry
+  become: true
+  
+  tasks:
+  - name: apt install snapclient
+    apt:
+      name: 
+      - snapclient
+      state: present
+
+  - name: Configure sound card
+    lineinfile:
+      dest: /etc/default/snapclient
+      create: true
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+    - { regexp: '^SNAPCLIENT_OPTS', line: 'SNAPCLIENT_OPTS="-s default"' }
+
+  - name: Start snapclient service
+    ansible.builtin.service:
+      name: snapclient
+      state: restarted
+      enabled: true

@@ -1,0 +1,25 @@
+- name: install squeezelite
+  hosts: raspberry
+  become: true
+  
+  tasks:
+  - name: apt install squeezelite
+    apt:
+      name: 
+      - squeezelite
+      state: present
+
+  - name: Configure sound card
+    lineinfile:
+      dest: /etc/default/squeezelite
+      create: true
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+    - { regexp: '^SB_EXTRA_ARGS=', line: 'SB_EXTRA_ARGS="-o sysdefault"' }
+
+  - name: Start squeezelite service
+    ansible.builtin.service:
+      name: squeezelite
+      state: restarted
+      enabled: true

@@ -1,0 +1,12 @@
+- name: init
+  hosts: raspberry
+  become: true
+
+  tasks:
+  
+    - name: apt update cache if it is older than 1 day
+      register: updatesys
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400

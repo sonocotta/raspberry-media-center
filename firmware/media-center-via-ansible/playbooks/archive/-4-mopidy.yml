@@ -1,0 +1,59 @@
+- name: Mopidy
+  hosts: AudioEndNodes
+  become: true
+  tasks:
+
+  - name: apt install packages
+    apt:
+      name: 
+        - gstreamer1.0-pulseaudio 
+        - gstreamer1.0-plugins-base 
+        - gstreamer1.0-plugins-good 
+        - gstreamer1.0-plugins-bad 
+        - gir1.2-gst-plugins-base-1.0 
+        - gir1.2-gstreamer-1.0
+        - mopidy
+        - mopidy-somafm
+        - mopidy-tunein
+        - mopidy-local
+        - python3-pip
+      state: present
+
+  - name: Install mopidy plugins
+    ansible.builtin.pip:
+      name: 
+        - Mopidy-Mobile 
+        - Mopidy-Bandcamp 
+        - youtube-dl 
+        - ytmusicapi 
+        - Mopidy-YouTube
+
+  - name: Patch mopidy.conf http
+    community.general.ini_file:
+      path: /etc/mopidy/mopidy.conf
+      section: http
+      option: hostname
+      value: '::'
+      state: present
+
+  - name: Patch mopidy.conf audio
+    community.general.ini_file:
+      path: /etc/mopidy/mopidy.conf
+      section: audio
+      option: output
+      value: pulsesink server=127.0.0.1
+      state: present
+
+  - name: Patch mopidy.conf logging
+    community.general.ini_file:
+      path: /etc/mopidy/mopidy.conf
+      section: logging
+      option: verbosity
+      value: 2
+      state: present
+
+  - name: Start mopidy service
+    ansible.builtin.service:
+      name: mopidy
+      state: restarted
+      enabled: yes
