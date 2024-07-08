@@ -32,7 +32,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
     - [Bare OS + Standard client services](#bare-os--standard-client-services)
     - [Third-party Media Software](#third-party-media-software)
     - [Volumio](#volumio)
-    - [Rotating the MAC address on the W5500](#rotating-mac-address-on-the-w5500)
+    - [Rotating MAC address on the W5500](#rotating-mac-address-on-the-w5500)
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi](#hifi-raspberry-pi)
     - [Loud Raspberry Pi](#loud-raspberry-pi-1)
@@ -159,14 +159,13 @@ With the bare OS you're in full control of what to install and configure. IT is 
 
 This is a work in progress and the idea is to have a bare minimum OS (be it Raspbian, DietPi, or Armbian) and install the most used client services via the Ansible playbook. I will add more details, as soon as I have working samples, but planned things to add are
 
-- [ ] Spotify Connect
-- [ ] Apple Airplay
-- [ ] Mpd
-- [ ] Network Pulsesink
-- [ ] UPNP sink
-- [ ] Snapcast client
-- [ ] Slimproto client
-- [ ] Basic UI with configuration
+- [x] Configure DAC (pick one of HiFi, Loud, or Louder)
+- [x] Pulseaudio server with network sink 
+- [x] Spotify Connect
+- [x] Snapcast client (with autodiscovery)
+- [x] Slimproto client (with autodiscovery)
+- [x] Apple Airplay
+- [x] UPNP sink (gmediarender)
 
 This will allow to integrate into existing media sources with Home Assistant, LMS, or Mopidy instance, including multi-room sync.
 
