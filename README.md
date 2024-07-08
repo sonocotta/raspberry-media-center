@@ -30,6 +30,7 @@ Raspberry Pi Media Center is a series of Raspberry Pi Zero-based media center de
     - [DAC Configuration - Louder Raspberry Pi](#dac-configuration---louder-raspberry-pi)
     - [Bare OS Options](#bare-os-options)
     - [Bare OS + Standard client services](#bare-os--standard-client-services)
+      - [How to use them](#how-to-use-them)
     - [Third-party Media Software](#third-party-media-software)
     - [Volumio](#volumio)
     - [Rotating MAC address on the W5500](#rotating-mac-address-on-the-w5500)
@@ -168,6 +169,15 @@ This is a work in progress and the idea is to have a bare minimum OS (be it Rasp
 - [x] UPNP sink (gmediarender)
 
 This will allow to integrate into existing media sources with Home Assistant, LMS, or Mopidy instance, including multi-room sync.
+
+#### How to use them
+
+- Write the downloaded Armbian image onto an SD card of your choice. Start your Orange Pi and find its IP address. The next steps will assume that the IP address of each node stays the same after reboot. You might need to configure your router to lease static IP to Orange Pi to make it stable.
+- Open [media-center-via-ansible](/firmware/media-center-via-ansible) folder in vscode. In case you don't want to install vscode, you can run commands in plain terminal as well. Please use [tasks.json](/firmware/.vscode/tasks.json) file for reference
+- Prepare [hosts](/firmware/hosts) file. Add your node's IP address and name. If you prefer password auth, you need to add a password here, but ssh-key auth is recommended
+- Run `0. install host prerequisites` task. It will install necessary tools on your laptop/PC, like Ansible client and such
+- Run `1-hifi-raspberry-pi.yml`, `1-loud-raspberry-pi.yml` or `1-louder-raspberry-pi.yml` playbook using `1. apply without password` task depending on your hardware.
+- Run remaining playbooks the same way, pick those that you're planning to use
 
 ### Third-party Media Software
 
