@@ -21,7 +21,7 @@
       replace: "{{ item.line }}"
     loop:
     - { regexp: '^dtparam=audio=on', line: '#dtparam=audio=on' }
-
+    - { regexp: '^dtoverlay=vc4-kms-v3d', line: '#dtoverlay=vc4-kms-v3d' }
 
   # Requires reboot due to hardaware configuration changes
   - name: Reboot the machine (Wait for 5 min)

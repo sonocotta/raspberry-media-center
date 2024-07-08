@@ -1,5 +1,5 @@
 - name: update apt cache
-  hosts: orangepi, raspberry
+  hosts: raspberry
   become: true
 
   tasks:

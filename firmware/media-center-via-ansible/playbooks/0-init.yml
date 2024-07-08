@@ -1,62 +1,12 @@
-- name: init orangepi
-  hosts: orangepi
+- name: init
+  hosts: raspberry
+  become: true
 
-  vars:
-    ansible_ssh_user: root
-  
   tasks:
-    # Allow {{ ansible_user }} to run sudo without password
-    - name: Allow the "{{ ansible_user }}" to run any commands with sudo
-      community.general.sudoers:
-        name: "{{ ansible_user + '-sudo-all' }}"
-        state: present
-        user: "{{ ansible_user }}"
-        commands: ALL
-
+  
     - name: apt update cache if it is older than 1 day
       register: updatesys
       apt:
         upgrade: yes
         update_cache: yes
         cache_valid_time: 86400
-
-
-# - name: init raspberry
-#   hosts: raspberry
-#   # remote_user: root
-
-#   tasks:
-#   - name: apt update cache if it is older than 1 day
-#     register: updatesys
-#     apt:
-#       upgrade: yes
-#       update_cache: yes
-#       cache_valid_time: 86400
-
-  # - name: apt install packages
-  #   apt:
-  #     name: 
-  #       - build-essential 
-  #       - git 
-  #       - curl
-  #       - linux-headers-current-sunxi
-  #     state: present
-
-  # # add user $USER, so we don't have to use root for the rest of the automation
-  # - name: Add the user '{{ lookup('ansible.builtin.env', 'USER') }}' with a specific uid and a group of 'sudo'
-  #   ansible.builtin.user:
-  #     name: "{{ lookup('ansible.builtin.env', 'USER') }}"
-  #     uid: 1000
-  #     groups: sudo, audio
-  #     shell: /bin/bash
-
-  # # transfer $USER's ssh key for password-less authentication
-  # - name: Transfer authorized key
-  #   ansible.posix.authorized_key:
-  #     user: "{{ lookup('ansible.builtin.env', 'USER') }}"
-  #     state: present
-  #     key: "{{ lookup('file', '/home/' + lookup('ansible.builtin.env', 'USER') + '/.ssh/id_rsa.pub') }}"
-
-  # - name: Reboot the machine (Wait for 5 min)``
-  #   reboot:
-  #     reboot_timeout: 300

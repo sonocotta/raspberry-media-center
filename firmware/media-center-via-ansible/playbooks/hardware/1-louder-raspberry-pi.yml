@@ -1,0 +1,60 @@
+- name: Hardware
+  hosts: raspberry
+  become: true
+
+  tasks:
+  - name: apt install packages
+    apt:
+      name: 
+      - git 
+      - raspberrypi-kernel-headers 
+      - build-essential
+      state: present
+
+  - name: Git checkout tas5805m kernel module from github
+    ansible.builtin.git:
+      repo: https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero
+      dest: /src/tas5805m-for-raspbian-paspberry-pi-zero
+
+  - name: Build kernel module
+    run_once: true
+    ansible.builtin.shell: make all
+    args:
+      chdir: /src/tas5805m-for-raspbian-paspberry-pi-zero
+
+  - name: Install kernel module
+    run_once: true
+    ansible.builtin.shell: make install
+    args:
+      chdir: /src/tas5805m-for-raspbian-paspberry-pi-zero
+
+  - name: Compile DT overlay
+    run_once: true
+    ansible.builtin.shell: ./compile-overlay.sh
+    args:
+      chdir: /src/tas5805m-for-raspbian-paspberry-pi-zero
+
+  - name: Patch config.txt
+    lineinfile:
+      dest: "{{ config_path }}"
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+    - { regexp: '^dtoverlay=w5500', line: 'dtoverlay=w5500' }
+    - { regexp: '^dtoverlay=tas5805m', line: 'dtoverlay=tas5805m,i2creg=0x2d' }
+
+  # Disable HDMI audio output
+  - name: Disable HDMI audio
+    replace:
+      dest: "{{ config_path }}"
+      regexp: "{{ item.regexp }}"
+      replace: "{{ item.line }}"
+    loop:
+    - { regexp: '^dtparam=audio=on', line: '#dtparam=audio=on' }
+    - { regexp: '^dtoverlay=vc4-kms-v3d', line: '#dtoverlay=vc4-kms-v3d' }
+
+
+  # Requires reboot due to hardaware configuration changes
+  - name: Reboot the machine (Wait for 5 min)
+    reboot:
+      reboot_timeout: 300

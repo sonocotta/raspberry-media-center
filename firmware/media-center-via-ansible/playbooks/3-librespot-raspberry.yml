@@ -3,6 +3,23 @@
   become: true
   
   tasks:
+  # ld-linux.so.3 is no longer provided by libc6 package in bookworm
+  # - name: apt install packages
+  #   apt:
+  #     name: 
+  #       - libc6-armel-cross 
+  #     state: present
+
+  # - name: Patch arm-linux-gnueabihf.conf
+  #   lineinfile:
+  #     dest: /etc/ld.so.conf.d/arm-linux-gnueabihf.conf
+  #     regexp: "{{ item.regexp }}"
+  #     line: "{{ item.line }}"
+  #   loop:
+  #     - { regexp: '^/usr/arm-linux-gnueabi/lib', line: '/usr/arm-linux-gnueabi/lib' }
+
+  # tested with bullseye
+  
   - name: Check if raspotify is installed
     command: dpkg-query -W raspotify
     register: my_package_check_deb

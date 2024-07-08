@@ -10,15 +10,7 @@
             "problemMatcher": []
         },
         {
-            "label": "1. apply with root password",
-            "type": "shell",
-            "command": "ansible-playbook ${file} -k -i hosts.yml",
-            "problemMatcher": [],
-            "group": "build"
-            
-        },
-        {
-            "label": "2. apply without password",
+            "label": "1. apply without password",
             "type": "shell",
             "command": "ansible-playbook ${file} -i hosts.yml",
             "problemMatcher": [],

@@ -1,5 +1,5 @@
 - name: install pulseaudio
-  hosts: orangepi, raspberry
+  hosts: raspberry
   become: true
   
   tasks:

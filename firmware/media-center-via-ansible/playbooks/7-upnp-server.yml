@@ -1,5 +1,5 @@
 - name: install gmediarender
-  hosts: raspberry, orangepi
+  hosts: raspberry
   become: true
   
   tasks:
@@ -18,11 +18,15 @@
       dest: "/etc/systemd/system/gmediarender.service"
       content: |
         [Unit]
-        Description=gmediarender system service
+        Description=gmediarender UPnP Renderer
 
         [Service]
         Type=simple
-        ExecStart=/usr/bin/gmediarender --friendly-name=$HOSTNAME --logfile=stdout --port=49494
+        EnvironmentFile=/etc/default/gmediarender
+        ExecStart=/usr/bin/gmediarender --friendly-name raspberry --logfile=stdout --port 49494
+        Restart=on-failure
+        User=nobody
+        Group=audio
 
         [Install]
         WantedBy=multi-user.target

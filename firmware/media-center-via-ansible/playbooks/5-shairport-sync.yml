@@ -1,5 +1,5 @@
 - name: install shairport-sync
-  hosts: raspberry, orangepi
+  hosts: raspberry
   become: true
   
   tasks:
