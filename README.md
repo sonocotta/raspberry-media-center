@@ -131,14 +131,14 @@ dtoverlay=w5500
 dtoverlay=hifiberry-dac
 ```
 
-### DAC Configuration - HiFi Raspberry Pi
+### DAC Configuration - Loud Raspberry Pi
 
 As simple as HiFi model, just add 3 lines to the `/boot/config.txt`
 
 ```
 dtoverlay=gpio-ir,gpio_pin=23
 dtoverlay=w5500
-dtoverlay=max98357a-overlay
+dtoverlay=max98357a-overlay,sdmode-pin=4
 ```
 
 ### DAC Configuration - Louder Raspberry Pi
