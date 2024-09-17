@@ -138,7 +138,7 @@ As simple as HiFi model, just add 3 lines to the `/boot/config.txt`
 ```
 dtoverlay=gpio-ir,gpio_pin=23
 dtoverlay=w5500
-dtoverlay=max98357a-overlay,sdmode-pin=4
+dtoverlay=max98357a,sdmode-pin=4
 ```
 
 ### DAC Configuration - Louder Raspberry Pi
