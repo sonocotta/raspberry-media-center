@@ -11,9 +11,9 @@
 
 Raspberry Pi Media Center and Hats are a series of Raspberry Pi Zero-based media center devices. They share a similar look, and compared to my earlier designs, they have a great-looking aluminum case.
 
-<image>
+![DSC_0081](https://github.com/user-attachments/assets/be6897be-4f40-46ab-b77b-3659a681ff39)
 
-Raspberry Pi Media Center Hats are cost-effective versions of the above devices, sharing the same DACs and similar schematics, but being able to pair with any Raspbeery Pi boards. 
+Raspberry Pi Media Center Hats are cost-effective versions of the above devices, sharing the same DACs and similar schematics, but being able to pair with any Raspberry Pi boards. 
 
 ## Table of Contents
 
@@ -58,7 +58,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
 
 I did few audio projects in the past, some using [ESP32](https://hackaday.io/project/173620-loud-esp), some using larger [Orange Pi](https://hackaday.io/project/191936-orange-pi-home-media-center) and [Raspberry Pi](https://hackaday.io/project/162373-orangepi-zero-pulse-music-server-using-i2s-dac) devices. Each has its pros and cons, and with each iteration, I'm trying to focus on the details that were working best for me, while actually using those devices at home. 
 
-What is special about the Raspberry eco-system is of course its community support. Being a not-so-strong software developer, I often have to rely on the work that other people did and baked into the base Raspbian image. Attaching a DAC, Ethernet, and IR reader is as simple as adding 3 lines into the `config.txt` file, which is a bit of a magic really
+What is special about the Raspberry eco-system is of course its community support. Being a not-so-strong software developer, I often have to rely on the work that other people did and baked into the base Raspbian image. Attaching a DAC, Ethernet, and IR reader is as simple as adding 3 lines into the `config.txt` file, which is a bit of magic really
 
 ```
 dtoverlay=gpio-ir,gpio_pin=23
@@ -72,48 +72,50 @@ Sure, compared to the ESP32 platform it is not as lightweight. It requires more 
 
 ## Raspberry Pi HiFi and Hat
 
-Raspberry Pi HiFi Media Center is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-niose LDO, making sure no interference from Raspberry come through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally I prefer late 80's audio gear).
+Raspberry Pi HiFi Media Center is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-noise LDO, making sure no interference from Raspberry come through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally I prefer late 80's audio gear).
 
-Raspberry Pi HiFi Hat is a same DAC and power circuitry **times two** in a Hat shape. You ca use it with any Raspberry Pi board, not only Zero. Raspberry Pi 5 user can use both outputs independently, while other Pis will produce the same audio on both outputs.
+Raspberry Pi HiFi Hat is the same DAC and power circuitry **times two** in a Hat shape. You can use it with any Raspberry Pi board, not only Zero. Raspberry Pi 5 users can use both outputs independently, while other Pis will produce the same audio on both outputs.
 
 
 | Cased | Hat |
 |---|---|
-| ![DSC_0727](https://github.com/sonocotta/raspberry-media-center/assets/5459747/029e5175-1ee1-4876-8ba3-91d49730c29f)
+| ![DSC_0727](https://github.com/sonocotta/raspberry-media-center/assets/5459747/029e5175-1ee1-4876-8ba3-91d49730c29f) | ![DSC_0038](https://github.com/user-attachments/assets/76359180-4787-443a-87aa-93235105e661)
 
 ## Raspberry Pi HiFi Plus 
 
-The PCM5100 HiFi DAC combined together with highly efficient TPA3110D2 D-class amplifier. Tines two (again, why not!). Brings all the best from the HiFi model, adds on-board amp to form a complete solution that can be paired with speakers directly. It uses exteral power source to feed hungry amps and host Pi using onboard drop-down converter. Raspberry Pi 5 user can use both outputs independently, older board will produce the same audio in parallel. Baords use 4-layer PCBs to ensure good signal protection to keep that noise low. Both amps can be shit down using GPIO pins, so you can be sure speakers will be dead quiet when it is not in use.  
+The PCM5100 HiFi DAC combined together with a highly efficient TPA3110D2 D-class amplifier. Tines two (again, why not!). It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers directly. It uses an external power source to feed hungry amps and host Pi using an onboard drop-down converter. Raspberry Pi 5 users can use both outputs independently, older boards will produce the same audio in parallel. Boards use 4-layer PCBs to ensure good signal protection to keep that noise low. Both amps can be shit down using GPIO pins, so you can be sure speakers will be dead quiet when it is not in use.  
 
-<image>
+![DSC_0054](https://github.com/user-attachments/assets/1d4c9496-945c-4937-913f-c07db443e347)
 
-Media Center version of the HiFi-Plus model is in the ideation stage. I see it to be a little more than just a same DAC on the boxed shape. The benefit of having DAC and AMP separated is abiblity to fiddle with the audio in the middle, so I'm looking to implement volume and tone controls availble on the front panel, as well as tone correction button. I'm thinking to pump ut the visual with the LED matrix or small OLED screen, which require mastering certain mechanical tasks. Long story short, this is a work in progress as of now. 
+The Media Center version of the HiFi-Plus model is in the ideation stage. I see it to be a little more than just the same DAC on the boxed shape. The benefit of having DAC and AMP separated is the ability to fiddle with the audio in the middle, so I'm looking to implement volume and tone controls available on the front panel, as well as a tone correction button. I'm thinking of pumping the visual with the LED matrix or small OLED screen, which requires mastering certain mechanical tasks. Long story short, this is a work in progress. 
 
 ## Loud Raspberry Pi and Hat
 
 Loud Raspberry Pi Media Center uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
 
-Loud Raspberry Pi Hat is the same DAC and audio circuitry, again times two (because why not!). You can use it with any Raspberry Pi, while Raspberry Pi 5 users can use both pair of speakers independently, while other Pis will produce the same audio on both ends. Hat will pull the juice from the Pi's 5V line, or power Pi itself using screw connectors, so you can make sure enough power is delievered to both boards.
+Loud Raspberry Pi Hat is the same DAC and audio circuitry, again times two (because why not!). You can use it with any Raspberry Pi, while Raspberry Pi 5 users can use both pairs of speakers independently, while other Pis will produce the same audio on both ends. Hat will pull the juice from the Pi's 5V line, or power the Pi itself using screw connectors, so you can make sure enough power is delivered to both boards.
 
 | Cased | Hat |
 |---|---|
-| ![DSC_0013](https://github.com/sonocotta/raspberry-media-center/assets/5459747/a998abe0-6069-443d-b7e2-b12694eca55d)
+| ![DSC_0013](https://github.com/sonocotta/raspberry-media-center/assets/5459747/a998abe0-6069-443d-b7e2-b12694eca55d) | ![DSC_0043](https://github.com/user-attachments/assets/5768a8c6-20bf-4841-bc8a-936c5d4e96a8)
+
 
 ## Louder Raspberry Pi and Hat
 
 Louder Raspberry Pi Media Center is a top-of-the-range model that uses a modern highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked, therefore it uses USB-C Power Delivery to pull up to 65W from the wall power adapter. It can be used both with Wi-Fi and Ethernet (to make sure bad Wi-Fi would not interrupt the stream)
 
-Louder Raspberry Pi Hat drops the USB-PD in favor of external power supply up to 28V (reads "more power"), and has a step-down converter onboard to deliver 5V to the Pi, so you need only single power source for everything. Otherwise, it delievers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones
+Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (reads "more power"), and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones
 
 | Cased | Hat |
 |---|---|
-| ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8dc35e18-1663-4a5e-8cae-7efb642978d4)
+| ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8dc35e18-1663-4a5e-8cae-7efb642978d4) | ![DSC_0075](https://github.com/user-attachments/assets/05402627-2729-4a22-9f8c-58b8a5e4abcf)
+
 
 ## Features
 
 |  | HiFi Raspberry Media Center | HiFi Raspberry Hat | HiFi-Plus Raspberry Hat | Loud Raspberry Media Center | Loud Raspberry Hat | Louder Raspberry Media Center | Louder Raspberry Hat |
 |---|---|---|---|---|---|---|---|
-|  | ![DSC_0733 (copy 1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/990da9e7-b8fd-400c-b818-cb9352fd10a3) | image | image | ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8846389c-f06c-4c36-88a7-63c0c789e944) | image | ![DSC_0011-copy](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fbedd926-8ff9-4f8a-8948-a3f96b013a6f) | image |
+|  | ![DSC_0733 (copy 1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/990da9e7-b8fd-400c-b818-cb9352fd10a3) | ![DSC_0022](https://github.com/user-attachments/assets/529c8179-702b-4a8e-b789-2e27cf373e4a) | ![DSC_0046](https://github.com/user-attachments/assets/20f83b94-3b65-4430-a84d-bf31d79a499e) | ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8846389c-f06c-4c36-88a7-63c0c789e944) | ![DSC_0023](https://github.com/user-attachments/assets/e82fb430-cd7a-44ed-9659-32136250b471) | ![DSC_0011-copy](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fbedd926-8ff9-4f8a-8948-a3f96b013a6f) | ![DSC_0062](https://github.com/user-attachments/assets/82718e9e-f36c-4f4c-ba08-e4726fd38f84) |
 | DAC | Single [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC | Dual [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC | Dual [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp | Dual I2S DAC [MAX98357](https://www.analog.com/en/products/max98357a.html) with built in D-Class amp | Quadruple I2S DAC [MAX98357](https://www.analog.com/en/products/max98357a.html) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp |
 | Output | 2.1 VRMS Line level output  -100 dB typical noise level | 2x 2.1 VRMS Line level output  -100 dB typical noise level | 4x 25W (8Ω, 1% THD+N) at 22V; 4x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 40W (4Ω, 1% THD+N) at 20V | 2x 3W (8Ω);   2x 5W (4Ω) | 4x 3W (8Ω);   4x 5W (4Ω) | 2x 22W (8Ω, 1% THD+N); 2x 32W (4Ω, 1% THD+N) at 20V <br /> 1x 45W (4Ω, 1% THD+N) at 20V  | 2x 32W (8Ω, 1% THD+N) at 24V <br /> 1x 55W (4Ω, 1% THD+N) at 24V  |
 | RGB LED | yes | none | none | yes | none | yes | none |
@@ -164,7 +166,7 @@ dtoverlay=hifiberry-dac
 
 ### DAC Configuration - Loud Raspberry Pi
 
-As simple as HiFi model, just add 3 lines to the `/boot/config.txt`
+As simple as the HiFi model, just add 3 lines to the `/boot/config.txt`
 
 ```
 dtoverlay=gpio-ir,gpio_pin=23
@@ -176,11 +178,11 @@ dtoverlay=max98357a,sdmode-pin=4
 
 ### DAC Configuration - Louder Raspberry Pi
 
-TAS5805M DAC is not supported by default Raspbian distribution, therefore some work needs to be done to enable it. [Linked repo](https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero) contains code and instruction on how to configure it. It will take you 5 minutes and one reboot.
+TAS5805M DAC is not supported by default Raspbian distribution, therefore some work needs to be done to enable it. [Linked repo](https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
 
 ### Bare OS Options
 
-With the bare OS you're in full control of what to install and configure. IT is totally up to your use case. 
+With the bare OS you're in full control of what to install and configure. It is totally up to your use case. 
 
 |          | Raspbian                       | DietPi                             | PostmarketOS                               |
 |----------|--------------------------------|------------------------------------|--------------------------------------------|
@@ -201,7 +203,7 @@ This is a work in progress and the idea is to have a bare minimum OS (be it Rasp
 - [x] Apple Airplay
 - [x] UPNP sink (gmediarender)
 
-This will allow to integrate into existing media sources with Home Assistant, LMS, or Mopidy instance, including multi-room sync.
+This will allow integration into existing media sources with Home Assistant, LMS, or Mopidy instance, including multi-room sync.
 
 #### How to use them
 
@@ -242,13 +244,18 @@ This will allow to integrate into existing media sources with Home Assistant, LM
 
 ### Volumio
 
-[Volumio](https://volumio.com/get-started/) is a great piece of software, extremely popular with media center devices like Raspberry Media Center. With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are supported out of the box. Select `HiFiBerry DAC` and `Adafruit MAX98357` in the DAC Model settings accordingly. Optionally you may also create a `/boot/userconfig.txt` file and add the following config to enable W5500 Ethernet
+[Volumio](https://volumio.com/get-started/) is a great piece of software, extremely popular with media center devices like Raspberry Media Center. 
+
+With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are supported out of the box. Select `HiFiBerry DAC` and `Adafruit MAX98357` in the DAC Model settings accordingly. Optionally you may also create a `/boot/userconfig.txt` file and add the following config to enable W5500 Ethernet
 ```
 [all]
 dtoverlay=w5500
 ```
 
 For Louder Raspberry, you'd need to perform a few more steps to configure a custom DAC.
+
+<details>
+  <summary>Setup instructions</summary>
 
 First, get access to the terminal either from USB-Serial or from SSH. To enter the Serial terminal you'd need to add this line to `/boot/volumioconfig.txt`
 ```
@@ -333,6 +340,8 @@ card 2: LouderRaspberry [Louder-Raspberry], device 0: bcm2835-i2s-tas5805m-ampli
 
 Volumio will start playing using the right DAC on its own. Congratulations!
 
+</details>
+
 ### Rotating MAC address on the W5500
 
 On some systems W5500 driver will rotatre the chip's MAC address on each boot, which is quite annoying if you're binding DHCP server to them. There is a manual fix that can help with that
@@ -381,7 +390,8 @@ For Louder Raspberry, it is clearly not an option. You'd need a PD-enabled power
 
 The interesting part was all the phone and laptop chargers I used for the test (around five different makes of each), sounded great, with no hissing, no popping. (Apart from the Apple ones, they didn’t work. Likely they have Apple-specific PD protocol). This is probably because modern devices have become so noise-sensitive that manufacturers have been forced to do good work on noise levels.
 
-Tested and perfectly working models are (others may be available)
+<details>
+  <summary>Tested and perfectly working models are (others may be available)</summary>
 
 | Model   | Image   |
 |-------------------------------|---------------------------------|
@@ -389,6 +399,8 @@ Tested and perfectly working models are (others may be available)
 | [65W 45W 20V 3.25A Type-C PD Laptop Charger](https://www.aliexpress.com/item/1005006086701848.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/266a9bed-dde5-4869-aa31-84176b0a6608)
 | [120W Gan Type-C PD Charger](https://www.aliexpress.com/item/1005006806666186.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/f42d4c8c-879b-494c-ac18-dd18ace322e7)
 | [45W Type-C PD Mobile Phone Wall Adapter](https://www.aliexpress.com/item/1005006713008533.html) | ![image](https://github.com/sonocotta/orange-pi-media-center/assets/5459747/110bb6f9-7014-4dfc-8fd8-3bc99b269e9c)
+
+</details>
 
 #### Serial and USB-PD
 
@@ -415,6 +427,9 @@ External relay can be connected directly between OUT and +5V pins (1st and 3rd p
 
 ### IR reader
 
+<details>
+  <summary>Setup instructions</summary>
+  
 Start by configuring IR device-tree overlay in the `/boot/config.txt` file
 
 ```
@@ -436,7 +451,7 @@ There are multiple ways you can capture IR signals using `/dev/lirc0` device, on
 $ sudo apt install lirc -y
 ```
 
-Next we need to pull the remote configuration or create new one by training `lirc`. First path is much easier, you may find your remote in the library [here](https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/). Pull it into lirc config by running
+Next, we need to pull the remote configuration or create new one by training `lirc`. First path is much easier, you may find your remote in the library [here](https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/). Pull it into lirc config by running
 
 ```
 $ cd /etc/lirc/lircd.conf.d/ 
@@ -450,7 +465,7 @@ driver          = default
 device          = /dev/lirc0
 ```
 
-Next capture incoming IR codes by running 
+Next, capture incoming IR codes by running 
 
 ```
 $ irw
@@ -477,6 +492,8 @@ LED_CHANNEL = 0
 ```
 
 Unfortunately, this library uses direct access to memory, so you need to run it as `root`. 
+
+</details>
 
 ## Demo
 
