@@ -87,6 +87,8 @@ The PCM5100 HiFi DAC combined together with highly efficient TPA3110D2 D-class a
 
 <image>
 
+Media Center version of the HiFi-Plus model is in the ideation stage. I see it to be a little more than just a same DAC on the boxed shape. The benefit of having DAC and AMP separated is abiblity to fiddle with the audio in the middle, so I'm looking to implement volume and tone controls availble on the front panel, as well as tone correction button. I'm thinking to pump ut the visual with the LED matrix or small OLED screen, which require mastering certain mechanical tasks. Long story short, this is a work in progress as of now. 
+
 ## Loud Raspberry Pi and Hat
 
 Loud Raspberry Pi Media Center uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
