@@ -537,9 +537,19 @@ Unfortunately, this library uses direct access to memory, so you need to run it 
 
 ### Raspberry Pi 5 note
 
-Raspberry Pi 5 is the forst one that allows to drive multiple I2S data lines using the same interface. What it mean in practice, is that while all older Pis have just 3 I2S lines (CLK, WS, DATA), Pi5 support up to 4 Data line (CLK, WS, D0, D1, D2, D3), capable of driving 4 independant audio interfaces. 
+Raspberry Pi 5 is the first one that allows to drive multiple I2S data lines using the same interface. What it means in practice, is that while all older Pis have just 3 I2S lines (CLK, WS, DATA), Pi5 support up to 4 Data lines (CLK, WS, D0, D1, D2, D3), capable of driving 4 independent audio interfaces. 
 
-All Raspberry Pi hats has experimental support of alternative data lines. You need to short some solder bridge to use it though. In theory it allows to confgure Hats to use different pins and stack them together to create 4 individual audio interfaces usinf the same device.  
+All Raspberry Pi hats have experimental support for alternative data lines. You need to short some solder bridge to use it though. In theory, it allows to configure Hats to use different pins and stack them together to create 4 individual stereo interfaces (8 channels in total) using the same device.  
+
+| HiFi Hat | HiFi-Plus Hat | Loud Hat |
+|----------|----------|----------|
+| ![image](https://github.com/user-attachments/assets/3c126719-d0ca-40b3-92d4-5b542fd0c335) | ![image](https://github.com/user-attachments/assets/496798fa-75e0-4205-bcec-b438e2711599) | ![image](https://github.com/user-attachments/assets/cbbade50-5d49-4a8b-954c-81f5a1c80550)
+
+Configuration value that allows this is quite simply
+
+```
+dtoverlay=hifiberry-dac8x
+```
 
 ## Demo
 
