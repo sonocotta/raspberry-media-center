@@ -569,9 +569,13 @@ dtoverlay=hifiberry-dac8x
 ## Where to buy
 
 You may support our work by ordering this product at Tindie
-- [HiFi Raspberry Pi](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
-- [Loud Raspberry](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/)
-- [Louder Raspberry Pi](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/) 
+- [HiFi Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
+- [HiFi Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/)
+- HiFi-Plus Raspberry Pi Hat - coming soon...
+- [Loud Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/)
+- [Loud Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/)
+- [Louder Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/)
+- [Louder Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat/)
 
 ## Press mentions
 
