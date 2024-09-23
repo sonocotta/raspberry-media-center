@@ -39,10 +39,15 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [Third-party Media Software](#third-party-media-software)
     - [Volumio](#volumio)
     - [Rotating MAC address on the W5500](#rotating-mac-address-on-the-w5500)
+    - [TAS5805M DSP Capabilities](#tas5805m-dsp-capabilities)
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi](#hifi-raspberry-pi)
+    - [HiFi Raspberry Hat](#hifi-raspberry-hat)
+    - [HiFi-Plus Raspberry Hat](#hifi-plus-raspberry-hat)
     - [Loud Raspberry Pi](#loud-raspberry-pi)
+    - [Loud Raspberry Hat](#loud-raspberry-hat)
     - [Louder Raspberry Pi](#louder-raspberry-pi)
+    - [Louder Raspberry Hat](#louder-raspberry-hat)
     - [Power considerations](#power-considerations)
       - [Hifi and Loud Raspberry](#hifi-and-loud-raspberry)
       - [Louder Raspberry](#louder-raspberry)
@@ -50,6 +55,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [Relay Driver](#relay-driver)
     - [IR reader](#ir-reader)
     - [RGB Led](#rgb-led)
+    - [Raspberry Pi 5 note](#raspberry-pi-5-note)
   - [Demo](#demo)
   - [Where to buy](#where-to-buy)
   - [Press mentions](#press-mentions)
@@ -351,6 +357,19 @@ On some systems W5500 driver will rotatre the chip's MAC address on each boot, w
 - move the new .dtbo into the overlays directory: `sudo cp w5500-custom.dtbo /boot/overlays/w5500.dtbo`
 - reboot and ip a will report the new MAC address
 
+### TAS5805M DSP Capabilities
+
+TAS5805M DAC (and his big brother TAS5825M) has quite a sophisitcated DSP inside, that is mostly undiscovered by the community at the moment. Documentation to it is scarse. The only reasonable way to use it is to obtain a TI PurePath license and Hradware Development kit ($250, if you find it). This shoudl allow the following skills
+
+- 2.0, 1.1, 2.1, 0.1 and pretty much any other speaker configuration
+- Loudnes correction (or Tone correction)
+- Soft clipping
+- Individaul EQ (16 of them I think)
+- True mono and other routing configurations
+- And many more
+
+I'm planning to dive deep into the topic (whenever I have time, haha) and provide an optional settings for most common configurations. This is work in progress with no deadline set.
+
 ## Hardware
 
 Please visit the [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs as well as Gerber archives.
@@ -515,6 +534,12 @@ LED_CHANNEL = 0
 Unfortunately, this library uses direct access to memory, so you need to run it as `root`. 
 
 </details>
+
+### Raspberry Pi 5 note
+
+Raspberry Pi 5 is the forst one that allows to drive multiple I2S data lines using the same interface. What it mean in practice, is that while all older Pis have just 3 I2S lines (CLK, WS, DATA), Pi5 support up to 4 Data line (CLK, WS, D0, D1, D2, D3), capable of driving 4 independant audio interfaces. 
+
+All Raspberry Pi hats has experimental support of alternative data lines. You need to short some solder bridge to use it though. In theory it allows to confgure Hats to use different pins and stack them together to create 4 individual audio interfaces usinf the same device.  
 
 ## Demo
 
