@@ -359,14 +359,25 @@ On some systems W5500 driver will rotatre the chip's MAC address on each boot, w
 
 ### TAS5805M DSP Capabilities
 
-TAS5805M DAC (and his big brother TAS5825M) has quite a sophisitcated DSP inside, that is mostly undiscovered by the community at the moment. Documentation to it is scarse. The only reasonable way to use it is to obtain a TI PurePath license and Hradware Development kit ($250, if you find it). This shoudl allow the following skills
+TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside, which is mostly undiscovered by the community at the moment. Documentation of it is scarce. The only reasonable way to use it is to obtain a TI PurePath license and Hardware Development kit ($250 if you find it). This should allow the following skills
 
-- 2.0, 1.1, 2.1, 0.1 and pretty much any other speaker configuration
-- Loudnes correction (or Tone correction)
+- 2.0, 1.1, 2.1, 0.1, and pretty much any other speaker configuration
+- Loudness correction (or Tone correction)
 - Soft clipping
-- Individaul EQ (16 of them I think)
+- Individual EQ (16 of them I think)
 - True mono and other routing configurations
 - And many more
+
+<details>
+  <summary>PurePath screenshots</summary>
+
+![image](https://github.com/user-attachments/assets/277d3901-87d8-4c73-84d0-7e2d697c300c)
+![image](https://github.com/user-attachments/assets/9275106c-5fd4-49df-88fd-f44e654f4d70)
+![image](https://github.com/user-attachments/assets/f919b864-0c3f-4e39-8409-f3199c799f02)
+![image](https://github.com/user-attachments/assets/d8976520-b60d-4ca5-9a11-9e7a752d1c03)
+
+</details>
+
 
 I'm planning to dive deep into the topic (whenever I have time, haha) and provide an optional settings for most common configurations. This is work in progress with no deadline set.
 
