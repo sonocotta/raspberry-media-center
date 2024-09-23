@@ -83,7 +83,7 @@ Raspberry Pi HiFi Hat is the same DAC and power circuitry **times two** in a Hat
 
 ## Raspberry Pi HiFi Plus 
 
-The PCM5100 HiFi DAC combined together with a highly efficient TPA3110D2 D-class amplifier. Tines two (again, why not!). It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers directly. It uses an external power source to feed hungry amps and host Pi using an onboard drop-down converter. Raspberry Pi 5 users can use both outputs independently, older boards will produce the same audio in parallel. Boards use 4-layer PCBs to ensure good signal protection to keep that noise low. Both amps can be shit down using GPIO pins, so you can be sure speakers will be dead quiet when it is not in use.  
+The PCM5100 HiFi DAC combined together with a highly efficient TPA3110D2 D-class amplifier. Times two (again, why not?). It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers directly. It uses an external power source to feed hungry amps and host Pi using an onboard drop-down converter. Raspberry Pi 5 users can use both outputs independently, older boards will produce the same audio in parallel. Boards use 4-layer PCBs to ensure good signal protection to keep that noise low. Both amps can be shut down using GPIO pins, so you can be sure the speakers will be dead quiet when they are not in use.  
 
 ![DSC_0054](https://github.com/user-attachments/assets/1d4c9496-945c-4937-913f-c07db443e347)
 
@@ -93,7 +93,7 @@ The Media Center version of the HiFi-Plus model is in the ideation stage. I see 
 
 Loud Raspberry Pi Media Center uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
 
-Loud Raspberry Pi Hat is the same DAC and audio circuitry, again times two (because why not!). You can use it with any Raspberry Pi, while Raspberry Pi 5 users can use both pairs of speakers independently, while other Pis will produce the same audio on both ends. Hat will pull the juice from the Pi's 5V line, or power the Pi itself using screw connectors, so you can make sure enough power is delivered to both boards.
+Loud Raspberry Pi Hat is the same DAC and audio circuitry, again times two (because why not?). You can use it with any Raspberry Pi, while Raspberry Pi 5 users can use both pairs of speakers independently, while other Pis will produce the same audio on both ends. Hat will pull the juice from the Pi's 5V line, or power the Pi itself using screw connectors, so you can make sure enough power is delivered to both boards.
 
 | Cased | Hat |
 |---|---|
@@ -104,7 +104,7 @@ Loud Raspberry Pi Hat is the same DAC and audio circuitry, again times two (beca
 
 Louder Raspberry Pi Media Center is a top-of-the-range model that uses a modern highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked, therefore it uses USB-C Power Delivery to pull up to 65W from the wall power adapter. It can be used both with Wi-Fi and Ethernet (to make sure bad Wi-Fi would not interrupt the stream)
 
-Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (reads "more power"), and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones
+Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (opposed to 20V over PD) and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones
 
 | Cased | Hat |
 |---|---|
@@ -364,17 +364,41 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 |---|---|---|
 | ![DSC_0730 (copy 1) JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/c281dab2-9842-4760-be31-8ad52d836f4d) | ![DSC_0733 (copy 1) JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/ba11555c-9e0c-47eb-b77e-4ac4b4ca1a99) | ![DSC_0739 (copy 1) JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/b438fd68-108c-42b6-b3b1-4c2507fbd568)
 
+### HiFi Raspberry Hat
+
+| Image |
+|-------|
+| ![image](https://github.com/user-attachments/assets/20753c79-cd01-4ef0-9c34-f24b8fe19cf4)
+
+### HiFi-Plus Raspberry Hat
+
+| Image |
+|-------|
+| ![image](https://github.com/user-attachments/assets/3c01a8b5-6dec-4063-921b-70df68d4b005)
+
 ### Loud Raspberry Pi
 
 | Front | Back | PCB |
 |---|---|---|
 | ![DSC_0730 (copy 1) JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/c281dab2-9842-4760-be31-8ad52d836f4d) | ![DSC_0008_small JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/7c939831-95e4-467d-874e-b2a65ba0960c) | ![DSC_0016_small JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/999abf17-8c0b-464a-b1b0-50d00ee8cb4b)
 
+### Loud Raspberry Hat
+
+| Image |
+|-------|
+| ![image](https://github.com/user-attachments/assets/81ecd4dd-5fe1-41eb-aed7-153bf5b99cf8)
+
 ### Louder Raspberry Pi
 
 | Front | Back | PCB |
 |---|---|---|
 |![DSC_0730 (copy 1) JPG-mh (1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/c281dab2-9842-4760-be31-8ad52d836f4d) | ![DSC_0011-copy JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/913adcb9-b5fe-4ffa-b443-bdbba04693bc) | ![DSC_0004-copy JPG-mh](https://github.com/sonocotta/raspberry-media-center/assets/5459747/adebf060-a3bd-45b9-8474-9397e695b0d7)
+
+### Louder Raspberry Hat
+
+| Image |
+|-------|
+| ![image](https://github.com/user-attachments/assets/4ac30e1b-8d07-4bda-a3ee-99d91c4dc1e9)
 
 ### Power considerations
 
