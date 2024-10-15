@@ -1,0 +1,67 @@
+- name: install CamillaDSP FE
+  hosts: raspberry
+  become: true
+  
+  tasks:
+  - name: apt install packages
+    apt:
+      name: 
+      - npm
+      state: present
+
+  - name: create camillagui folder
+    ansible.builtin.file:
+      path: /home/camilla/camillagui
+      state: directory
+      owner: camilla
+      group: camilla
+
+  - name: pull camillaNode
+    ansible.builtin.git:
+      repo: https://github.com/ismailAtaman/camillaNode
+      dest: /home/camilla/camillaNode
+      update: yes
+
+  - name: npm install
+    ansible.builtin.shell:
+      cmd: "cd /home/camilla/camillaNode && npm install"
+  
+  - name: camillaNode folder permissions
+    ansible.builtin.file:
+      dest: /home/camilla/camillaNode
+      state: directory
+      owner: camilla
+      group: camilla
+      recurse: true
+
+  - name: camillaNode config
+    ansible.builtin.copy:
+      dest: /home/camilla/camillaNode/camillaNodeConfig.json
+      content: |
+        { "port": 8080 }
+
+
+  - name: install camillaNode service
+    ansible.builtin.copy:
+      dest: "/etc/systemd/system/camillanode.service"
+      content: |
+        [Unit]
+        Description=CamillaNode Service
+        After=network.target
+
+        [Service]
+        User=camilla
+        Group=camilla
+        WorkingDirectory=/home/camilla/camillaNode
+        ExecStart=/usr/bin/node index.js
+        Restart=always
+
+        [Install]
+        WantedBy=multi-user.target
+
+  - name: start camillaNode service
+    ansible.builtin.service:
+      name: camillanode
+      state: restarted
+      enabled: true
+      daemon_reload: yes

@@ -1,0 +1,100 @@
+- name: Install CamillaDSP Backend
+  hosts: raspberry
+  become: true
+
+  tasks:
+  - name: apt install packages
+    apt:
+      name:
+      - alsa-utils
+      - git
+      - python3
+      - python3-pip
+      - python3-websocket
+      - python3-aiohttp
+      - python3-jsonschema
+      - python3-numpy
+      - python3-matplotlib
+      - unzip
+      state: present
+
+  - name: Install CamillaDSP packages
+    ansible.builtin.pip:
+      name:
+      - git+https://github.com/HEnquist/pycamilladsp.git
+      - git+https://github.com/HEnquist/pycamilladsp-plot.git
+      break_system_packages: true
+
+  - name: Pull Camilla dist
+    ansible.builtin.unarchive:
+      src: "{{ camilla_pkg }}"
+      dest: /usr/local/bin
+      remote_src: yes
+
+  - name: Create camilla user group
+    ansible.builtin.group:
+      name: camilla
+      state: present
+
+  - name: Create camilla user
+    ansible.builtin.user:
+      name: camilla
+      state: present
+      create_home: yes
+      group: camilla
+      groups: audio
+
+  - name: Create camilla home folder
+    ansible.builtin.file:
+      path: "{{ item.path }}"
+      state: directory
+      owner: camilla
+      group: camilla
+    loop:
+      - { path: /home/camilla/camilladsp/coeffs }
+      - { path: /home/camilla/camilladsp/configs }
+
+  - name: Install Camilla Service
+    ansible.builtin.copy:
+      dest: "/etc/systemd/system/camilla.service"
+      content: |
+        [Unit]
+        Description=CamillaDSP
+        After=default.target
+        StartLimitIntervalSec=10
+        StartLimitBurst=10
+
+        [Service]
+        Type=simple
+        User=camilla
+        Group=camilla
+        WorkingDirectory=~
+        ExecStart=camilladsp -s camilladsp/statefile.yml -w -g0 -o camilladsp/camilladsp.log -p 1234
+        Restart=always
+        RestartSec=1
+        StandardOutput=journal
+        StandardError=journal
+        SyslogIdentifier=camilladsp
+        CPUSchedulingPolicy=fifo
+        CPUSchedulingPriority=10
+
+        [Install]
+        WantedBy=default.target
+
+  - name: Start Camilla Service
+    ansible.builtin.service:
+      name: camilla
+      state: restarted
+      enabled: true
+      daemon_reload: yes
+
+  # optional loopback device, requires restart
+  - name: Enable Alsa loopback device
+    ansible.builtin.copy:
+      dest: /etc/modules-load.d/snd-aloop.conf
+      content: | 
+        snd-aloop
+
+  - name: Restart device
+    reboot:
+      reboot_timeout: 300

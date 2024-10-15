@@ -16,7 +16,7 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
     loop:
-    - { regexp: '^SNAPCLIENT_OPTS', line: 'SNAPCLIENT_OPTS="-s default"' }
+    - { regexp: '^SNAPCLIENT_OPTS', line: 'SNAPCLIENT_OPTS="-s {{ snapclient_device }} --sampleformat 44100:32:*"' }
 
   - name: Start snapclient service
     ansible.builtin.service:
