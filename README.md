@@ -477,12 +477,12 @@ Schematics:
 External relay can be connected directly between OUT and +5V pins (1st and 3rd pins, mid pin being GND)
 
 ### IR reader
+  
+Start by configuring IR device-tree overlay in the `/boot/config.txt` file
 
 <details>
   <summary>Setup instructions</summary>
   
-Start by configuring IR device-tree overlay in the `/boot/config.txt` file
-
 ```
 # Enable IR reader on GPIO23
 dtoverlay=gpio-ir,gpio_pin=23
@@ -526,11 +526,15 @@ $ irw
 00000000e0e0d02f 00 KEY_VOLUMEDOWN Samsung_TV
 00000000e0e0d02f 01 KEY_VOLUMEDOWN Samsung_TV
 ```
+</details>
 
 ### RGB Led
 
 The tested method of controlling RGB LED is to use [rpi_ws281x](https://github.com/jgarff/rpi_ws281x) library, available as [rpi-ws281x-python](https://github.com/rpi-ws281x/rpi-ws281x-python/tree/master) module. You can install it with `pip`. This library uses PWN capabilities of the GPIO and does not require any specific device tree configuration. The only configuration that you'd need in any of the [provided examples](https://github.com/rpi-ws281x/rpi-ws281x-python/tree/master/examples) is below
 
+<details>
+  <summary>Setup instructions</summary>
+  
 ```
 # LED strip configuration:
 LED_COUNT = 1         
