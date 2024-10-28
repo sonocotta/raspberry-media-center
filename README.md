@@ -534,7 +534,19 @@ The tested method of controlling RGB LED is to use [rpi_ws281x](https://github.c
 
 <details>
   <summary>Setup instructions</summary>
-  
+
+Install the library first
+```
+sudo apt install python3-pip git -y
+sudo pip install rpi_ws281x --break-system-packages
+```
+
+Pull the example repo
+```
+git clone https://github.com/rpi-ws281x/rpi-ws281x-python/ && cd rpi-ws281x-python/examples
+```
+
+Update any of the example's header with the below configuration 
 ```
 # LED strip configuration:
 LED_COUNT = 1         
@@ -545,6 +557,14 @@ LED_BRIGHTNESS = 255
 LED_INVERT = False    
 LED_CHANNEL = 0       
 ```
+
+Now you're ready to run it
+
+```
+sudo python3 ./strandtest.py
+```
+
+![IMG_1739 MOV](https://github.com/user-attachments/assets/6188e2ce-9a40-4463-8329-c2b6642573ba)
 
 Unfortunately, this library uses direct access to memory, so you need to run it as `root`. 
 
