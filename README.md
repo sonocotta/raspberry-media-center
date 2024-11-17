@@ -51,6 +51,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [Power considerations](#power-considerations)
       - [Hifi and Loud Raspberry](#hifi-and-loud-raspberry)
       - [Louder Raspberry](#louder-raspberry)
+      - [Louder Raspberry NOPD](#louder-raspberry-nopd)
       - [Serial and USB-PD](#serial-and-usb-pd)
     - [Relay Driver](#relay-driver)
     - [IR reader](#ir-reader)
