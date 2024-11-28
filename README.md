@@ -21,7 +21,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
   - [Table of Contents](#table-of-contents)
   - [Motivation](#motivation)
   - [Raspberry Pi HiFi and Hat](#raspberry-pi-hifi-and-hat)
-  - [Raspberry Pi HiFi Plus](#raspberry-pi-hifi-plus)
+  - [Raspberry Pi HiFi-Amped](#raspberry-pi-hifi-amped)
   - [Loud Raspberry Pi and Hat](#loud-raspberry-pi-and-hat)
   - [Louder Raspberry Pi and Hat](#louder-raspberry-pi-and-hat)
   - [Features](#features)
@@ -30,7 +30,8 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [Peripheral](#peripheral)
     - [Peripheral (Louder)](#peripheral-louder)
   - [Software](#software)
-    - [DAC Configuration - HiFi Raspberry Pi](#dac-configuration---hifi-raspberry-pi)
+    - [DAC Configuration - HiFi Raspberry Pi and Hat](#dac-configuration---hifi-raspberry-pi-and-hat)
+    - [DAC Configuration - HiFi-Amped Raspberry Hat](#dac-configuration---hifi-amped-raspberry-hat)
     - [DAC Configuration - Loud Raspberry Pi](#dac-configuration---loud-raspberry-pi)
     - [DAC Configuration - Louder Raspberry Pi](#dac-configuration---louder-raspberry-pi)
     - [Bare OS Options](#bare-os-options)
@@ -43,7 +44,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi](#hifi-raspberry-pi)
     - [HiFi Raspberry Hat](#hifi-raspberry-hat)
-    - [HiFi-Plus Raspberry Hat](#hifi-plus-raspberry-hat)
+    - [HiFi-Amped Raspberry Hat](#hifi-amped-raspberry-hat)
     - [Loud Raspberry Pi](#loud-raspberry-pi)
     - [Loud Raspberry Hat](#loud-raspberry-hat)
     - [Louder Raspberry Pi](#louder-raspberry-pi)
@@ -87,13 +88,13 @@ Raspberry Pi HiFi Media Center is a first-in-line product that uses the legendar
 
 Raspberry Pi HiFi Hat is the same DAC and power circuitry **times two** in a Hat shape. You can use it with any Raspberry Pi board, not only Zero. Raspberry Pi 5 users can use both outputs independently, while other Pis will produce the same audio on both outputs.
 
-## Raspberry Pi HiFi Plus 
+## Raspberry Pi HiFi-Amped 
 
 The PCM5100 HiFi DAC combined together with a highly efficient TPA3110D2 D-class amplifier. Times two (again, why not?). It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers directly. It uses an external power source to feed hungry amps and host Pi using an onboard drop-down converter. Raspberry Pi 5 users can use both outputs independently, older boards will produce the same audio in parallel. Boards use 4-layer PCBs to ensure good signal protection to keep that noise low. Both amps can be shut down using GPIO pins, so you can be sure the speakers will be dead quiet when they are not in use.  
 
 ![DSC_0054](https://github.com/user-attachments/assets/1d4c9496-945c-4937-913f-c07db443e347)
 
-The Media Center version of the HiFi-Plus model is in the ideation stage. I see it to be a little more than just the same DAC on the boxed shape. The benefit of having DAC and AMP separated is the ability to fiddle with the audio in the middle, so I'm looking to implement volume and tone controls available on the front panel, as well as a tone correction button. I'm thinking of pumping the visual with the LED matrix or small OLED screen, which requires mastering certain mechanical tasks. Long story short, this is a work in progress. 
+The Media Center version of the HiFi-Amped model is in the ideation stage. I see it to be a little more than just the same DAC on the boxed shape. The benefit of having DAC and AMP separated is the ability to fiddle with the audio in the middle, so I'm looking to implement volume and tone controls available on the front panel, as well as a tone correction button. I'm thinking of pumping the visual with the LED matrix or small OLED screen, which requires mastering certain mechanical tasks. Long story short, this is a work in progress. 
 
 ## Loud Raspberry Pi and Hat
 
@@ -119,10 +120,10 @@ Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up
 
 ## Features
 
-|  | HiFi Raspberry Media Center | HiFi Raspberry Hat | HiFi-Plus Raspberry Hat | Loud Raspberry Media Center | Loud Raspberry Hat | Louder Raspberry Media Center | Louder Raspberry Media Center NOPD | Louder Raspberry Hat |
+|  | HiFi Raspberry Media Center | HiFi Raspberry Hat | HiFi-Amped Raspberry Hat | Loud Raspberry Media Center | Loud Raspberry Hat | Louder Raspberry Media Center | Louder Raspberry Media Center NOPD | Louder Raspberry Hat |
 |---|---|---|---|---|---|---|---|---|
 | Image | ![DSC_0733 (copy 1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/990da9e7-b8fd-400c-b818-cb9352fd10a3) | ![DSC_0022](https://github.com/user-attachments/assets/529c8179-702b-4a8e-b789-2e27cf373e4a) | ![DSC_0046](https://github.com/user-attachments/assets/20f83b94-3b65-4430-a84d-bf31d79a499e) | ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8846389c-f06c-4c36-88a7-63c0c789e944) |  ![DSC_0023](https://github.com/user-attachments/assets/e82fb430-cd7a-44ed-9659-32136250b471) | ![DSC_0011-copy](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fbedd926-8ff9-4f8a-8948-a3f96b013a6f) | ![DSC_0100](https://github.com/user-attachments/assets/8c660fc9-387e-43e5-a9f5-8b0363ebc8e6) | ![DSC_0062](https://github.com/user-attachments/assets/82718e9e-f36c-4f4c-ba08-e4726fd38f84) |
-| DAC | Single [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC | Dual [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC | Dual [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp | Dual I2S DAC [MAX98357](https://www.analog.com/en/products/max98357a.html) with built in D-Class amp | Quadruple I2S DAC [MAX98357](https://www.analog.com/en/products/max98357a.html) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp |
+| DAC | Single [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC | Dual [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC | Dual [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC <br />+<br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp | Dual I2S DAC [MAX98357](https://www.analog.com/en/products/max98357a.html) with built in D-Class amp | Quadruple I2S DAC [MAX98357](https://www.analog.com/en/products/max98357a.html) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp | Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp |
 | Output | 2.1 VRMS Line level output  -100 dB typical noise level | 2x 2.1 VRMS Line level output  -100 dB typical noise level | 4x 25W (8Ω, 1% THD+N) at 22V; 4x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 40W (4Ω, 1% THD+N) at 20V | 2x 3W (8Ω);   2x 5W (4Ω) | 4x 3W (8Ω);   4x 5W (4Ω) | 2x 22W (8Ω, 1% THD+N); 2x 32W (4Ω, 1% THD+N) at 20V <br /> 1x 45W (4Ω, 1% THD+N) at 20V  | 2x 22W (8Ω, 1% THD+N); 2x 32W (4Ω, 1% THD+N) at 20V <br /> 1x 45W (4Ω, 1% THD+N) at 20V  | 2x 32W (8Ω, 1% THD+N) at 24V <br /> 1x 55W (4Ω, 1% THD+N) at 24V  |
 | RGB LED | yes | none | none | yes | none | yes | yes | none |
 | IR input | yes | header only | none | yes | header only | yes | yes | header only |
@@ -136,7 +137,7 @@ Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up
 
 ### Audio
 
-|                    | I2S CLK | I2S DATA           | I2S WS | MAX98357A EN, Loud Media Center | MAX98357A EN, Loud Hat | TPA3110 EN, HiFi-Plus Hat
+|                    | I2S CLK | I2S DATA           | I2S WS | MAX98357A EN, Loud Media Center | MAX98357A EN, Loud Hat | TPA3110 EN, HiFi-Amped Hat
 |--------------------|---------|--------------------|--------|--------|--------|--------|
 | Raspberry Pi Zero  | 18      | 21                 | 19     |   4    |   5,6  |   5,6
 | Raspberry Pi 2,3,4 | 18      | 21                 | 19     |   4    |   5,6  |   5,6
@@ -160,7 +161,7 @@ Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up
 
 Being a Raspberry Pi software selection is a vast space for experimentation. First things first, for any OS you need to configure DAC. Then we talk about different OS options.
 
-### DAC Configuration - HiFi Raspberry Pi
+### DAC Configuration - HiFi Raspberry Pi and Hat
 
 You can use any distribution you like. The only change you need to make to enable hardware is to add 3 lines to the `/boot/config.txt`
 
@@ -169,6 +170,20 @@ dtoverlay=gpio-ir,gpio_pin=23
 dtoverlay=w5500
 dtoverlay=hifiberry-dac
 ```
+
+Note that for Hat only last line is applicable
+
+### DAC Configuration - HiFi-Amped Raspberry Hat
+
+Simple setup should only include single line into `/boot/config.txt`, amp will be powered on all the time by default.
+
+```
+dtoverlay=hifiberry-dac
+```
+
+If you want to control the amp using GPIO you may use software integration to pull GPIO5/6 HIGH or LOW to switch amp ON and OFF.
+
+Strating from the rev C it will be possible to use device-tree configuration to switch amp ON and OFF when audio is playing (it is possbile in earlier revisions as well, but I didn't manage to fix the speakers popping)
 
 ### DAC Configuration - Loud Raspberry Pi
 
@@ -181,6 +196,8 @@ dtoverlay=w5500
 dtoverlay=max98357a,sdmode-pin=4
 
 ```
+
+Note that for Hat only last line is applicable
 
 ### DAC Configuration - Louder Raspberry Pi
 
@@ -400,7 +417,7 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 |-------|
 | ![image](https://github.com/user-attachments/assets/20753c79-cd01-4ef0-9c34-f24b8fe19cf4)
 
-### HiFi-Plus Raspberry Hat
+### HiFi-Amped Raspberry Hat
 
 | Image |
 |-------|
@@ -589,7 +606,7 @@ Raspberry Pi 5 is the first one that allows to drive multiple I2S data lines usi
 
 All Raspberry Pi hats have experimental support for alternative data lines. You need to short some solder bridge to use it though. In theory, it allows to configure Hats to use different pins and stack them together to create 4 individual stereo interfaces (8 channels in total) using the same device.  
 
-| HiFi Hat | HiFi-Plus Hat | Loud Hat |
+| HiFi Hat | HiFi-Amped Hat | Loud Hat |
 |----------|----------|----------|
 | ![image](https://github.com/user-attachments/assets/3c126719-d0ca-40b3-92d4-5b542fd0c335) | ![image](https://github.com/user-attachments/assets/496798fa-75e0-4205-bcec-b438e2711599) | ![image](https://github.com/user-attachments/assets/cbbade50-5d49-4a8b-954c-81f5a1c80550)
 
@@ -608,7 +625,7 @@ dtoverlay=hifiberry-dac8x
 You may support our work by ordering this product at Tindie
 - [HiFi Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
 - [HiFi Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/)
-- HiFi-Plus Raspberry Pi Hat - coming soon...
+- HiFi-Amped Raspberry Pi Hat - coming soon...
 - [Loud Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/)
 - [Loud Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/)
 - [Louder Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/)
