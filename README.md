@@ -171,7 +171,7 @@ dtoverlay=w5500
 dtoverlay=hifiberry-dac
 ```
 
-Note that for Hat only last line is applicable
+Note that for Hat only the last line is applicable
 
 ### DAC Configuration - HiFi-Amped Raspberry Hat
 
@@ -181,9 +181,9 @@ Simple setup should only include single line into `/boot/config.txt`, amp will b
 dtoverlay=hifiberry-dac
 ```
 
-If you want to control the amp using GPIO you may use software integration to pull GPIO5/6 HIGH or LOW to switch amp ON and OFF.
+If you want to control the amp using GPIO you may use software integration to pull GPIO5/6 HIGH or LOW to switch the amp ON and OFF.
 
-Strating from the rev C it will be possible to use device-tree configuration to switch amp ON and OFF when audio is playing (it is possbile in earlier revisions as well, but I didn't manage to fix the speakers popping)
+Starting from revision C it will be possible to use device-tree configuration to switch the amp ON and OFF when audio is playing (it is possible in earlier revisions as well, but I didn't manage to avoid fully the speakers popping sound)
 
 ### DAC Configuration - Loud Raspberry Pi
 
@@ -197,7 +197,7 @@ dtoverlay=max98357a,sdmode-pin=4
 
 ```
 
-Note that for Hat only last line is applicable
+Note that for Hat only the last line is applicable
 
 ### DAC Configuration - Louder Raspberry Pi
 
@@ -321,12 +321,12 @@ make[1]: Entering directory '/usr/src/rpi-linux'
 make[1]: Leaving directory '/usr/src/rpi-linux'
 ```
 
-Copy over kernel drivers to filesystem
+Copy over kernel drivers to the filesystem
 ```
 sudo make install
 ```
 
-Now let's compile and copy device tree
+Now let's compile and copy the device tree
 ```
 sudo apt install device-tree-compiler -y
 sudo ./compile-overlay.sh
@@ -354,7 +354,7 @@ At this stage it is not changing DT overlay automatically, I need to figure out 
 dtoverlay=tas5805m,i2creg=0x2d
 ```
 
-After reboot, you should be able to see new sound card via `aplay -l`
+After reboot, you should be able to see the new sound card via `aplay -l`
 ```
 card 2: LouderRaspberry [Louder-Raspberry], device 0: bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0 [bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0] ^F Forward
   Subdevices: 1/1
@@ -367,7 +367,7 @@ Volumio will start playing using the right DAC on its own. Congratulations!
 
 ### Rotating MAC address on the W5500
 
-On some systems W5500 driver will rotatre the chip's MAC address on each boot, which is quite annoying if you're binding DHCP server to them. There is a manual fix that can help with that
+On some systems, the W5500 driver will rotate the chip's MAC address on each boot, which is quite annoying if you're binding the DHCP server to them. There is a manual fix that can help with that
 
 - Downloaded the [w5500 overlay](https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.6.y/arch/arm/boot/dts/overlays/w5500-overlay.dts) file
 - uncomment this line and change the MAC to your liking //				local-mac-address = [aa bb cc dd ee ff];
@@ -399,7 +399,7 @@ TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside
 </details>
 
 
-I'm planning to dive deep into the topic (whenever I have time, haha) and provide an optional settings for most common configurations. This is work in progress with no deadline set.
+I'm planning to dive deep into the topic (whenever I have time, haha) and provide an optional setting for the most common configurations. This is a work in progress with no deadline set.
 
 ## Hardware
 
