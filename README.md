@@ -158,9 +158,9 @@ TAS5805M DAC has a highly capable DSP that allows flexible configuration of each
 
 |                    | I2S CLK | I2S DATA           | I2S WS | MAX98357A EN, Loud Media Center | MAX98357A EN, Loud Hat | TPA3110 EN, HiFi-Amped Hat (Revisions A,B)
 |--------------------|---------|--------------------|--------|--------|--------|--------|
-| Raspberry Pi Zero  | 18      | 21                 | 19     |   4    |   5,6  |   5,6
-| Raspberry Pi 2,3,4 | 18      | 21                 | 19     |   4    |   5,6  |   5,6
-| Raspberry Pi 5     | 18      | 21, 23, 25, 27     | 19     |   4    |   5,6  |   5,6
+| Raspberry Pi Zero  | 18      | 21                 | 19     |   4    |   [1X]8, [2X]5,6  |   [Rev A, B]5,6
+| Raspberry Pi 2,3,4 | 18      | 21                 | 19     |   4    |   [1X]8, [2X]5,6  |   [Rev A, B]5,6
+| Raspberry Pi 5     | 18      | 21, 23, 25, 27     | 19     |   4    |   [1X]8, [2X]5,6  |   [Rev A, B]5,6
 
 
 ### Peripheral 
