@@ -432,7 +432,7 @@ I'm planning to dive deep into the topic (whenever I have time, haha) and provid
 
 Please visit the [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs as well as Gerber archives.
 
-### HiFi Raspberry Pi
+### HiFi Raspberry Pi Media Center
 
 | Front | Back | PCB |
 |---|---|---|
@@ -440,15 +440,21 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### HiFi Raspberry Hat
 
-| Image |
-|-------|
-| ![image](https://github.com/user-attachments/assets/2a406a90-1263-4541-b18f-be0753c5ec83)
+| 1X | 2X |
+|-------|-------|
+| ![image](https://github.com/user-attachments/assets/2a406a90-1263-4541-b18f-be0753c5ec83) | ![image](https://github.com/user-attachments/assets/80e42497-1b3d-4c76-8f76-1da259401a2d)
 
-### HiFi-Amped Raspberry Hat
+### HiFi Raspberry Pi Media Center
 
-| Image |
-|-------|
-| ![image](https://github.com/user-attachments/assets/3c01a8b5-6dec-4063-921b-70df68d4b005)
+| Front | Back | PCB |
+|---|---|---|
+| ![image](https://github.com/user-attachments/assets/a07cbe40-3e4b-4ab2-a83e-3a4518818f81) | ![image](https://github.com/user-attachments/assets/21e76145-e5e2-47c2-b69a-847779a9f42f) | ![image](https://github.com/user-attachments/assets/7fb7c523-aa55-4f46-befb-a174da8e6eb4)
+
+### Amped Raspberry Hat
+
+| 1X | 2X |
+|-------|-------|
+| ![image](https://github.com/user-attachments/assets/1e22e916-2b51-4543-a7d2-9dc79f9277ca) | ![image](https://github.com/user-attachments/assets/e0271a8e-8034-47d4-8f7d-fffa3649aed9) 
 
 ### Loud Raspberry Pi
 
@@ -458,9 +464,9 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### Loud Raspberry Hat
 
-| Image |
-|-------|
-| ![image](https://github.com/user-attachments/assets/81ecd4dd-5fe1-41eb-aed7-153bf5b99cf8)
+| 1X | 2X |
+|-------|-------|
+| ![image](https://github.com/user-attachments/assets/8aca2281-1e73-4aa9-b7b4-29bc4994f136) | ![image](https://github.com/user-attachments/assets/81ecd4dd-5fe1-41eb-aed7-153bf5b99cf8)
 
 ### Louder Raspberry Pi
 
@@ -470,15 +476,15 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### Louder Raspberry Hat
 
-| Image |
-|-------|
-| ![image](https://github.com/user-attachments/assets/4ac30e1b-8d07-4bda-a3ee-99d91c4dc1e9)
+| 1X | 2X |
+|-------|-------|
+| ![image](https://github.com/user-attachments/assets/9357eff8-739b-4b38-ae04-3698985e3dc0) | ![image](https://github.com/user-attachments/assets/4ac30e1b-8d07-4bda-a3ee-99d91c4dc1e9)
 
 ### Power considerations
 
 #### Hifi and Loud Raspberry
 
-According to the manufacturer Raspberry Pi Zero requires at least 1 Amp of 5V line, and each of the Loud Raspberry DAC needs at least 1 Amp extra. With the total budget requirement of 3 Amps, it is within specs for a non-PD USB-C 5V power line. I've decided not to use USB-PD for The Loud model. Just make sure your power adapter is capable of 3 Amps (or keep a reasonable volume if it is not).
+According to the manufacturer, Raspberry Pi Zero requires at least 1 Amp of 5V line, and each of the Loud Raspberry DAC needs at least 1 Amp extra. With the total budget requirement of 3 Amps, it is within specs for a non-PD USB-C 5V power line. I've decided not to use USB-PD for the Loud model. Just make sure your power adapter is capable of 3 Amps (or keep a reasonable volume if it is not).
 
 HiFi Raspberry barely uses extra power compared to what the Raspberry Pi Zero board itself needs. No special requirements are there.
 
