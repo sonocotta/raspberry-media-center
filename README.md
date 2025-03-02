@@ -140,7 +140,7 @@ TAS5805M DAC has a highly capable DSP that allows flexible configuration of each
 
 ## Features
 
-|  | HiFi Raspberry Media Center and Hat | Amped Raspberry Media Center and Hat | Loud Raspberry Media Center and Hat | Louder Raspberry Media Center and Hat |
+|  | [HiFi Raspberry Media Center](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/) | [Amped Raspberry Media Center](https://www.tindie.com/products/sonocotta/amped-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/hifi-amped-raspberry-pi-hat/) | [Loud Raspberry Media Center](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/) | [Louder Raspberry Media Center](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat/) |
 |---|---|---|---|---|
 | Image (Media Center) | ![DSC_0733 (copy 1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/990da9e7-b8fd-400c-b818-cb9352fd10a3) | ![DSC_0009](https://github.com/user-attachments/assets/eeeb18d5-01fc-4678-ba52-fe4ac63d199b) | ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8846389c-f06c-4c36-88a7-63c0c789e944) | ![DSC_0011-copy](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fbedd926-8ff9-4f8a-8948-a3f96b013a6f) |
 | Compatible with (Media Center) | Raspberry Pi Zero (W), Raspberry Pi Zero2 W  | Raspberry Pi Zero (W), Raspberry Pi Zero2 W  | Raspberry Pi Zero (W), Raspberry Pi Zero2 W  | Raspberry Pi Zero (W), Raspberry Pi Zero2 W  |
