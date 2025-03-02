@@ -441,9 +441,9 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### HiFi Raspberry Hat
 
-| 1X | 2X |
-|-------|-------|
-| ![image](https://github.com/user-attachments/assets/2a406a90-1263-4541-b18f-be0753c5ec83) | ![image](https://github.com/user-attachments/assets/80e42497-1b3d-4c76-8f76-1da259401a2d)
+| 1X and 2X |
+|-------|
+| ![image](https://github.com/user-attachments/assets/2a406a90-1263-4541-b18f-be0753c5ec83) | 
 
 ### HiFi Raspberry Pi Media Center
 
@@ -636,23 +636,23 @@ Unfortunately, this library uses direct access to memory, so you need to run it 
 
 ### Raspberry Pi 5 note
 
-Raspberry Pi 5 is the first one that allows to drive multiple I2S data lines using the same interface. What it means in practice, is that while all older Pis have just 3 I2S lines (CLK, WS, DATA), Pi5 support up to 4 Data lines (CLK, WS, D0, D1, D2, D3), capable of driving 4 independent audio interfaces. 
+Raspberry Pi 5 is the first one that allows the user to drive multiple I2S data lines using the same interface. What it means in practice is that while all older Pis have just 3 I2S lines (CLK, WS, DATA), Pi5 supports up to 4 Data lines (CLK, WS, D0, D1, D2, D3), capable of driving 4 independent audio interfaces. 
 
-2X Raspberry Pi hats have support for alternative data lines. You need to short some solder bridge to use it though. It allows configuring Hats to use different pins and stack them together to create 4 individual stereo interfaces (8 channels in total) using the same device.
+2X Raspberry Pi hats support alternative data lines. You need to short some solder bridge to use it, though. It allows configuring Hats to use different pins and stack them together to create 4 individual stereo interfaces (8 channels in total) using the same device.
 
-By default, 2X hat uses pins 21,23 for data, with the possibility to switch to pins 25, and 27 with solder bridges and stack 2 boards together.
+By default, the 2X hat uses pins 21, 23 for data, with the possibility to switch to pins 25 and 27 with solder bridges and stack 2 boards together.
 
 | HiFi Hat (rev C) | HiFi Hat (rev D) | HiFi-Amped Hat | Loud Hat |
 |----------|----------|----------|----------|
 | ![image](https://github.com/user-attachments/assets/3c126719-d0ca-40b3-92d4-5b542fd0c335) | ![image](https://github.com/user-attachments/assets/0c429268-412e-41a2-90dc-f3e49f5cc586) | ![image](https://github.com/user-attachments/assets/496798fa-75e0-4205-bcec-b438e2711599) | ![image](https://github.com/user-attachments/assets/cbbade50-5d49-4a8b-954c-81f5a1c80550)
 
-Configuration value that allows this is quite simply
+The configuration value that allows this is quite simply
 
 ```
 dtoverlay=hifiberry-dac8x
 ```
 
-At this point, all Hats with 1X marking is a single DAC version that can be used with every Pi, including Pi 5. The 2X version uses two data lines of the Pi5 and will work out-of-the-box with it. It can be changed to use a second set of data lines, so 2 boards stacked together will utilize 4 DACs or 8 channels of audio. You can short data lines together and use 2X Hat with Pi2/3/4, having 2 parallel DAC channels.
+At this point, all Hats with 1X marking a single DAC version that can be used with every Pi, including Pi 5. The 2X version uses two data lines of the Pi5 and will work out-of-the-box with it. It can be changed to use a second set of data lines, so 2 boards stacked together will utilize 4 DACs or 8 channels of audio. You can short data lines together and use 2X Hat with Pi2/3/4, having 2 parallel DAC channels.
 
 
 ## Demo
