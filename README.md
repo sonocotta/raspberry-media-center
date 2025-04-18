@@ -490,7 +490,7 @@ HiFi Raspberry barely uses extra power compared to what the Raspberry Pi Zero bo
 
 #### Louder Raspberry
 
-For Louder Raspberry, it is clearly not an option. You'd need a PD-enabled power adapter to run the board. Ideally, you should supply a 20V 3.25 Amp capable power source, common for modern laptops (Dell, HP, and Lenovo all tested and work perfectly). However, pretty much any 9V/12V/20V PD-enabled power adapter will work, most typically phone chargers with a quick charge option. The smallest of the family is a 25W model, which is plenty enough for both Raspberry Pi and DAC.
+For Louder Raspberry, it is clearly not an option. You'd need a PD-enabled power adapter to run the board. Ideally, you should supply a 20V 3.25 Amp capable power source, common for modern laptops (Dell, HP, and Lenovo all tested and work perfectly). However, pretty much any 9V/12V/20V PD-enabled power adapter will work, most typically phone chargers with a quick charge option. The smallest of the family is a 25W model, which is plenty enough for both the Raspberry Pi and the DAC.
 
 The interesting part was all the phone and laptop chargers I used for the test (around five different makes of each), sounded great, with no hissing, no popping. (Apart from the Apple ones, they didn’t work. Likely they have Apple-specific PD protocol). This is probably because modern devices have become so noise-sensitive that manufacturers have been forced to do good work on noise levels.
 
@@ -506,7 +506,7 @@ The interesting part was all the phone and laptop chargers I used for the test (
 
 </details>
 
-Because USB-PD is a bit of a Wild West in terms of standards, sometimes not everything goes as designed. Some people have run into this with power adapters that aren’t fully PD-standard compliant. In most cases, the worst that happens is the PD chip doesn’t trigger the 20V mode, so the Raspberry goes into the boot loop, not getting enough voltage on the 5V bus.
+Because USB-PD is a bit of a Wild West in terms of standards, sometimes not everything goes as designed. Some people have run into this with power adapters that aren’t fully PD-standard compliant. In most cases, the worst that happens is the PD chip doesn’t trigger the 20V mode, so the Raspberry Pi goes into the boot loop, not getting enough voltage on the 5V bus.
 
 #### Louder Raspberry NOPD
 
@@ -515,6 +515,13 @@ The “hammer-style” solution I came up with is a new NOPD version of the Loud
 ![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
 
 With this setup, you can supply more than the 20V limit of PD, giving you a bit more power for the speakers. You probably won’t hear much difference (thanks to the way human hearing works), but it could help larger speakers that need a bit more to really “open up." Other than that, the NOPD version works just like the PD version — no software changes are needed.
+
+#### Louder and Amped Raspberry Hats
+
+Due to the limited space available on the Raspberry Pi Hat-sized PCB, I'm using simplified output filter schematics with 1812 ferrite beads (instead of full-size coils on the Media Center models). These filters are not as efficient and generate more heat on the larger volumes. The datasheet recommends (quote)
+
+- Ferrite bead filter is appropriate for lower PVCC (< 12V)
+- Ferrite bead filter is recommended for use with Fsw = 384 kHz with Spread spectrum enabled, BD Modulation
 
 #### Serial and USB-PD
 
