@@ -226,10 +226,9 @@ Note for 2X Loud Hat - it will probably require a dedicated device tree file, th
 
 ### DAC Configuration - Louder Raspberry Pi Media Center and Hat
 
-TAS5805M DAC is not supported by default Raspbian distribution, therefore some work needs to be done to enable it. [Linked repo](https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
+TAS5805M DAC is not supported by default Raspbian distribution, therefore, some work needs to be done to enable it. [Linked repo](https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
 
-Note for 2X Louder Hat - updated driver capable of driving all 3 speakers is a work in progress still.
-
+Note for 2X Louder Hat - updated driver capable of driving all 2.1 speaker configurations is a work in progress and lives in a [dedicated branch](https://github.com/sonocotta/tas5805m-driver-for-raspbian/blob/features/louder-raspberry-2x-support/README.md).
 
 ### Bare OS Options
 
@@ -251,7 +250,7 @@ This is a work in progress and the idea is to have a bare minimum OS (be it Rasp
 - [x] Spotify Connect
 - [x] Snapcast client (with autodiscovery)
 - [x] Slimproto client (with autodiscovery)
-- [x] Apple Airplay
+- [x] Apple AirPlay
 - [x] UPNP sink (gmediarender)
 
 This will allow integration into existing media sources with Home Assistant, LMS, or Mopidy instance, including multi-room sync.
