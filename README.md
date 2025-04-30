@@ -67,7 +67,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
 
 I did a few audio projects in the past, some using [ESP32](https://hackaday.io/project/173620-loud-esp), some using larger [Orange Pi](https://hackaday.io/project/191936-orange-pi-home-media-center) and [Raspberry Pi](https://hackaday.io/project/162373-orangepi-zero-pulse-music-server-using-i2s-dac) devices. Each has its pros and cons, and with each iteration, I'm trying to focus on the details that were working best for me while actually using those devices at home. 
 
-What is special about the Raspberry eco-system is, of course, its community support. Being a not-so-strong software developer, I often have to rely on the work that other people did and bake it into the base Raspbian image. Attaching a DAC, Ethernet, and IR reader is as simple as adding 3 lines to the `config.txt` file, which is a bit of magic really
+What is special about the Raspberry Pi ecosystem is, of course, its community support. Being a not-so-strong software developer, I often have to rely on the work that other people did and bake it into the base Raspbian image. Attaching a DAC, Ethernet, and IR reader is as simple as adding 3 lines to the `config.txt` file, which is a bit of magic, really
 
 ```
 dtoverlay=gpio-ir,gpio_pin=23
@@ -154,7 +154,7 @@ TAS5805M DAC has a highly capable DSP that allows flexible configuration of each
 | IR input | yes | yes | yes | yes |
 | Onboard Serial Bridge | Media Center only | Media Center only | Media Center only | Media Center only |
 | Ethernet (Media Center) | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet | Wiznet [W5500](https://www.wiznet.io/product-item/w5500/) SPI Ethernet |
-| Powers from | Media Center: 5V USB-C power adapter (up to 1 A)<br/>Hat: 5V from the host<br/> Internally:  [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO | 8..26V from external source<br />powering host (up to 3A cont.) | Media Center: 5V USB-C power adapter (up to 3 A) <br/><br/>Hat: 5V from the host (up to 4A)<br/> or 5V from screw connector (powering host) | 65W USB-C PD power adapter <br/><br/>[NOPD] Up to 26V from external PSU<br/><br/>[Hat] 7..28V from external source<br />powering host (up to 3A cont.) |
+| Powers from | Media Center: 5V USB-C power adapter (up to 1 A)<br/>Hat: 5V from the host<br/> Internally:  [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO | 65W USB-C PD power adapter <br/><br/>[NOPD] 8..26V from external PSU<br/><br/>[Hat] 8..26V from external source<br />powering host (up to 3A cont.) | Media Center: 5V USB-C power adapter (up to 3 A) <br/><br/>Hat: 5V from the host (up to 4A)<br/> or 5V from screw connector (powering host) | 65W USB-C PD power adapter <br/><br/>[NOPD] Up to 26V from external PSU<br/><br/>[Hat] 7..26V from external source<br />powering host (up to 3A cont.) |
 | Mechanical dimensions (WxHxD), Media Center | 88mm x 38mm x 100mm | 88mm x 38mm x 100mm | 88mm x 38mm x 100mm | 88mm x 38mm x 100mm |
 | Mechanical dimensions (WxHxD), Hat | 65mm x 30mm x 15mm | 70mm x 61mm x 20mm | 65mm x 30mm x 20mm | 65mm x 56mm x 20mm |
 
