@@ -145,9 +145,11 @@ TAS5805M DAC has a highly capable DSP that allows flexible configuration of each
 
 ## Dual TFT and OLED Hats
 
-To add visual touch to the above Hats I developed two Hats that add two displays each: Dual OLED Hat adds 1.3' 128x64 px OLED displays and Dual TFT Hat that adds two 2.0' 240x320 px TFT displays. These can be used to add visualisations, current track playing and whatever else comes to your mind. Both options use SPI bus and this means things: they are nor very fast, you should count on 30 fps frame rate at best; but also they are very easy to use from user space, using popular Adafruit and Pimoroni python libraries. But most importantly, they are dead cheap, costing only $5 a piece definitely not going to drain your budget.
+To add a visual touch to the above Hats, I developed two Hats that add two displays each: Dual OLED Hat adds 1.3" 128x64 px OLED displays, and Dual TFT Hat that adds two 2.0" 240x320 px TFT displays. These can be used to add visualisations, current track playing, and whatever else comes to your mind. Both options use SPI bus, and this means things: they are not very fast, you should count on 30 fps frame rate at best; but also they are very easy to use from user space, using popular Adafruit and Pimoroni python libraries. But most importantly, they are dead cheap, costing only $5 a piece definitely not going to drain your budget.
 
-<image>
+|  Dual OLED Hat | Dual TFT Hat |
+|-----------|---------|
+| ![DSC_0034](https://github.com/user-attachments/assets/48fb3fad-1429-46f3-9ce5-d13e16ebf292) | ![DSC_0048](https://github.com/user-attachments/assets/fd67ffb1-1b53-4117-bde3-3f122d1b2af7) |
 
 
 ## Features
@@ -660,16 +662,18 @@ Unfortunately, this library uses direct access to memory, so you need to run it 
 
 ### OLED Display Hat
 
-OLED display Hat supports 2 types of display: 16 pin and 30 pin. Despite using different connector, they are using similar pinout and same controller, typically SH1106 for 1.3' displays (for which these hats are designed mechanically) or smaller 0.96' SSD1306 based ones. They present different display orientation though, so pick one based on your specific need. Tested display models are below
+![DSC_0035](https://github.com/user-attachments/assets/479cde35-872a-4782-9beb-8d4d939820a5)
+
+OLED display Hat supports 2 types of display: 16-pin and 30-pin. Despite using different connectors, they are using similar pinouts and the same controller, typically SH1106 for 1.3' displays (for which these hats are designed mechanically) or smaller 0.96' SSD1306-based ones. They present different display orientations, though, so pick one based on your specific need. Tested display models are below
 
 | Model | Image |
 |----|----|
-| [1.3" 128x64 OLED Screen SH1106 White/Blue 16-Pin](https://www.aliexpress.com/item/1005003801387081.html) | <image>
-| [1.3" 128x64 OLED Screen SH1106 White/Blue 30-Pin](https://www.aliexpress.com/item/1005003801387081.html) | <image>
+| [1.3" 128x64 OLED Screen SH1106 White/Blue 16-Pin](https://www.aliexpress.com/item/1005003801387081.html) | ![image](https://github.com/user-attachments/assets/e1babd73-2c87-4562-b88b-c4adac1b7008)
+| [1.3" 128x64 OLED Screen SH1106 White/Blue 30-Pin](https://www.aliexpress.com/item/1005003801387081.html) | ![image](https://github.com/user-attachments/assets/2d949fb3-9dfa-467f-811a-e8bbc3998e82)
 
-On the software side, I used [luma-oled](https://luma-oled.readthedocs.io/en/latest/) library for testing and it works well. Other libraries might do even better, but I didn't spent too much time on the discovery yet.
+On the software side, I used the [luma-oled](https://luma-oled.readthedocs.io/en/latest/) library for testing, and it works well. Other libraries might do even better, but I haven't spent too much time on the discovery yet.
 
-Below code snippet will get you started (make sure SPI is enabled)
+The code snippet below will get you started (make sure SPI is enabled)
 
 ```python
 from luma.core.interface.serial import i2c, spi, pcf8574
@@ -694,26 +698,21 @@ with canvas(device1) as draw:
 
 ### TFT Display Hat
 
-TFT display Hat also supports 14-pin and 22-pin pinouts, that can be used with multiple screen models, based on ST7735 and ST7789 controllers. Use 2.0" displays to achieve a perfect fit, but smaller or larger displays will wirk as well. These are 320x240 px TFT displays that I've tested, and apart from working, they also provide really good picture
+TFT display Hat also supports 14-pin and 22-pin pinouts, which can be used with multiple screen models, based on ST7735 and ST7789 controllers. Use 2.0" displays to achieve a perfect fit, but smaller or larger displays will work as well. These are 320x240 px TFT displays that I've tested, and apart from working, they also provide a really good picture
 
 | Model | Image |
 |----|----|
-| [2.0" ST7789 IPS TFT Display 240x320 14-Pin](https://www.aliexpress.com/item/1005008463441614.html) | <image>
-| [2.4" ST7789 IPS TFT Display 240x320 14-Pin](https://www.aliexpress.com/item/1005008472996411.html) | <image>
+| [2.0" ST7789 IPS TFT Display 240x320 14-Pin](https://www.aliexpress.com/item/1005008463441614.html) | ![image](https://github.com/user-attachments/assets/f318a0aa-d24f-4c3c-bdf1-72ed820c97b3)
+| [2.4" ST7789 IPS TFT Display 240x320 14-Pin](https://www.aliexpress.com/item/1005008472996411.html) | ![image](https://github.com/user-attachments/assets/6edf5e8f-3904-4bb0-a638-c1fb8767053c)
 
 On the software side, I used pimoroni libraries for [st7735](https://github.com/pimoroni/st7735-python) and [st7789](https://github.com/pimoroni/st7789-python) to acceess the displays over SPI directly, while there is also a more linux-native option is availble.
 
-The `libtft` libaray allow to initialize these displays as a framebuffer device as simple as enabling these 2 lines in the `config.txt` file
+The `libtft` library allows for initialization of these displays as a framebuffer device as simply as enabling these two lines in the `config.txt` file
 
 ```
 dtoverlay=fbtft,spi0-0,st7789v,rotate=90,width=240,height=320,dc_pin=25,reset_pin=16,led_pin=18
 dtoverlay=fbtft,spi0-1,st7789v,rotate=90,width=240,height=320,dc_pin=24
 ```
-
-And you even get a console on these small displays
-
-<image>
-
 ### Raspberry Pi 5 note
 
 Raspberry Pi 5 is the first one that allows the user to drive multiple I2S data lines using the same interface. What it means in practice is that while all older Pis have just 3 I2S lines (CLK, WS, DATA), Pi5 supports up to 4 Data lines (CLK, WS, D0, D1, D2, D3), capable of driving 4 independent audio interfaces. 
