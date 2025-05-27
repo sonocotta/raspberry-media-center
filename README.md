@@ -145,7 +145,7 @@ TAS5805M DAC has a highly capable DSP that allows flexible configuration of each
 
 ## Dual TFT and OLED Hats
 
-To add a visual touch to the above Hats, I developed two Hats that add two displays each: Dual OLED Hat adds 1.3" 128x64 px OLED displays, and Dual TFT Hat that adds two 2.0" 240x320 px TFT displays. These can be used to add visualisations, current track playing, and whatever else comes to your mind. Both options use SPI bus, and this means things: they are not very fast, you should count on 30 fps frame rate at best; but also they are very easy to use from user space, using popular Adafruit and Pimoroni python libraries. But most importantly, they are dead cheap, costing only $5 a piece definitely not going to drain your budget.
+To add a visual touch to the above Hats, I developed two Hats that add two displays each: Dual OLED Hat adds 1.3" 128x64 px OLED displays, and Dual TFT Hat that adds two 2.0" 240x320 px TFT displays. These can be used to add visualisations, current track playing, and whatever else comes to your mind. Both options use SPI bus, and this means two things: they are not very fast, you should count on 30 fps frame rate at best; but also they are very easy to use from user space, using popular Adafruit and Pimoroni python libraries. But most importantly, they are dead cheap, costing only $5 a piece definitely not going to drain your budget.
 
 |  Dual OLED Hat | Dual TFT Hat |
 |-----------|---------|
