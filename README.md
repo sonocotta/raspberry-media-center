@@ -24,11 +24,13 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
   - [Amped Raspberry Pi Media Center and Hats](#amped-raspberry-pi-media-center-and-hats)
   - [Loud Raspberry Pi Media Center and Hats](#loud-raspberry-pi-media-center-and-hats)
   - [Louder Raspberry Pi Media Center and Hats](#louder-raspberry-pi-media-center-and-hats)
+  - [Dual TFT and OLED Hats](#dual-tft-and-oled-hats)
   - [Features](#features)
   - [Boards Pinout](#boards-pinout)
     - [Audio](#audio)
     - [Peripheral](#peripheral)
     - [Peripheral (Louder)](#peripheral-louder)
+    - [FTF and OLED Hats](#ftf-and-oled-hats)
   - [Software](#software)
     - [DAC Configuration - HiFi Raspberry Pi Media Center and Hat](#dac-configuration---hifi-raspberry-pi-media-center-and-hat)
     - [DAC Configuration - Amped Raspberry Media Center and Hat](#dac-configuration---amped-raspberry-media-center-and-hat)
@@ -54,10 +56,13 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
       - [Hifi and Loud Raspberry](#hifi-and-loud-raspberry)
       - [Louder Raspberry](#louder-raspberry)
       - [Louder Raspberry NOPD](#louder-raspberry-nopd)
+      - [Louder and Amped Raspberry Hats](#louder-and-amped-raspberry-hats)
       - [Serial and USB-PD](#serial-and-usb-pd)
     - [Relay Driver](#relay-driver)
     - [IR reader](#ir-reader)
     - [RGB Led](#rgb-led)
+    - [OLED Display Hat](#oled-display-hat)
+    - [TFT Display Hat](#tft-display-hat)
     - [Raspberry Pi 5 note](#raspberry-pi-5-note)
   - [Demo](#demo)
   - [Where to buy](#where-to-buy)
@@ -138,6 +143,13 @@ TAS5805M DAC has a highly capable DSP that allows flexible configuration of each
 ![image](https://github.com/user-attachments/assets/67d55c4e-90fa-4877-af64-10a7d82b5f9c)
 
 
+## Dual TFT and OLED Hats
+
+To add visual touch to the above Hats I developed two Hats that add two displays each: Dual OLED Hat adds 1.3' 128x64 px OLED displays and Dual TFT Hat that adds two 2.0' 240x320 px TFT displays. These can be used to add visualisations, current track playing and whatever else comes to your mind. Both options use SPI bus and this means things: they are nor very fast, you should count on 30 fps frame rate at best; but also they are very easy to use from user space, using popular Adafruit and Pimoroni python libraries. But most importantly, they are dead cheap, costing only $5 a piece definitely not going to drain your budget.
+
+<image>
+
+
 ## Features
 
 |  | [HiFi Raspberry Media Center](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/) | [Amped Raspberry Media Center](https://www.tindie.com/products/sonocotta/amped-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/hifi-amped-raspberry-pi-hat/) | [Loud Raspberry Media Center](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/) | [Louder Raspberry Media Center](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat/) |
@@ -180,6 +192,12 @@ TAS5805M DAC has a highly capable DSP that allows flexible configuration of each
 |       | I2C CLK | I2C DATA | DAC PWDN | DAC FAULT | PD POWER GOOD 
 |-------|---------|----------|--------|--------|--------|
 | Raspberry Pi Zero (BCM) | 3      | 2       | 4     |   26  |   16
+
+### FTF and OLED Hats
+
+|                     | SPI MOSI | SPI MISO | SPI CLK | SPI CE0 | SPI CE1 | DC0  | DC1 | RESET (SHARED) | BACKLIGHT (SHARED) |
+|---------------------|----------|----------|---------|---------|---------|------|-----|----------------|--------------------|
+| Raspberry Pi (Any)) | 10       | 9        | 11      |   7     |   8     | 24   | 25  | 16             | 18                 |
 
 
 ## Software
@@ -639,6 +657,62 @@ sudo python3 ./strandtest.py
 Unfortunately, this library uses direct access to memory, so you need to run it as `root`. 
 
 </details>
+
+### OLED Display Hat
+
+OLED display Hat supports 2 types of display: 16 pin and 30 pin. Despite using different connector, they are using similar pinout and same controller, typically SH1106 for 1.3' displays (for which these hats are designed mechanically) or smaller 0.96' SSD1306 based ones. They present different display orientation though, so pick one based on your specific need. Tested display models are below
+
+| Model | Image |
+|----|----|
+| [1.3" 128x64 OLED Screen SH1106 White/Blue 16-Pin](https://www.aliexpress.com/item/1005003801387081.html) | <image>
+| [1.3" 128x64 OLED Screen SH1106 White/Blue 30-Pin](https://www.aliexpress.com/item/1005003801387081.html) | <image>
+
+On the software side, I used [luma-oled](https://luma-oled.readthedocs.io/en/latest/) library for testing and it works well. Other libraries might do even better, but I didn't spent too much time on the discovery yet.
+
+Below code snippet will get you started (make sure SPI is enabled)
+
+```python
+from luma.core.interface.serial import i2c, spi, pcf8574
+from luma.core.render import canvas
+from luma.oled.device import ssd1306, ssd1309, ssd1325, sh1106, sh1107, ws0010
+from time import sleep
+
+serial1 = spi(device=1, port=0, gpio_DC=24, gpio_RST=16)
+serial0 = spi(device=0, port=0, gpio_DC=25, gpio_RST=16)
+
+device1 = sh1106(serial1, rotate=0, width=128, height=64)
+device0 = sh1106(serial0, rotate=0, width=128, height=64)
+
+with canvas(device0) as draw:
+    draw.rectangle(device0.bounding_box, outline="white", fill="black")
+    draw.text((30, 40), "Hello World #{}".format(0), fill="white")
+
+with canvas(device1) as draw:
+    draw.rectangle(device1.bounding_box, outline="white", fill="black")
+    draw.text((30, 40), "Hello World #{}".format(1), fill="white")
+```
+
+### TFT Display Hat
+
+TFT display Hat also supports 14-pin and 22-pin pinouts, that can be used with multiple screen models, based on ST7735 and ST7789 controllers. Use 2.0" displays to achieve a perfect fit, but smaller or larger displays will wirk as well. These are 320x240 px TFT displays that I've tested, and apart from working, they also provide really good picture
+
+| Model | Image |
+|----|----|
+| [2.0" ST7789 IPS TFT Display 240x320 14-Pin](https://www.aliexpress.com/item/1005008463441614.html) | <image>
+| [2.4" ST7789 IPS TFT Display 240x320 14-Pin](https://www.aliexpress.com/item/1005008472996411.html) | <image>
+
+On the software side, I used pimoroni libraries for [st7735](https://github.com/pimoroni/st7735-python) and [st7789](https://github.com/pimoroni/st7789-python) to acceess the displays over SPI directly, while there is also a more linux-native option is availble.
+
+The `libtft` libaray allow to initialize these displays as a framebuffer device as simple as enabling these 2 lines in the `config.txt` file
+
+```
+dtoverlay=fbtft,spi0-0,st7789v,rotate=90,width=240,height=320,dc_pin=25,reset_pin=16,led_pin=18
+dtoverlay=fbtft,spi0-1,st7789v,rotate=90,width=240,height=320,dc_pin=24
+```
+
+And you even get a console on these small displays
+
+<image>
 
 ### Raspberry Pi 5 note
 
