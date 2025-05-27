@@ -698,6 +698,8 @@ with canvas(device1) as draw:
 
 ### TFT Display Hat
 
+![DSC_0048](https://github.com/user-attachments/assets/f7e6df04-3975-4364-b0fa-8cf8aa134086)
+
 TFT display Hat also supports 14-pin and 22-pin pinouts, which can be used with multiple screen models, based on ST7735 and ST7789 controllers. Use 2.0" displays to achieve a perfect fit, but smaller or larger displays will work as well. These are 320x240 px TFT displays that I've tested, and apart from working, they also provide a really good picture
 
 | Model | Image |
