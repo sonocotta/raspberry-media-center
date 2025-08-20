@@ -26,6 +26,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
   - [Louder Raspberry Pi Media Center and Hats](#louder-raspberry-pi-media-center-and-hats)
   - [Dual TFT and OLED Hats](#dual-tft-and-oled-hats)
   - [Features](#features)
+  - [Which device is right for me](#which-device-is-right-for-me)
   - [Boards Pinout](#boards-pinout)
     - [Audio](#audio)
     - [Peripheral](#peripheral)
@@ -151,6 +152,10 @@ To add a visual touch to the above Hats, I developed two Hats that add two displ
 |-----------|---------|
 | ![DSC_0034](https://github.com/user-attachments/assets/48fb3fad-1429-46f3-9ce5-d13e16ebf292) | ![DSC_0048](https://github.com/user-attachments/assets/fd67ffb1-1b53-4117-bde3-3f122d1b2af7) |
 
+
+## Which device is right for me
+
+<img width="2102" height="1093" alt="image" src="https://github.com/user-attachments/assets/78b83243-9530-4cba-ae67-2a607f5e2c55" />
 
 ## Features
 
