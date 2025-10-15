@@ -1,0 +1,67 @@
+- name: Install and autostart rpi-ws281x-python
+  hosts: raspberry
+  become: true
+
+  vars:
+    repo_url: "https://github.com/rpi-ws281x/rpi-ws281x-python"
+    repo_dir: "/opt/rpi-ws281x-python"
+    venv_dir: "/opt/.venv"
+    service_name: "rpi-ws281x"
+
+  tasks:
+    - name: Ensure required system packages are installed
+      ansible.builtin.apt:
+        name:
+          - git
+          - python3
+          - python3-venv
+          - python3-pip
+        state: present
+        update_cache: yes
+
+    - name: Clone rpi-ws281x-python repository
+      ansible.builtin.git:
+        repo: "{{ repo_url }}"
+        dest: "{{ repo_dir }}"
+        version: master
+        update: yes
+
+    - name: Create Python virtual environment
+      ansible.builtin.command:
+        cmd: "python3 -m venv {{ venv_dir }}"
+        creates: "{{ venv_dir }}/bin/activate"
+
+    - name: Install rpi-ws281x dependencies into venv
+      ansible.builtin.command:
+        cmd: "{{ venv_dir }}/bin/pip install -e ."
+        chdir: "{{ repo_dir }}"
+      environment:
+        PATH: "{{ venv_dir }}/bin:{{ ansible_env.PATH }}"
+
+    - name: Create systemd service for rpi-ws281x example
+      ansible.builtin.copy:
+        dest: "/etc/systemd/system/{{ service_name }}.service"
+        content: |
+          [Unit]
+          Description=Raspberry Pi WS281x LED Example
+          After=network.target
+
+          [Service]
+          Type=simple
+          ExecStart={{ venv_dir }}/bin/python {{ repo_dir }}/examples/strandtest.py
+          WorkingDirectory={{ repo_dir }}
+          Restart=always
+          User=root
+          Group=root
+          StandardOutput=journal
+          StandardError=journal
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and start the rpi-ws281x service
+      ansible.builtin.systemd:
+        name: "{{ service_name }}"
+        enabled: true
+        state: restarted
+        daemon_reload: true

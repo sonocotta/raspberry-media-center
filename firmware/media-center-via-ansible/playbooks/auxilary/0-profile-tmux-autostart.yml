@@ -1,0 +1,79 @@
+---
+- name: Configure auto-start tmux session on SSH login
+  hosts: raspberry
+  become: false
+  vars:
+    user_name: pi
+    tmux_session_name: monitor
+    tmux_config_dir: "/home/{{ user_name }}/.config/tmux"
+    tmux_session_script: "{{ tmux_config_dir }}/{{ tmux_session_name }}.tmux"
+    bash_profile: "/home/{{ user_name }}/.bash_profile"
+
+  tasks:
+    - name: Ensure tmux is installed
+      become: true
+      apt:
+        name: tmux
+        state: present
+        update_cache: yes
+
+    - name: Create tmux config directory
+      file:
+        path: "{{ tmux_config_dir }}"
+        state: directory
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: '0755'
+
+    - name: Create tmux session script
+      copy:
+        dest: "{{ tmux_session_script }}"
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: '0755'
+        content: |
+          #!/usr/bin/env bash
+          SESSION="{{ tmux_session_name }}"
+
+          # If session already exists and is attached elsewhere, do not attach
+          if tmux has-session -t "$SESSION" 2>/dev/null; then
+              # Check if session is already attached
+              attached_count=$(tmux list-clients -t "$SESSION" 2>/dev/null | wc -l)
+              if [ "$attached_count" -gt 0 ]; then
+                  echo "Tmux session '$SESSION' is already attached elsewhere."
+                  exit 0
+              fi
+              tmux attach -t "$SESSION"
+              exit 0
+          fi
+
+          # Create new tmux session with layout
+          tmux new-session -d -s "$SESSION" 'htop'
+          tmux split-window -v 'journalctl -f'
+          # tmux split-window -v 'journalctl -kf'
+          tmux select-layout even-vertical
+          tmux attach -t "$SESSION"
+
+    - name: Add auto-tmux launch to bash profile
+      blockinfile:
+        path: "{{ bash_profile }}"
+        marker: "# {mark} ANSIBLE MANAGED: auto-tmux session"
+        block: |
+          # Auto-start tmux session on SSH login
+          if [ -z "$TMUX" ] && [ -n "$SSH_CONNECTION" ]; then
+              bash "{{ tmux_session_script }}"
+          fi
+        create: yes
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: '0644'
+        insertafter: EOF
+
+    - name: Ensure bash_profile is sourced from bashrc (for some systems)
+      lineinfile:
+        path: "/home/{{ user_name }}/.bashrc"
+        regexp: 'source ~/.bash_profile'
+        line: 'source ~/.bash_profile'
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: '0644'

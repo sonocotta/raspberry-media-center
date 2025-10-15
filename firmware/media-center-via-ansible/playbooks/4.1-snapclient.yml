@@ -1,6 +1,10 @@
 - name: install snapclient
   hosts: raspberry
   become: true
+
+  vars:
+    # change to your sound card, e.g. "hw:CARD=sndrpihifiberry,DEV=0"
+    snapclient_device: "default"
   
   tasks:
   - name: apt install snapclient

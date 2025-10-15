@@ -1,0 +1,68 @@
+- name: Build and install Python 3.12 on Raspberry Pi OS
+  hosts: raspberry
+  become: true
+
+  vars:
+    python_version: "3.12.7"
+    python_src_dir: "/usr/src/Python-{{ python_version }}"
+    python_tarball: "/usr/src/Python-{{ python_version }}.tgz"
+    python_url: "https://www.python.org/ftp/python/{{ python_version }}/Python-{{ python_version }}.tgz"
+    python_bin: "/usr/local/bin/python3.12"
+
+  tasks:
+    - name: Check if Python 3.12 is already installed
+      stat:
+        path: "{{ python_bin }}"
+      register: python_installed
+
+    - name: Install build dependencies
+      apt:
+        name:
+          - build-essential
+          - zlib1g-dev
+          - libncurses5-dev
+          - libgdbm-dev
+          - libnss3-dev
+          - libssl-dev
+          - libreadline-dev
+          - libffi-dev
+          - wget
+          - libbz2-dev
+          - libsqlite3-dev
+          - tk-dev
+          - liblzma-dev
+          - uuid-dev
+        state: present
+        update_cache: yes
+      when: not python_installed.stat.exists
+
+    - name: Download Python 3.12 source
+      get_url:
+        url: "{{ python_url }}"
+        dest: "{{ python_tarball }}"
+      when: not python_installed.stat.exists
+
+    - name: Extract Python source
+      unarchive:
+        src: "{{ python_tarball }}"
+        dest: "/usr/src/"
+        remote_src: yes
+      when: not python_installed.stat.exists
+
+    - name: Build and install Python 3.12
+      shell: |
+        cd "{{ python_src_dir }}" && \
+        ./configure --enable-optimizations && \
+        make -j"$(nproc)" && \
+        make altinstall
+      args:
+        creates: "{{ python_bin }}"
+      when: not python_installed.stat.exists
+
+    - name: Verify Python 3.12 installation
+      command: "{{ python_bin }} --version"
+      register: python_version_check
+
+    - name: Display installed Python version
+      debug:
+        msg: "Installed Python version: {{ python_version_check.stdout }}"
