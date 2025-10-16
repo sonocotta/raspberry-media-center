@@ -250,7 +250,7 @@ This will allow integration into existing media sources with Home Assistant, LMS
 
 [Volumio](https://volumio.com/get-started/) is a great piece of software, extremely popular with media center devices like Raspberry Media Center. 
 
-With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are supported out of the box. Select `HiFiBerry DAC` and `Adafruit MAX98357` in the DAC Model settings accordingly. Optionally you may also create a `/boot/userconfig.txt` file and add the following config to enable W5500 Ethernet
+With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are supported out of the box. Select `HiFiBerry DAC` and `Adafruit MAX98357` in the DAC Model settings accordingly. Optionally, you may also create a `/boot/userconfig.txt` file and add the following config to enable W5500 Ethernet
 ```
 [all]
 dtoverlay=w5500
@@ -379,25 +379,37 @@ TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside
 
 </details>
 
-
-I'm planning to dive deep into the topic (whenever I have time, haha) and provide an optional settings for most common configurations. This is work in progress with no deadline set.
+I'm planning to dive deep into the topic (whenever I have time, haha) and provide optional settings for the most common configurations. This is a work in progress with no deadline set.
 
 ### TAS5805M DAC I2C address changes
 
-While most of the boards come with I2C address consistent with drivers default value, some boards might appear on the 1-bit off address. It happens partially becuase I accidently put resistor with wrong value on the 'address set' pin on one of the early batches, partually becuase of some other unknown quirks (it was once reported on the modern board). It seems that when TAS5805M reports unexpected address, it sticks to it, so it is easy to fix.
+While most of the boards come with an I2C address consistent with the driver's default value, some boards might appear on the 1-bit off address. It happens partially because I accidentally put a resistor with the wrong value on the 'address set' pin on one of the early batches, partially because of some other unknown quirks (it was once reported on the modern board). It seems that when TAS5805M reports an unexpected address, it sticks to it, so it is easy to fix.
 
-The indication of that is when `journalctl` spits out errors about I2C communication failure. In that case one can confirm address issue by running `i2cdetect -y 1` command. 
-
-| config.txt | i2cdetect | journactl -k |
-|------------|-----------|--------------|
-| `dtoverlay=tas5805m,i2creg=0x2e` | <command>  | <errors screenshot> |
-
-In that case, address needs to be changed in the `/boot/firmware/config.txt` file to reflect actual address. The correct picture would look like this
+The indication of that is when `journalctl` spits out errors about I2C communication failure. In that case, one can confirm the address issue by running the `i2cdetect -y 1` command. 
 
 | config.txt | i2cdetect | journactl -k |
 |------------|-----------|--------------|
-| `dtoverlay=tas5805m,i2creg=0x2d` | <command>  | <errors screenshot> |
+| `dtoverlay=tas5805m,i2creg=0x2e` | <img width="374" height="142" alt="image" src="https://github.com/user-attachments/assets/e506a526-c56e-4d59-aa97-23d0d428d0c5" /> | <img width="669" height="164" alt="image" src="https://github.com/user-attachments/assets/4dcc8a87-dcf7-4690-94fc-27333c5bb771" />
 
+In the picture above device is found on the `0x2d` address, while the driver hooks up to the `0x2e` address, indicated by the `UU` mark. In that case, the address needs to be changed in the `/boot/firmware/config.txt` file to reflect the actual address. The correct picture would look like below
+
+| config.txt | i2cdetect | journactl -k |
+|------------|-----------|--------------|
+| `dtoverlay=tas5805m,i2creg=0x2d` | <img width="415" height="143" alt="image" src="https://github.com/user-attachments/assets/6e573494-fcdc-4757-bcc5-b0de835b7385" /> | <img width="678" height="158" alt="image" src="https://github.com/user-attachments/assets/53594da6-a387-42b9-ae68-6b4ceb95dbc0" /> |
+
+On the Louder 2X Hat, though, the driver only hooks up to the _master_ DAC, which drives satellite speakers, the _slave_ DAC configuration is handled within driver code. So the expected output from the `i2cdetect` command is `UU` mark on the master DAC and `0x2x` mark on the slave DAC
+
+```
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- UU 2e --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- —
+```
 
 ## Hardware
 
@@ -449,7 +461,7 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 #### Hifi and Loud Raspberry
 
-According to the manufacturer Raspberry Pi Zero requires at least 1 Amp of 5V line, and each of the Loud Raspberry DAC needs at least 1 Amp extra. With the total budget requirement of 3 Amps, it is within specs for a non-PD USB-C 5V power line. I've decided not to use USB-PD for The Loud model. Just make sure your power adapter is capable of 3 Amps (or keep a reasonable volume if it is not).
+According to the manufacturer, Raspberry Pi Zero requires at least 1 Amp of 5V line, and each of the Loud Raspberry DAC needs at least 1 Amp extra. With the total budget requirement of 3 Amps, it is within specs for a non-PD USB-C 5V power line. I've decided not to use USB-PD for The Loud model. Just make sure your power adapter is capable of 3 Amps (or keep a reasonable volume if it is not).
 
 HiFi Raspberry barely uses extra power compared to what the Raspberry Pi Zero board itself needs. No special requirements are there.
 
@@ -566,15 +578,15 @@ Unfortunately, this library uses direct access to memory, so you need to run it 
 
 ### Raspberry Pi 5 note
 
-Raspberry Pi 5 is the first one that allows to drive multiple I2S data lines using the same interface. What it means in practice, is that while all older Pis have just 3 I2S lines (CLK, WS, DATA), Pi5 support up to 4 Data lines (CLK, WS, D0, D1, D2, D3), capable of driving 4 independent audio interfaces. 
+Raspberry Pi 5 is the first one that allows driving multiple I2S data lines using the same interface. What it means in practice is that while all older Pis have just 3 I2S lines (CLK, WS, DATA), Pi5 supports up to 4 Data lines (CLK, WS, D0, D1, D2, D3), capable of driving 4 independent audio interfaces. 
 
-All Raspberry Pi hats have experimental support for alternative data lines. You need to short some solder bridge to use it though. In theory, it allows to configure Hats to use different pins and stack them together to create 4 individual stereo interfaces (8 channels in total) using the same device.  
+All Raspberry Pi hats have experimental support for alternative data lines. You need to short some solder bridge to use it, though. In theory, it allows for configuring Hats to use different pins and stack them together to create 4 individual stereo interfaces (8 channels in total) using the same device.  
 
 | HiFi Hat | HiFi-Plus Hat | Loud Hat |
 |----------|----------|----------|
 | ![image](https://github.com/user-attachments/assets/3c126719-d0ca-40b3-92d4-5b542fd0c335) | ![image](https://github.com/user-attachments/assets/496798fa-75e0-4205-bcec-b438e2711599) | ![image](https://github.com/user-attachments/assets/cbbade50-5d49-4a8b-954c-81f5a1c80550)
 
-Configuration value that allows this is quite simply
+The configuration value that allows this is quite simply
 
 ```
 dtoverlay=hifiberry-dac8x
