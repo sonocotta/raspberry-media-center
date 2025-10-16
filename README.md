@@ -40,6 +40,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [Volumio](#volumio)
     - [Rotating MAC address on the W5500](#rotating-mac-address-on-the-w5500)
     - [TAS5805M DSP Capabilities](#tas5805m-dsp-capabilities)
+    - [TAS5805M DAC I2C address changes](#tas5805m-dac-i2c-address-changes)
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi](#hifi-raspberry-pi)
     - [HiFi Raspberry Hat](#hifi-raspberry-hat)
@@ -380,6 +381,23 @@ TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside
 
 
 I'm planning to dive deep into the topic (whenever I have time, haha) and provide an optional settings for most common configurations. This is work in progress with no deadline set.
+
+### TAS5805M DAC I2C address changes
+
+While most of the boards come with I2C address consistent with drivers default value, some boards might appear on the 1-bit off address. It happens partially becuase I accidently put resistor with wrong value on the 'address set' pin on one of the early batches, partually becuase of some other unknown quirks (it was once reported on the modern board). It seems that when TAS5805M reports unexpected address, it sticks to it, so it is easy to fix.
+
+The indication of that is when `journalctl` spits out errors about I2C communication failure. In that case one can confirm address issue by running `i2cdetect -y 1` command. 
+
+| config.txt | i2cdetect | journactl -k |
+|------------|-----------|--------------|
+| `dtoverlay=tas5805m,i2creg=0x2e` | <command>  | <errors screenshot> |
+
+In that case, address needs to be changed in the `/boot/firmware/config.txt` file to reflect actual address. The correct picture would look like this
+
+| config.txt | i2cdetect | journactl -k |
+|------------|-----------|--------------|
+| `dtoverlay=tas5805m,i2creg=0x2d` | <command>  | <errors screenshot> |
+
 
 ## Hardware
 
