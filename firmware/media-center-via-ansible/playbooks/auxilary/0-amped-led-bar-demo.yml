@@ -3,10 +3,11 @@
   become: true
 
   vars:
-    repo_url: "https://github.com/rpi-ws281x/rpi-ws281x-python"
     repo_dir: "/opt/rpi-ws281x-python"
     venv_dir: "/opt/.venv"
     service_name: "rpi-ws281x"
+    led_count: 8
+    led_pin: 12
 
   tasks:
     - name: Ensure required system packages are installed
@@ -16,27 +17,41 @@
           - python3
           - python3-venv
           - python3-pip
+          - python3-dev
+          - build-essential
         state: present
         update_cache: yes
 
-    - name: Clone rpi-ws281x-python repository
-      ansible.builtin.git:
-        repo: "{{ repo_url }}"
-        dest: "{{ repo_dir }}"
-        version: master
-        update: yes
+    - name: Ensure target directory exists for strandtest
+      ansible.builtin.file:
+        path: "{{ repo_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
 
     - name: Create Python virtual environment
       ansible.builtin.command:
         cmd: "python3 -m venv {{ venv_dir }}"
         creates: "{{ venv_dir }}/bin/activate"
 
-    - name: Install rpi-ws281x dependencies into venv
+    - name: Upgrade pip/setuptools/wheel inside venv
       ansible.builtin.command:
-        cmd: "{{ venv_dir }}/bin/pip install -e ."
-        chdir: "{{ repo_dir }}"
-      environment:
-        PATH: "{{ venv_dir }}/bin:{{ ansible_env.PATH }}"
+        cmd: "{{ venv_dir }}/bin/pip install --upgrade pip setuptools wheel"
+        creates: "{{ venv_dir }}/bin/pip"
+
+    - name: Install rpi_ws281x into venv
+      ansible.builtin.pip:
+        name: rpi_ws281x
+        executable: "{{ venv_dir }}/bin/pip"
+
+    - name: Copy provided strandtest.py into place
+      ansible.builtin.copy:
+        src: "files/strandtest.py"
+        dest: "{{ repo_dir }}/strandtest.py"
+        owner: root
+        group: root
+        mode: "0755"
 
     - name: Create systemd service for rpi-ws281x example
       ansible.builtin.copy:
@@ -48,8 +63,10 @@
 
           [Service]
           Type=simple
-          ExecStart={{ venv_dir }}/bin/python {{ repo_dir }}/examples/strandtest.py
+          ExecStart={{ venv_dir }}/bin/python {{ repo_dir }}/strandtest.py
           WorkingDirectory={{ repo_dir }}
+          Environment=LED_COUNT={{ led_count }}
+          Environment=LED_PIN={{ led_pin }}
           Restart=always
           User=root
           Group=root

@@ -1,6 +1,9 @@
 - name: install pulseaudio
   hosts: raspberry
   become: true
+
+  vars:
+    pulse_user: pulse
   
   tasks:
   - name: apt install packages
@@ -10,13 +13,32 @@
       - pulseaudio-module-zeroconf
       state: present
 
-  - name: Patch Pulseaudio default.pa config
-    lineinfile:
-      dest: /etc/pulse/default.pa
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
-    loop:
-      - { regexp: '^set-default-sink', line: 'set-default-sink alsa_output.platform-sound_i2s.stereo-fallback' }
+  - name: Add camilla user to audio group
+    user:
+      name: "{{ pulse_user }}"
+      groups: audio
+      append: yes
+
+  - name: Ensure pulse user is in audio group
+    user:
+      name: pulse
+      groups: audio
+      append: yes
+
+  - name: Ensure PulseAudio system mode enabled
+    ansible.builtin.lineinfile:
+      path: /etc/pulse/daemon.conf
+      regexp: '^;? system-instance'
+      line: 'system-instance = yes'
+
+  # - name: Patch Pulseaudio default.pa config
+  #   lineinfile:
+  #     dest: /etc/pulse/default.pa
+  #     regexp: "{{ item.regexp }}"
+  #     line: "{{ item.line }}"
+  #   loop:
+  #     - { regexp: '^load-module', line: 'load-module module-alsa-sink' }
+  #     # - { regexp: '^set-default-sink', line: 'set-default-sink alsa_output.platform-sound_i2s.stereo-fallback' }
   
 
   - name: Patch Pulseaudio system.pa config
@@ -28,6 +50,7 @@
       - { regexp: '^load-module module-native-protocol-unix', line: 'load-module module-native-protocol-unix auth-anonymous=1' }
       - { regexp: '^load-module module-native-protocol-tcp', line: 'load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;192.168.0.0/23 auth-anonymous=1' }
       - { regexp: '^load-module module-zeroconf-publish', line: 'load-module module-zeroconf-publish' }
+      - { regexp: '^load-module', line: 'load-module module-alsa-sink' }
   
   - name: Pulseaudio system service
     copy:
@@ -35,10 +58,15 @@
       content: |
         [Unit]
         Description=PulseAudio system server
+        After=network-online.target sound.target
+        Wants=network-online.target
 
         [Service]
         Type=notify
-        ExecStart=/usr/bin/pulseaudio --daemonize=no --system --realtime --log-target=journal
+        Group=audio
+        ExecStart=/usr/bin/pulseaudio --daemonize=no --system --realtime --log-target=journal --verbose
+        Restart=always
+        RestartSec=5
 
         [Install]
         WantedBy=multi-user.target

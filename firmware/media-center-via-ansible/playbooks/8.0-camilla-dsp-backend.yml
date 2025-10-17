@@ -5,7 +5,7 @@
   vars:
     camilladsp_version: "v3.0.1"
     camilladsp_release_url: "https://github.com/HEnquist/camilladsp/releases/download"
-    camilladsp_tarball: "camilladsp-linux-armv7.tar.gz"
+    camilladsp_tarball: "camilladsp-linux-{{ arch }}.tar.gz"
     camilladsp_user: "camilla"
     camilladsp_install_dir: "/usr/local/bin"
     camilladsp_config_dir : "/home/{{ camilladsp_user }}/camilladsp"
@@ -45,7 +45,7 @@
     loop:
       - "{{ camilladsp_config_dir }}"
 
-  - name: Download CamillaDSP binary (ARMv7)
+  - name: Download CamillaDSP binary ({{ arch}})
     get_url:
       url: "{{ camilladsp_release_url }}/{{ camilladsp_version }}/{{ camilladsp_tarball }}"
       dest: "/tmp/{{ camilladsp_tarball }}"
@@ -213,7 +213,7 @@
         WorkingDirectory={{ camilladsp_install_dir }}
         ExecStart={{ camilladsp_install_dir }}/camilladsp -s {{ camilladsp_state_file }} -w -p 1234 -o {{ camilladsp_log_file}} {{ camilladsp_config_file }}
         Restart=always
-        RestartSec=1
+        RestartSec=3
         StandardOutput=journal
         StandardError=journal
         SyslogIdentifier=camilladsp
@@ -237,6 +237,6 @@
       content: | 
         snd-aloop
 
-  # - name: Restart device
-  #   reboot:
-  #     reboot_timeout: 300
+  - name: Restart device
+    reboot:
+      reboot_timeout: 300
