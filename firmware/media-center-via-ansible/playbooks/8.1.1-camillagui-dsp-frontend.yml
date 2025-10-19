@@ -60,13 +60,13 @@
       content: |
         [Unit]
         Description=CamillaDSP GUI (Backend + Web Frontend)
-        After=network-online.target
+        Requires=camilladsp.service
+        After=network-online.target camilladsp.service
 
         [Service]
         Type=simple
         User={{ camilladsp_user }}
         WorkingDirectory={{ camillagui_dir }}
-        ExecStartPre=/bin/sleep 3
         ExecStart={{ camillagui_dir }}/camillagui_backend
         Restart=always
         RestartSec=3

@@ -13,12 +13,6 @@
       - pulseaudio-module-zeroconf
       state: present
 
-  - name: Add camilla user to audio group
-    user:
-      name: "{{ pulse_user }}"
-      groups: audio
-      append: yes
-
   - name: Ensure pulse user is in audio group
     user:
       name: pulse
@@ -30,16 +24,6 @@
       path: /etc/pulse/daemon.conf
       regexp: '^;? system-instance'
       line: 'system-instance = yes'
-
-  # - name: Patch Pulseaudio default.pa config
-  #   lineinfile:
-  #     dest: /etc/pulse/default.pa
-  #     regexp: "{{ item.regexp }}"
-  #     line: "{{ item.line }}"
-  #   loop:
-  #     - { regexp: '^load-module', line: 'load-module module-alsa-sink' }
-  #     # - { regexp: '^set-default-sink', line: 'set-default-sink alsa_output.platform-sound_i2s.stereo-fallback' }
-  
 
   - name: Patch Pulseaudio system.pa config
     lineinfile:

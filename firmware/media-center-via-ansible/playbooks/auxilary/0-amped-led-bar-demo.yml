@@ -4,7 +4,7 @@
 
   vars:
     repo_dir: "/opt/rpi-ws281x-python"
-    venv_dir: "/opt/.venv"
+    venv_dir: "{{ repo_dir }}/.venv"
     service_name: "rpi-ws281x"
     led_count: 8
     led_pin: 12

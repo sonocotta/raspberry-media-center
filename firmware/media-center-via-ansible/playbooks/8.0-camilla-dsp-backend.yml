@@ -14,6 +14,7 @@
     camilladsp_config_file: "{{ camilladsp_config_dir }}/configs/loudness.yaml"
 
   tasks:
+  
   - name: apt install packages
     apt:
       name:
@@ -202,8 +203,9 @@
       content: |
         [Unit]
         Description=CamillaDSP
-        After=default.target
-        StartLimitIntervalSec=10
+        After=network-online.target sound.target
+        Wants=network-online.target
+        StartLimitIntervalSec=60
         StartLimitBurst=5
 
         [Service]
@@ -230,7 +232,33 @@
       enabled: true
       daemon_reload: yes
 
-  # optional loopback device, requires restart
+  - name: Ensure systemd drop-in directory for pulseaudio exists
+    file:
+      path: /etc/systemd/system/pulseaudio.service.d
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+
+  - name: Add pulseaudio override to start after camilladsp
+    copy:
+      dest: /etc/systemd/system/pulseaudio.service.d/override.conf
+      content: |
+        [Unit]
+        After=camilladsp.service
+        Wants=camilladsp.service
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Reload systemd and restart pulseaudio
+    ansible.builtin.systemd:
+      name: pulseaudio
+      state: restarted
+      enabled: true
+      daemon_reload: yes
+
+  # Enable loopback device, requires restart
   - name: Enable Alsa loopback device
     ansible.builtin.copy:
       dest: /etc/modules-load.d/snd-aloop.conf
