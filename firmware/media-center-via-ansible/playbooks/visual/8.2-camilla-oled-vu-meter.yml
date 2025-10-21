@@ -1,0 +1,117 @@
+
+- name: Install Camilla LED-bar VU meter
+  hosts: raspberry
+  become: true
+
+  vars:
+    repo_url: "https://github.com/sonocotta/rpi-ws281x-camilla-vu-meter.git"
+    repo_dir: "/opt/rpi-ws281x-camilla-vu-meter"
+    venv_dir: "{{ repo_dir }}/.venv"
+    service_name: "camilla-oled-vu-meter"
+    exec_cmd_dual: "{{ venv_dir }}/bin/python {{ repo_dir }}/main.py --interval-ms 50 --oled"
+    exec_cmd_single: "{{ venv_dir }}/bin/python {{ repo_dir }}/main.py --interval-ms 50 --oled --oled-mono --oled-spi-device0=1 --oled-dc0=16 --oled-rst=20"
+    systemd_path: "/etc/systemd/system/{{ service_name }}.service"
+    config_path: /boot/firmware/config.txt
+    exec_cmd : "{{ display_oled_single | default(false) | ternary(exec_cmd_single, exec_cmd_dual) }}"
+
+  tasks:
+    # - name: Ensure SPI is enabled in config.txt
+    #   ansible.builtin.lineinfile:
+    #     path: "{{ config_path }}"
+    #     regexp: '^dtparam=spi='
+    #     line: 'dtparam=spi=on'
+    #     create: yes
+    #     state: present
+    #   register: spi_line
+
+    # - name: Sync filesystem (ensure write)
+    #   ansible.builtin.command:
+    #     cmd: sync
+    #   when: spi_line.changed
+
+    # - name: Reboot to apply SPI setting
+    #   ansible.builtin.reboot:
+    #     msg: "Rebooting to apply dtparam=spi=on"
+    #     reboot_timeout: 300
+    #   when: spi_line.changed
+
+    - name: Ensure required APT packages are installed
+      ansible.builtin.apt:
+        name:
+          - git
+          - python3
+          - python3-venv
+          - python3-pip
+          - build-essential
+          - python3-dev
+          - python3-rpi.gpio
+          - python3-pil
+          - libjpeg-dev 
+          - zlib1g-dev 
+          - libtiff5-dev 
+          - libfreetype6-dev
+          - liblcms2-dev 
+          - libwebp-dev 
+          - libopenjp2-7-dev
+          - fonts-dejavu  
+
+    - ansible.builtin.git:
+        repo: "{{ repo_url }}"
+        dest: "{{ repo_dir }}"
+        version: "master"
+        force: true
+        update: true
+
+    - name: Create Python virtual environment
+      ansible.builtin.command:
+        cmd: "python3 -m venv {{ venv_dir }}"
+        creates: "{{ venv_dir }}/bin/activate"
+
+    - name: Install Python requirements into venv (requirements.txt)
+      ansible.builtin.pip:
+        requirements: "{{ repo_dir }}/requirements.txt"
+        executable: "{{ venv_dir }}/bin/pip"
+
+    - name: Ensure main.py is executable
+      ansible.builtin.file:
+        path: "{{ repo_dir }}/main.py"
+        mode: "0755"
+        owner: root
+        group: root
+
+    - name: Install systemd service for Camilla OLED VU meter
+      ansible.builtin.copy:
+        dest: "{{ systemd_path }}"
+        content: |
+          [Unit]
+          Description=Camilla OLED VU meter
+          Requires=camilladsp.service
+          After=network.target camilladsp.service
+
+          [Service]
+          Type=simple
+          User=root
+          Group=root
+          WorkingDirectory={{ repo_dir }}
+          ExecStart={{ exec_cmd }}
+          Restart=on-failure
+          RestartSec=5
+          StartLimitBurst=5
+          StandardOutput=journal
+          StandardError=journal
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: daemon-reload
+
+    - name: Enable and start Camilla OLED VU meter service
+      ansible.builtin.systemd:
+        name: "{{ service_name }}"
+        enabled: true
+        state: restarted
+        daemon_reload: true
+
+  handlers:
+    - name: daemon-reload
+      ansible.builtin.command: systemctl daemon-reload
+      become: true

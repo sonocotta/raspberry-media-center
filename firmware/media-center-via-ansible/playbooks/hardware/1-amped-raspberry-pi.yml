@@ -3,11 +3,12 @@
   become: true
 
   vars:
-    gpio_pin: 520                   # BCM GPIO8 - Pi 3 and 4
     service_name: dac-enable-gpio
     service_path: "/etc/systemd/system/{{ service_name }}.service"
     enable_script: "/usr/local/bin/dac-enable-gpio.sh"
-    use_w5500_overlay: true        # set to true to deploy dtoverlay=w5500 instead of GPIO control
+    use_w5500_overlay: false        # set to true to deploy dtoverlay=w5500 (uses SPI and thus conflicts with GPIO control with GPIO8 usage)
+    gpio_set_on_boot: false         # set to true to enable DAC via GPIO8 on boot (some boards only)
+    gpio_pin: 520                   # BCM GPIO8
 
   tasks:
 
@@ -15,9 +16,9 @@
     apt:
       name: python3-gpiozero
       state: present
-    when: not use_w5500_overlay
+    when: gpio_set_on_boot
 
-  - name: Patch config.txt - ensure hifiberry overlay present
+  - name: Patch config.txt - ensure HifiBerry overlay present
     lineinfile:
       dest: "{{ config_path }}"
       regexp: "{{ item.regexp }}"
@@ -38,7 +39,7 @@
       dest: "{{ config_path }}"
       regexp: '^dtoverlay=w5500'
       state: absent
-    when: not use_w5500_overlay
+    when: gpio_set_on_boot
 
   # Disable HDMI audio output
   - name: Disable HDMI audio
@@ -91,7 +92,7 @@
             exit 1
             ;;
         esac
-    when: not use_w5500_overlay
+    when: gpio_set_on_boot
 
   - name: Create systemd service for DAC GPIO control
     copy:
@@ -117,7 +118,7 @@
       enabled: true
       state: started
       daemon_reload: true
-    when: not use_w5500_overlay
+    when: gpio_set_on_boot
 
   - name: Ensure dac-enable-gpio service is stopped and disabled when using w5500 overlay
     systemd:
@@ -132,3 +133,14 @@
   - name: Reboot the machine (Wait for 5 min)
     reboot:
       reboot_timeout: 300
+
+  - name: List ALSA playback devices after reboot
+    ansible.builtin.command:
+      cmd: aplay -l
+    register: aplay_out
+    changed_when: false
+    failed_when: false
+
+  - name: Show aplay output
+    ansible.builtin.debug:
+      var: aplay_out.stdout_lines

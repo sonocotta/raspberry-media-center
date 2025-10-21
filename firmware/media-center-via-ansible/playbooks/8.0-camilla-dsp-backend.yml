@@ -232,15 +232,19 @@
       enabled: true
       daemon_reload: yes
 
-  - name: Ensure systemd drop-in directory for pulseaudio exists
+  - name: Gather service facts
+    ansible.builtin.service_facts:
+
+  - name: Ensure systemd drop-in directory for pulseaudio exists (only if pulseaudio installed)
     file:
       path: /etc/systemd/system/pulseaudio.service.d
       state: directory
       owner: root
       group: root
       mode: '0755'
+    when: "'pulseaudio.service' in ansible_facts.services"
 
-  - name: Add pulseaudio override to start after camilladsp
+  - name: Add pulseaudio override to start after camilladsp (only if pulseaudio installed)
     copy:
       dest: /etc/systemd/system/pulseaudio.service.d/override.conf
       content: |
@@ -250,13 +254,17 @@
       owner: root
       group: root
       mode: '0644'
+    when: "'pulseaudio.service' in ansible_facts.services"
+    notify: daemon-reload
 
-  - name: Reload systemd and restart pulseaudio
+  - name: Reload systemd and restart pulseaudio (only if pulseaudio installed)
     ansible.builtin.systemd:
       name: pulseaudio
       state: restarted
       enabled: true
       daemon_reload: yes
+    when: "'pulseaudio.service' in ansible_facts.services"
+    ignore_errors: true
 
   # Enable loopback device, requires restart
   - name: Enable Alsa loopback device
@@ -268,3 +276,8 @@
   - name: Restart device
     reboot:
       reboot_timeout: 300
+
+  handlers:
+    - name: daemon-reload
+      ansible.builtin.command: systemctl daemon-reload
+      become: true

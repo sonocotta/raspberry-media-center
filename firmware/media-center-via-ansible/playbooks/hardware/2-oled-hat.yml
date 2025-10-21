@@ -1,0 +1,28 @@
+---
+- name: Enable SPI for OLED HAT and reboot
+  hosts: raspberry
+  become: true
+
+  vars:
+    config_path: /boot/firmware/config.txt
+
+  tasks:
+    - name: Ensure SPI is enabled in config.txt
+      ansible.builtin.lineinfile:
+        path: "{{ config_path }}"
+        regexp: '^dtparam=spi='
+        line: 'dtparam=spi=on'
+        create: yes
+        state: present
+      register: spi_line
+
+    - name: Sync filesystem (ensure write)
+      ansible.builtin.command:
+        cmd: sync
+      when: spi_line.changed
+
+    - name: Reboot to apply SPI setting
+      ansible.builtin.reboot:
+        msg: "Rebooting to apply dtparam=spi=on"
+        reboot_timeout: 300
+      when: spi_line.changed
