@@ -1,5 +1,4 @@
-
-- name: Install Camilla OLED VU meter
+- name: Install Camilla TFT VU meter
   hosts: raspberry
   become: true
 
@@ -7,12 +6,12 @@
     repo_url: "https://github.com/sonocotta/rpi-ws281x-camilla-vu-meter.git"
     repo_dir: "/opt/rpi-ws281x-camilla-vu-meter"
     venv_dir: "{{ repo_dir }}/.venv"
-    service_name: "camilla-oled-vu-meter"
-    exec_cmd_dual: "{{ venv_dir }}/bin/python {{ repo_dir }}/main.py --interval-ms 50 --oled"
-    exec_cmd_single: "{{ venv_dir }}/bin/python {{ repo_dir }}/main.py --interval-ms 50 --oled --oled-mono --oled-spi-device0=1 --oled-dc0=16 --oled-rst=20"
+    service_name: "camilla-tft-vu-meter"
+    exec_cmd_dual: "{{ venv_dir }}/bin/python {{ repo_dir }}/main.py --interval-ms 50 --tft"
+    exec_cmd_single: "{{ venv_dir }}/bin/python {{ repo_dir }}/main.py --interval-ms 50 --tft --tft-mono"
     systemd_path: "/etc/systemd/system/{{ service_name }}.service"
     config_path: /boot/firmware/config.txt
-    exec_cmd : "{{ display_oled_single | default(false) | ternary(exec_cmd_single, exec_cmd_dual) }}"
+    exec_cmd : "{{ display_tft_single | default(false) | ternary(exec_cmd_single, exec_cmd_dual) }}"
 
   tasks:
     - name: Ensure SPI is enabled in config.txt
@@ -54,6 +53,9 @@
           - libwebp-dev 
           - libopenjp2-7-dev
           - fonts-dejavu  
+          - libgpiod-dev 
+          - python3-libgpiod
+          - libopenblas-dev
 
     - ansible.builtin.git:
         repo: "{{ repo_url }}"
