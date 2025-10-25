@@ -34,8 +34,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [DAC Configuration - Loud Raspberry Pi](#dac-configuration---loud-raspberry-pi)
     - [DAC Configuration - Louder Raspberry Pi](#dac-configuration---louder-raspberry-pi)
     - [Bare OS Options](#bare-os-options)
-    - [Bare OS + Standard client services](#bare-os--standard-client-services)
-      - [How to use them](#how-to-use-them)
+    - [Bare OS + Standard client services (Ansible short overview)](#bare-os--standard-client-services-ansible-short-overview)
     - [Third-party Media Software](#third-party-media-software)
     - [Volumio](#volumio)
     - [Rotating MAC address on the W5500](#rotating-mac-address-on-the-w5500)
@@ -195,28 +194,26 @@ With the bare OS you're in full control of what to install and configure. It is 
 | Based on | Debian                         | Debian                             | Alpine                                     |
 | Type     | Bare OS                        | Base OS                            | Bare OS                                    |
 
-### Bare OS + Standard client services
+### Bare OS + Standard client services (Ansible short overview)
 
-This is a work in progress and the idea is to have a bare minimum OS (be it Raspbian, DietPi, or Armbian) and install the most used client services via the Ansible playbook. I will add more details, as soon as I have working samples, but planned things to add are
+A minimal Raspberry Pi OS can be provisioned with the most-used media features via Ansible playbooks in this repo. Current functionality includes:
 
-- [x] Configure DAC (pick one of HiFi, Loud, or Louder)
-- [x] Pulseaudio server with network sink 
-- [x] Spotify Connect
-- [x] Snapcast client (with autodiscovery)
-- [x] Slimproto client (with autodiscovery)
-- [x] Apple Airplay
-- [x] UPNP sink (gmediarender)
+- Hardware setup: HiFi/Loud/Louder/Amped DAC configuration, optional W5500 SPI Ethernet overlay, HDMI audio disable, OLED/TFT enable, rotating-MAC fix for W5500.
+- Core audio services:
+  - PulseAudio (system-wide, network sink)
+  - Spotify Connect (Raspotify/librespot)
+  - Snapcast server and client (multi-room sync)
+  - Apple AirPlay (Shairport Sync)
+  - Logitech Media Server client (Squeezelite)
+  - UPnP/DLNA renderer (gmediarender)
+- DSP: CamillaDSP backend plus CamillaGUI frontend.
+- Visualizers: LED bar, OLED, and TFT CamillaDSP VU meters.
+- Convenience: tmux auto-attach profile, base init/updates.
 
-This will allow integration into existing media sources with Home Assistant, LMS, or Mopidy instance, including multi-room sync.
+Full details, requirements, and run steps are documented here:
+- See the detailed guide: [Ansible Playbooks README](./firmware/media-center-via-ansible/README.md)
 
-#### How to use them
-
-- Write the downloaded Armbian image onto an SD card of your choice. Start your Orange Pi and find its IP address. The next steps will assume that the IP address of each node stays the same after reboot. You might need to configure your router to lease static IP to Orange Pi to make it stable.
-- Open [media-center-via-ansible](/firmware/media-center-via-ansible) folder in vscode. In case you don't want to install vscode, you can run commands in plain terminal as well. Please use [tasks.json](/firmware/.vscode/tasks.json) file for reference
-- Prepare [hosts](/firmware/hosts) file. Add your node's IP address and name. If you prefer password auth, you need to add a password here, but ssh-key auth is recommended
-- Run `0. install host prerequisites` task. It will install necessary tools on your laptop/PC, like Ansible client and such
-- Run `1-hifi-raspberry-pi.yml`, `1-loud-raspberry-pi.yml` or `1-louder-raspberry-pi.yml` playbook using `1. apply without password` task depending on your hardware.
-- Run remaining playbooks the same way, pick those that you're planning to use
+This setup integrates cleanly with Home Assistant, LMS, Mopidy, and other sources, including multi-room synchronization via Snapcast.
 
 ### Third-party Media Software
 

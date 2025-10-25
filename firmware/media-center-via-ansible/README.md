@@ -103,6 +103,8 @@ ansible-playbook -i hosts.yml playbooks/<playbook>.yml
 
 ### Visualizers
 
+The actual code for those services is in the linked repo: https://github.com/sonocotta/raspberry-camilla-vu-meter
+
 - playbooks/3-visual/8.2-camilla-ledbar-vu-meter.yml
   - Clones https://github.com/sonocotta/rpi-ws281x-camilla-vu-meter to /opt, creates venv, installs dependencies, and installs camilla-ledbar-vu-meter.service to run:
     - main.py --interval-ms 50 --ledbar --led-pin 12 --led-count 8 --led-end-colors
