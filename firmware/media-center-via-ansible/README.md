@@ -107,11 +107,18 @@ ansible-playbook -i hosts.yml playbooks/<playbook>.yml
   - Clones https://github.com/sonocotta/rpi-ws281x-camilla-vu-meter to /opt, creates venv, installs dependencies, and installs camilla-ledbar-vu-meter.service to run:
     - main.py --interval-ms 50 --ledbar --led-pin 12 --led-count 8 --led-end-colors
 
+   <img width="864" height="658" alt="image" src="https://github.com/user-attachments/assets/3bb7696b-07f4-4b08-952c-2eeb38915ee8" />
+
 - playbooks/3-visual/8.2-camilla-oled-vu-meter.yml
   - OLED visualizer variant. Enables SPI in config if needed, creates a venv in the repo, installs requirements (ensure Pillow build deps installed via apt), and runs main.py with --oled flags (mono/dual variants controlled by variables).
 
+  <img width="1290" height="712" alt="image" src="https://github.com/user-attachments/assets/121504a8-163e-4632-a787-17fc9713d9bf" />
+
+
 - playbooks/3-visual/8.2-camilla-tft-vu-meter.yml
   - TFT display visualizer variant for small TFT screens. Enables SPI interface, installs required packages including Pillow dependencies, fonts, and GPIO libraries. Clones the same repository and runs main.py with `--tft` flags. Supports both dual-channel and mono modes (controlled by `--tft-mono` flag). Requires CamillaDSP backend service.
+
+  <img width="1328" height="675" alt="image" src="https://github.com/user-attachments/assets/1671d49f-3634-4e1f-93cf-327e557aaa8d" />
 
 ### Auxiliary
 
