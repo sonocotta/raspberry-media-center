@@ -38,12 +38,12 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [DAC Configuration - Loud Raspberry Pi Media Center and Hat](#dac-configuration---loud-raspberry-pi-media-center-and-hat)
     - [DAC Configuration - Louder Raspberry Pi Media Center and Hat](#dac-configuration---louder-raspberry-pi-media-center-and-hat)
     - [Bare OS Options](#bare-os-options)
-    - [Bare OS + Standard client services](#bare-os--standard-client-services)
-      - [How to use them](#how-to-use-them)
+    - [Bare OS + Standard client services (Ansible short overview)](#bare-os--standard-client-services-ansible-short-overview)
     - [Third-party Media Software](#third-party-media-software)
     - [Volumio](#volumio)
     - [Rotating MAC address on the W5500](#rotating-mac-address-on-the-w5500)
     - [TAS5805M DSP Capabilities](#tas5805m-dsp-capabilities)
+    - [TAS5805M DAC I2C address changes](#tas5805m-dac-i2c-address-changes)
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi Media Center](#hifi-raspberry-pi-media-center)
     - [HiFi Raspberry Hat](#hifi-raspberry-hat)
@@ -266,28 +266,26 @@ With the bare OS, you're in full control of what to install and configure. It is
 | Based on | Debian                         | Debian                             | Alpine                                     |
 | Type     | Bare OS                        | Base OS                            | Bare OS                                    |
 
-### Bare OS + Standard client services
+### Bare OS + Standard client services (Ansible short overview)
 
-This is a work in progress and the idea is to have a bare minimum OS (be it Raspbian, DietPi, or Armbian) and install the most used client services via the Ansible playbook. I will add more details, as soon as I have working samples, but planned things to add are
+A minimal Raspberry Pi OS can be provisioned with the most-used media features via Ansible playbooks in this repo. Current functionality includes:
 
-- [x] Configure DAC (pick one of HiFi, Loud, or Louder)
-- [x] Pulseaudio server with network sink 
-- [x] Spotify Connect
-- [x] Snapcast client (with autodiscovery)
-- [x] Slimproto client (with autodiscovery)
-- [x] Apple AirPlay
-- [x] UPNP sink (gmediarender)
+- Hardware setup: HiFi/Loud/Louder/Amped DAC configuration, optional W5500 SPI Ethernet overlay, HDMI audio disable, OLED/TFT enable, rotating-MAC fix for W5500.
+- Core audio services:
+  - PulseAudio (system-wide, network sink)
+  - Spotify Connect (Raspotify/librespot)
+  - Snapcast server and client (multi-room sync)
+  - Apple AirPlay (Shairport Sync)
+  - Logitech Media Server client (Squeezelite)
+  - UPnP/DLNA renderer (gmediarender)
+- DSP: CamillaDSP backend plus CamillaGUI frontend.
+- Visualizers: LED bar, OLED, and TFT CamillaDSP VU meters.
+- Convenience: tmux auto-attach profile, base init/updates.
 
-This will allow integration into existing media sources with Home Assistant, LMS, or Mopidy instance, including multi-room sync.
+Full details, requirements, and run steps are documented here:
+- See the detailed guide: [Ansible Playbooks README](./firmware/media-center-via-ansible/README.md)
 
-#### How to use them
-
-- Write the downloaded Armbian image onto an SD card of your choice. Start your Orange Pi and find its IP address. The next steps will assume that the IP address of each node stays the same after reboot. You might need to configure your router to lease static IP to Orange Pi to make it stable.
-- Open [media-center-via-ansible](/firmware/media-center-via-ansible) folder in vscode. In case you don't want to install vscode, you can run commands in plain terminal as well. Please use [tasks.json](/firmware/.vscode/tasks.json) file for reference
-- Prepare [hosts](/firmware/hosts) file. Add your node's IP address and name. If you prefer password auth, you need to add a password here, but ssh-key auth is recommended
-- Run `0. install host prerequisites` task. It will install necessary tools on your laptop/PC, like Ansible client and such
-- Run `1-hifi-raspberry-pi.yml`, `1-loud-raspberry-pi.yml` or `1-louder-raspberry-pi.yml` playbook using `1. apply without password` task depending on your hardware.
-- Run remaining playbooks the same way, pick those that you're planning to use
+This setup integrates cleanly with Home Assistant, LMS, Mopidy, and other sources, including multi-room synchronization via Snapcast.
 
 ### Third-party Media Software
 
@@ -321,7 +319,7 @@ This will allow integration into existing media sources with Home Assistant, LMS
 
 [Volumio](https://volumio.com/get-started/) is a great piece of software, extremely popular with media center devices like Raspberry Media Center. 
 
-With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are supported out of the box. Select `HiFiBerry DAC` and `Adafruit MAX98357` in the DAC Model settings accordingly. Optionally you may also create a `/boot/userconfig.txt` file and add the following config to enable W5500 Ethernet
+With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are supported out of the box. Select `HiFiBerry DAC` and `Adafruit MAX98357` in the DAC Model settings accordingly. Optionally, you may also create a `/boot/userconfig.txt` file and add the following config to enable W5500 Ethernet
 ```
 [all]
 dtoverlay=w5500
@@ -450,8 +448,37 @@ TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside
 
 </details>
 
+I'm planning to dive deep into the topic (whenever I have time, haha) and provide optional settings for the most common configurations. This is a work in progress with no deadline set.
 
-I'm planning to dive deep into the topic (whenever I have time, haha) and provide an optional setting for the most common configurations. This is a work in progress with no deadline set.
+### TAS5805M DAC I2C address changes
+
+While most of the boards come with an I2C address consistent with the driver's default value, some boards might appear on the 1-bit off address. It happens partially because I accidentally put a resistor with the wrong value on the 'address set' pin on one of the early batches, partially because of some other unknown quirks (it was once reported on the modern board). It seems that when TAS5805M reports an unexpected address, it sticks to it, so it is easy to fix.
+
+The indication of that is when `journalctl` spits out errors about I2C communication failure. In that case, one can confirm the address issue by running the `i2cdetect -y 1` command. 
+
+| config.txt | i2cdetect | journactl -k |
+|------------|-----------|--------------|
+| `dtoverlay=tas5805m,i2creg=0x2e` | <img width="374" height="142" alt="image" src="https://github.com/user-attachments/assets/e506a526-c56e-4d59-aa97-23d0d428d0c5" /> | <img width="669" height="164" alt="image" src="https://github.com/user-attachments/assets/4dcc8a87-dcf7-4690-94fc-27333c5bb771" />
+
+In the picture above device is found on the `0x2d` address, while the driver hooks up to the `0x2e` address, indicated by the `UU` mark. In that case, the address needs to be changed in the `/boot/firmware/config.txt` file to reflect the actual address. The correct picture would look like below
+
+| config.txt | i2cdetect | journactl -k |
+|------------|-----------|--------------|
+| `dtoverlay=tas5805m,i2creg=0x2d` | <img width="415" height="143" alt="image" src="https://github.com/user-attachments/assets/6e573494-fcdc-4757-bcc5-b0de835b7385" /> | <img width="678" height="158" alt="image" src="https://github.com/user-attachments/assets/53594da6-a387-42b9-ae68-6b4ceb95dbc0" /> |
+
+On the Louder 2X Hat, though, the driver only hooks up to the _master_ DAC, which drives satellite speakers, the _slave_ DAC configuration is handled within driver code. So the expected output from the `i2cdetect` command is `UU` mark on the master DAC and `0x2x` mark on the slave DAC
+
+```
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- UU 2e --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- —
+```
 
 ## Hardware
 
@@ -509,7 +536,7 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 #### Hifi and Loud Raspberry
 
-According to the manufacturer, Raspberry Pi Zero requires at least 1 Amp of 5V line, and each of the Loud Raspberry DAC needs at least 1 Amp extra. With the total budget requirement of 3 Amps, it is within specs for a non-PD USB-C 5V power line. I've decided not to use USB-PD for the Loud model. Just make sure your power adapter is capable of 3 Amps (or keep a reasonable volume if it is not).
+According to the manufacturer, Raspberry Pi Zero requires at least 1 Amp of 5V line, and each of the Loud Raspberry DAC needs at least 1 Amp extra. With the total budget requirement of 3 Amps, it is within specs for a non-PD USB-C 5V power line. I've decided not to use USB-PD for The Loud model. Just make sure your power adapter is capable of 3 Amps (or keep a reasonable volume if it is not).
 
 HiFi Raspberry barely uses extra power compared to what the Raspberry Pi Zero board itself needs. No special requirements are there.
 

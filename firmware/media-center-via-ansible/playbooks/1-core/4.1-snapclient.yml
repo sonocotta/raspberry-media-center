@@ -1,6 +1,10 @@
 - name: install snapclient
   hosts: raspberry
   become: true
+
+  vars:
+    # change to your sound card, e.g. "hw:CARD=sndrpihifiberry,DEV=0"
+    snapclient_device: "default"
   
   tasks:
   - name: apt install snapclient
@@ -16,7 +20,7 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
     loop:
-    - { regexp: '^SNAPCLIENT_OPTS', line: 'SNAPCLIENT_OPTS="-s default"' }
+    - { regexp: '^SNAPCLIENT_OPTS', line: 'SNAPCLIENT_OPTS="-s {{ snapclient_device }} --sampleformat 48000:32:*"' }
 
   - name: Start snapclient service
     ansible.builtin.service:

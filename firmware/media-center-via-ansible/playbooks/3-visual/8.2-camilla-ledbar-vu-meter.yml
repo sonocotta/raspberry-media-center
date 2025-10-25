@@ -1,0 +1,87 @@
+- name: Install Camilla LED-bar VU meter
+  hosts: raspberry
+  become: true
+
+  vars:
+    repo_url: "https://github.com/sonocotta/rpi-ws281x-camilla-vu-meter.git"
+    repo_dir: "/opt/rpi-ws281x-camilla-vu-meter"
+    venv_dir: "{{ repo_dir }}/.venv"
+    service_name: "camilla-ledbar-vu-meter"
+    exec_cmd: "{{ venv_dir }}/bin/python {{ repo_dir }}/main.py --interval-ms 50 --ledbar --led-pin 12 --led-count 8 --led-end-colors"
+    systemd_path: "/etc/systemd/system/{{ service_name }}.service"
+
+  tasks:
+
+    - name: Ensure required APT packages are installed
+      ansible.builtin.apt:
+        name:
+          - git
+          - python3
+          - python3-venv
+          - python3-pip
+          - build-essential
+          - python3-dev
+        state: present
+        update_cache: yes
+
+    - name: Clone rpi-ws281x-camilla-vu-meter repo
+      ansible.builtin.git:
+        repo: "{{ repo_url }}"
+        dest: "{{ repo_dir }}"
+        version: "master"
+        force: true
+        update: true
+
+    - name: Create Python virtual environment
+      ansible.builtin.command:
+        cmd: "python3 -m venv {{ venv_dir }}"
+        creates: "{{ venv_dir }}/bin/activate"
+
+    - name: Install Python requirements into venv (requirements.txt)
+      ansible.builtin.pip:
+        requirements: "{{ repo_dir }}/requirements.txt"
+        executable: "{{ venv_dir }}/bin/pip"
+
+    - name: Ensure main.py is executable
+      ansible.builtin.file:
+        path: "{{ repo_dir }}/main.py"
+        mode: "0755"
+        owner: root
+        group: root
+
+    - name: Install systemd service for Camilla LED-bar VU meter
+      ansible.builtin.copy:
+        dest: "{{ systemd_path }}"
+        content: |
+          [Unit]
+          Description=Camilla LED-bar VU meter
+          Requires=camilladsp.service
+          After=network.target camilladsp.service
+
+          [Service]
+          Type=simple
+          User=root
+          Group=root
+          WorkingDirectory={{ repo_dir }}
+          ExecStart={{ exec_cmd }}
+          Restart=on-failure
+          RestartSec=5
+          StartLimitBurst=5
+          StandardOutput=journal
+          StandardError=journal
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: daemon-reload
+
+    - name: Enable and start Camilla LED-bar VU meter service
+      ansible.builtin.systemd:
+        name: "{{ service_name }}"
+        enabled: true
+        state: restarted
+        daemon_reload: true
+
+  handlers:
+    - name: daemon-reload
+      ansible.builtin.command: systemctl daemon-reload
+      become: true

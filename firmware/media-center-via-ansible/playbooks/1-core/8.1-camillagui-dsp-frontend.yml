@@ -1,0 +1,85 @@
+- name: Install CamillaDSP GUI (Frontend + Backend)
+  hosts: raspberry
+  become: true
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    # Shared vars (align with CamillaDSP playbook)
+    camilladsp_user: "camilla"
+    camilladsp_base_dir: "/opt/camilladsp"
+    camilladsp_config_dir: "/etc/camilladsp"
+
+    # GUI-specific vars
+    camillagui_version: "v3.0.3"
+    camillagui_repo_url: "https://github.com/HEnquist/camillagui-backend"
+    camillagui_bundle: "bundle_linux_{{ arch }}.tar.gz"
+    camillagui_release_url: "{{ camillagui_repo_url }}/releases/download/{{ camillagui_version }}/{{ camillagui_bundle }}"
+    camillagui_dir: "{{ camilladsp_base_dir }}/camillagui_backend"
+    camillagui_service_file: "/etc/systemd/system/camillagui.service"
+    camillagui_python: "python3.12"
+
+  tasks:
+
+  - name: Ensure dependencies are installed
+    apt:
+      name:
+        - python3
+        - python3-venv
+        - python3-pip
+        - python3-numpy
+        - tar
+        - wget
+      state: present
+      update_cache: yes
+
+  - name: Create Camilla GUI directory
+    file:
+      path: "{{ camilladsp_base_dir }}"
+      state: directory
+      owner: "{{ camilladsp_user }}"
+      group: "{{ camilladsp_user }}"
+      mode: "0755"
+
+  - name: Download and extract Camilla GUI bundle
+    ansible.builtin.unarchive:
+      src: "{{ camillagui_release_url }}"
+      dest: "{{ camilladsp_base_dir }}"
+      remote_src: yes
+      mode: "0755"
+
+  - name: Ensure proper ownership
+    file:
+      path: "{{ camillagui_dir }}"
+      owner: "{{ camilladsp_user }}"
+      group: "{{ camilladsp_user }}"
+      recurse: true
+
+  - name: Create systemd service for Camilla GUI
+    copy:
+      dest: "{{ camillagui_service_file }}"
+      content: |
+        [Unit]
+        Description=CamillaDSP GUI (Backend + Web Frontend)
+        Requires=camilladsp.service
+        After=network-online.target camilladsp.service
+
+        [Service]
+        Type=simple
+        User={{ camilladsp_user }}
+        WorkingDirectory={{ camillagui_dir }}
+        ExecStart={{ camillagui_dir }}/camillagui_backend
+        Restart=always
+        RestartSec=3
+        Nice=0
+        StandardOutput=journal
+        StandardError=journal
+
+        [Install]
+        WantedBy=multi-user.target    
+
+  - name: Start Camilla GUI Service
+    ansible.builtin.service:
+      name: camillagui
+      state: restarted
+      enabled: true
+      daemon_reload: yes

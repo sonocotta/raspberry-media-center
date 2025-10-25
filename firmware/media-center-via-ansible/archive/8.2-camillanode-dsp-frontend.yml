@@ -1,0 +1,98 @@
+- name: Install CamillaNode (CamillaDSP alternative frontend)
+  hosts: raspberry
+  become: true
+
+  vars:
+    camilla_user: camilla
+    camilla_group: camilla
+    camillanode_repo: "https://github.com/ismailAtaman/camillaNode.git"
+    camillanode_dir: "/opt/camillanode"
+    camillanode_port: 8080
+    camillanode_service: "/etc/systemd/system/camillanode.service"
+
+  tasks:
+    - name: Ensure required packages are installed
+      apt:
+        name:
+          - nodejs
+          - npm
+          - git
+        state: present
+        update_cache: yes
+
+    - name: Clone CamillaNode repository
+      git:
+        repo: "{{ camillanode_repo }}"
+        dest: "{{ camillanode_dir }}"
+        version: main
+        update: yes
+        force: yes
+      notify: Restart CamillaNode
+
+    - name: Ensure ownership for CamillaNode directory
+      file:
+        path: "{{ camillanode_dir }}"
+        owner: "{{ camilla_user }}"
+        group: "{{ camilla_group }}"
+        recurse: true
+
+    - name: Install Node.js dependencies
+      npm:
+        path: "{{ camillanode_dir }}"
+        production: true
+      notify: Restart CamillaNode
+
+    - name: Create CamillaNode configuration
+      copy:
+        dest: "{{ camillanode_dir }}/camillaNodeConfig.json"
+        content: |
+          {
+            "port": {{ camillanode_port }}
+          }
+        owner: "{{ camilla_user }}"
+        group: "{{ camilla_group }}"
+        mode: '0644'
+      notify: Restart CamillaNode
+
+    - name: Ensure ownership for CamillaNode directory
+      file:
+        path: "{{ camillanode_dir }}"
+        owner: "{{ camilla_user }}"
+        group: "{{ camilla_group }}"
+        recurse: true
+
+    - name: Install systemd service for CamillaNode
+      copy:
+        dest: "{{ camillanode_service }}"
+        content: |
+          [Unit]
+          Description=CamillaNode Service
+          After=network.target
+
+          [Service]
+          Type=simple
+          User={{ camilla_user }}
+          Group={{ camilla_group }}
+          WorkingDirectory={{ camillanode_dir }}
+          ExecStart=/usr/bin/node index.js
+          Restart=always
+          RestartSec=5
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: Reload systemd
+
+    - name: Enable and start CamillaNode service
+      systemd:
+        name: camillanode
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Reload systemd
+      command: systemctl daemon-reload
+
+    - name: Restart CamillaNode
+      systemd:
+        name: camillanode
+        state: restarted

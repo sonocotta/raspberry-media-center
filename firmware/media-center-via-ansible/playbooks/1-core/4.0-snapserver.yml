@@ -1,0 +1,89 @@
+- name: install snapserver
+  hosts: raspberry
+  become: true
+  
+  tasks:
+  - name: apt install snapserver
+    apt:
+      name: 
+      - snapserver
+      state: present
+
+  - name: Configure Avahi server
+    copy:
+      dest: "/etc/avahi/services/snapcast.service"
+      content: |
+        <?xml version="1.0" standalone='no'?>
+        <!--*-nxml-*-->
+        <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+        <service-group>
+          <name replace-wildcards="yes">%h</name>
+          <service>
+            <type>_snapcast._tcp</type>
+            <port>1704</port>
+          </service>
+        </service-group>
+    
+  - name: Download snapweb
+    get_url: 
+      url="https://github.com/badaix/snapweb/releases/download/v0.8.0/snapweb_0.8.0-1_all.deb"
+      dest="/tmp/snapweb_0.8.0-1_all.deb"
+
+  - name: Install snapweb
+    run_once: true
+    ansible.builtin.shell:
+      cmd: "dpkg -i /tmp/snapweb_0.8.0-1_all.deb"    
+
+  - name: Configure listen on all interfaces
+    community.general.ini_file:
+      path: /etc/snapserver.conf
+      section: "tcp"
+      option: "bind_to_address"
+      values: 
+        - "0.0.0.0"
+        - "::"
+      state: present
+
+  - name: Configure streams on all interfaces
+    community.general.ini_file:
+      path: /etc/snapserver.conf
+      section: "stream"
+      option: "bind_to_address"
+      values: 
+        - "0.0.0.0"
+        - "::"
+      state: present
+
+  - name: Configure Snapserver streams
+    community.general.ini_file:
+      path: /etc/snapserver.conf
+      section: "stream"
+      option: "source"
+      values: 
+        - "tcp://0.0.0.0:1716?name=other"
+        - "tcp://0.0.0.0:1706?name=mopidy"
+        # - "librespot:////usr/bin/librespot?name=spotify&devicename=My%20Home"
+      state: present
+
+  - name: Configure Snapweb
+    community.general.ini_file:
+      path: /etc/snapserver.conf
+      section: "{{ item.section }}"
+      option: "{{ item.option }}"
+      value: "{{ item.value }}"
+      state: present
+    loop:
+      - { section: http, option: enabled, value: true }
+      - { section: http, option: doc_root, value: "/usr/share/snapweb" }
+
+  - name: Start snapserver service
+    ansible.builtin.service:
+      name: snapserver
+      state: restarted
+      enabled: true
+
+  - name: Start avahi service
+    ansible.builtin.service:
+      name: avahi-daemon
+      state: restarted
+      enabled: true

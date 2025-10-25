@@ -1,0 +1,84 @@
+- name: Install and autostart rpi-ws281x-python
+  hosts: raspberry
+  become: true
+
+  vars:
+    repo_dir: "/opt/rpi-ws281x-python"
+    venv_dir: "{{ repo_dir }}/.venv"
+    service_name: "rpi-ws281x"
+    led_count: 8
+    led_pin: 12
+
+  tasks:
+    - name: Ensure required system packages are installed
+      ansible.builtin.apt:
+        name:
+          - git
+          - python3
+          - python3-venv
+          - python3-pip
+          - python3-dev
+          - build-essential
+        state: present
+        update_cache: yes
+
+    - name: Ensure target directory exists for strandtest
+      ansible.builtin.file:
+        path: "{{ repo_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create Python virtual environment
+      ansible.builtin.command:
+        cmd: "python3 -m venv {{ venv_dir }}"
+        creates: "{{ venv_dir }}/bin/activate"
+
+    - name: Upgrade pip/setuptools/wheel inside venv
+      ansible.builtin.command:
+        cmd: "{{ venv_dir }}/bin/pip install --upgrade pip setuptools wheel"
+        creates: "{{ venv_dir }}/bin/pip"
+
+    - name: Install rpi_ws281x into venv
+      ansible.builtin.pip:
+        name: rpi_ws281x
+        executable: "{{ venv_dir }}/bin/pip"
+
+    - name: Copy provided strandtest.py into place
+      ansible.builtin.copy:
+        src: "files/strandtest.py"
+        dest: "{{ repo_dir }}/strandtest.py"
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create systemd service for rpi-ws281x example
+      ansible.builtin.copy:
+        dest: "/etc/systemd/system/{{ service_name }}.service"
+        content: |
+          [Unit]
+          Description=Raspberry Pi WS281x LED Example
+          After=network.target
+
+          [Service]
+          Type=simple
+          ExecStart={{ venv_dir }}/bin/python {{ repo_dir }}/strandtest.py
+          WorkingDirectory={{ repo_dir }}
+          Environment=LED_COUNT={{ led_count }}
+          Environment=LED_PIN={{ led_pin }}
+          Restart=always
+          User=root
+          Group=root
+          StandardOutput=journal
+          StandardError=journal
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and start the rpi-ws281x service
+      ansible.builtin.systemd:
+        name: "{{ service_name }}"
+        enabled: true
+        state: restarted
+        daemon_reload: true

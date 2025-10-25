@@ -1,0 +1,73 @@
+- name: Deploy custom W5500 overlay and install dtbo
+  hosts: raspberry
+  become: true
+
+  vars:
+    src_dts: "{{ playbook_dir }}/files/w5500-overlay.dts"
+    remote_dts: /tmp/w5500-overlay-custom.dts
+    remote_dtbo: /tmp/w5500-custom.dtbo
+    overlay_path: /boot/overlays/w5500.dtbo
+    overlay_backup: /boot/overlays/w5500.dtbo.BACKUP
+
+  tasks:
+    - name: Ensure device tree compiler is installed
+      ansible.builtin.apt:
+        name: device-tree-compiler
+        state: present
+        update_cache: yes
+
+    - name: Copy custom DTS to target
+      ansible.builtin.copy:
+        src: "{{ src_dts }}"
+        dest: "{{ remote_dts }}"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Compile DTS -> DTBO
+      ansible.builtin.command:
+        cmd: "dtc -I dts -O dtb -o {{ remote_dtbo }} {{ remote_dts }}"
+      register: dtc_compile
+      changed_when: dtc_compile.rc == 0
+
+    - name: Check if original overlay exists
+      ansible.builtin.stat:
+        path: "{{ overlay_path }}"
+      register: overlay_stat
+
+    - name: Check if backup overlay already exists
+      ansible.builtin.stat:
+        path: "{{ overlay_backup }}"
+      register: overlay_backup_stat
+
+    - name: Backup original w5500.dtbo if present and not already backed up
+      ansible.builtin.command:
+        cmd: "mv {{ overlay_path }} {{ overlay_backup }}"
+      when:
+        - overlay_stat.stat.exists
+        - not overlay_backup_stat.stat.exists
+
+    - name: Copy new DTBO into overlays directory
+      ansible.builtin.copy:
+        src: "{{ remote_dtbo }}"
+        dest: "{{ overlay_path }}"
+        remote_src: yes
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Ensure permissions on overlays directory
+      ansible.builtin.file:
+        path: /boot/overlays
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Sync to disk
+      ansible.builtin.command:
+        cmd: sync
+
+    - name: Reboot to apply overlay
+      ansible.builtin.reboot:
+        reboot_timeout: 300
+        msg: "Rebooting to apply custom w5500 overlay"

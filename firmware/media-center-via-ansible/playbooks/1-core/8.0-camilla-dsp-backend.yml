@@ -1,0 +1,283 @@
+- name: Install CamillaDSP Backend
+  hosts: raspberry
+  become: true
+
+  vars:
+    camilladsp_version: "v3.0.1"
+    camilladsp_release_url: "https://github.com/HEnquist/camilladsp/releases/download"
+    camilladsp_tarball: "camilladsp-linux-{{ arch }}.tar.gz"
+    camilladsp_user: "camilla"
+    camilladsp_install_dir: "/usr/local/bin"
+    camilladsp_config_dir : "/home/{{ camilladsp_user }}/camilladsp"
+    camilladsp_state_file : "{{ camilladsp_config_dir }}/statefile.yml"
+    camilladsp_log_file   : "{{ camilladsp_config_dir }}/camilladsp.log"
+    camilladsp_config_file: "{{ camilladsp_config_dir }}/configs/loudness.yaml"
+
+  tasks:
+  
+  - name: apt install packages
+    apt:
+      name:
+      - alsa-utils
+      - git
+      - libasound2-dev
+      - libyaml-dev
+      state: present
+
+  - name: Create system user for CamillaDSP
+    user:
+      name: "{{ camilladsp_user }}"
+      shell: /usr/sbin/nologin
+      create_home: yes
+
+  - name: Add camilla user to audio group
+    user:
+      name: "{{ camilladsp_user }}"
+      groups: audio
+      append: yes
+
+  - name: Create installation directories
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: "{{ camilladsp_user }}"
+      group: "{{ camilladsp_user }}"
+      mode: "0755"
+    loop:
+      - "{{ camilladsp_config_dir }}"
+
+  - name: Download CamillaDSP binary ({{ arch}})
+    get_url:
+      url: "{{ camilladsp_release_url }}/{{ camilladsp_version }}/{{ camilladsp_tarball }}"
+      dest: "/tmp/{{ camilladsp_tarball }}"
+      mode: "0644"
+
+  - name: Extract CamillaDSP binary to install directory
+    ansible.builtin.unarchive:
+      src: "/tmp/{{ camilladsp_tarball }}"
+      dest: "{{ camilladsp_install_dir }}"
+      remote_src: yes
+      owner: "{{ camilladsp_user }}"
+      group: "{{ camilladsp_user }}"
+      mode: "0755"
+
+  - name: Create camilla home folder
+    ansible.builtin.file:
+      path: "{{ item.path }}"
+      state: directory
+      owner: "{{ camilladsp_user }}" 
+      group: "{{ camilladsp_user }}" 
+    loop:
+      - { path: "{{ camilladsp_config_dir }}/coeffs" }
+      - { path: "{{ camilladsp_config_dir }}/configs" }
+
+  - name: Place state.yaml file to configs folder
+    copy:
+      dest: "{{  camilladsp_state_file }}"
+      content: |
+        ---
+        config_path: {{ camilladsp_config_file }}
+        mute:
+          - false
+          - false
+          - false
+          - false
+          - false
+        volume:
+          - -6.0
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+      owner: "{{ camilladsp_user }}"
+      group: "{{ camilladsp_user }}"
+      mode: "0644"
+
+  - name: Create default config file if missing
+    copy:
+      dest: "{{ camilladsp_config_file }}"
+      content: |
+        description: Config provides capture on Loopback interface and playback on the HiFi-Berry
+          I2S interface. It includes simple Stereo mixer and Loudness filter. Alternatively,
+          Bass-boost filter can be used in place of Loudness filter (disabled by default)
+        devices:
+          adjust_period: null
+          capture:
+            channels: 2
+            device: dsnoop:CARD=Loopback,DEV=1
+            format: S32LE
+            labels: null
+            link_mute_control: null
+            link_volume_control: null
+            stop_on_inactive: null
+            type: Alsa
+          capture_samplerate: 48000
+          chunksize: 1024
+          enable_rate_adjust: null
+          multithreaded: null
+          playback:
+            channels: 2
+            device: dmix:CARD=sndrpihifiberry,DEV=0
+            format: S32LE
+            type: Alsa
+          queuelimit: null
+          rate_measure_interval: null
+          resampler: null
+          samplerate: 48000
+          silence_threshold: null
+          silence_timeout: null
+          stop_on_rate_change: null
+          target_level: null
+          volume_limit: null
+          volume_ramp_time: null
+          worker_threads: null
+        filters:
+          Bass boost:
+            description: null
+            parameters:
+              freq: 80
+              gain: 15
+              q: 0.5
+              type: Lowshelf
+            type: Biquad
+          Loudness:
+            description: null
+            parameters:
+              attenuate_mid: false
+              fader: Main
+              high_boost: 9
+              low_boost: 18
+              reference_level: 0
+            type: Loudness
+        mixers:
+          Stereo Mixer:
+            channels:
+              in: 2
+              out: 2
+            description: null
+            labels: null
+            mapping:
+            - dest: 0
+              mute: false
+              sources:
+              - channel: 0
+                gain: 0
+                inverted: false
+                mute: false
+                scale: dB
+            - dest: 1
+              mute: false
+              sources:
+              - channel: 1
+                gain: 0
+                inverted: false
+                mute: false
+                scale: dB
+        pipeline:
+        - bypassed: null
+          description: null
+          name: Stereo Mixer
+          type: Mixer
+        - bypassed: null
+          channels: null
+          description: null
+          names:
+          - Loudness
+          type: Filter
+        - bypassed: null
+          channels: []
+          description: null
+          names:
+          - Bass boost
+          type: Filter
+        processors: {}
+        title: Loudness Stereo Pipeline
+      owner: "{{ camilladsp_user }}"
+      group: "{{ camilladsp_user }}"
+      mode: "0644"
+      force: no
+      
+  - name: Install Camilla Service
+    ansible.builtin.copy:
+      dest: "/etc/systemd/system/camilladsp.service"
+      content: |
+        [Unit]
+        Description=CamillaDSP
+        After=network-online.target sound.target
+        Wants=network-online.target
+        StartLimitIntervalSec=60
+        StartLimitBurst=5
+
+        [Service]
+        Type=simple
+        User={{ camilladsp_user }}
+        Group={{ camilladsp_user }}
+        WorkingDirectory={{ camilladsp_install_dir }}
+        ExecStart={{ camilladsp_install_dir }}/camilladsp -s {{ camilladsp_state_file }} -w -p 1234 -o {{ camilladsp_log_file}} {{ camilladsp_config_file }}
+        Restart=always
+        RestartSec=3
+        StandardOutput=journal
+        StandardError=journal
+        SyslogIdentifier=camilladsp
+        CPUSchedulingPolicy=fifo
+        CPUSchedulingPriority=10
+
+        [Install]
+        WantedBy=default.target
+
+  - name: Start Camilla Service
+    ansible.builtin.service:
+      name: camilladsp
+      state: restarted
+      enabled: true
+      daemon_reload: yes
+
+  - name: Gather service facts
+    ansible.builtin.service_facts:
+
+  - name: Ensure systemd drop-in directory for pulseaudio exists (only if pulseaudio installed)
+    file:
+      path: /etc/systemd/system/pulseaudio.service.d
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+    when: "'pulseaudio.service' in ansible_facts.services"
+
+  - name: Add pulseaudio override to start after camilladsp (only if pulseaudio installed)
+    copy:
+      dest: /etc/systemd/system/pulseaudio.service.d/override.conf
+      content: |
+        [Unit]
+        After=camilladsp.service
+        Wants=camilladsp.service
+      owner: root
+      group: root
+      mode: '0644'
+    when: "'pulseaudio.service' in ansible_facts.services"
+    notify: daemon-reload
+
+  - name: Reload systemd and restart pulseaudio (only if pulseaudio installed)
+    ansible.builtin.systemd:
+      name: pulseaudio
+      state: restarted
+      enabled: true
+      daemon_reload: yes
+    when: "'pulseaudio.service' in ansible_facts.services"
+    ignore_errors: true
+
+  # Enable loopback device, requires restart
+  - name: Enable Alsa loopback device
+    ansible.builtin.copy:
+      dest: /etc/modules-load.d/snd-aloop.conf
+      content: | 
+        snd-aloop
+
+  - name: Restart device
+    reboot:
+      reboot_timeout: 300
+
+  handlers:
+    - name: daemon-reload
+      ansible.builtin.command: systemctl daemon-reload
+      become: true

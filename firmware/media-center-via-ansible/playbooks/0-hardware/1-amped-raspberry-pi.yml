@@ -1,0 +1,146 @@
+- name: Hardware
+  hosts: raspberry
+  become: true
+
+  vars:
+    service_name: dac-enable-gpio
+    service_path: "/etc/systemd/system/{{ service_name }}.service"
+    enable_script: "/usr/local/bin/dac-enable-gpio.sh"
+    use_w5500_overlay: false        # set to true to deploy dtoverlay=w5500 (uses SPI and thus conflicts with GPIO control with GPIO8 usage)
+    gpio_set_on_boot: false         # set to true to enable DAC via GPIO8 on boot (some boards only)
+    gpio_pin: 520                   # BCM GPIO8
+
+  tasks:
+
+  - name: Install required package for GPIO control
+    apt:
+      name: python3-gpiozero
+      state: present
+    when: gpio_set_on_boot
+
+  - name: Patch config.txt - ensure HifiBerry overlay present
+    lineinfile:
+      dest: "{{ config_path }}"
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    loop:
+      - { regexp: '^dtoverlay=hifiberry-dac', line: 'dtoverlay=hifiberry-dac' }
+
+  - name: Optionally enable dtoverlay=w5500 (mutually exclusive with GPIO control)
+    lineinfile:
+      dest: "{{ config_path }}"
+      regexp: '^dtoverlay=w5500'
+      line: 'dtoverlay=w5500'
+      insertafter: EOF
+    when: use_w5500_overlay
+
+  - name: Remove dtoverlay=w5500 from config when using GPIO control
+    lineinfile:
+      dest: "{{ config_path }}"
+      regexp: '^dtoverlay=w5500'
+      state: absent
+    when: gpio_set_on_boot
+
+  # Disable HDMI audio output
+  - name: Disable HDMI audio
+    replace:
+      dest: "{{ config_path }}"
+      regexp: "{{ item.regexp }}"
+      replace: "{{ item.line }}"
+    loop:
+    - { regexp: '^dtparam=audio=on', line: '#dtparam=audio=on' }
+    - { regexp: '^dtoverlay=vc4-kms-v3d', line: '#dtoverlay=vc4-kms-v3d' }
+
+  - name: Create DAC enable GPIO control script
+    copy:
+      dest: "{{ enable_script }}"
+      mode: '0755'
+      content: |
+        #!/usr/bin/env bash
+        set -e
+
+        PIN={{ gpio_pin }}
+        GPIO_PATH="/sys/class/gpio/gpio${PIN}"
+
+        export_gpio() {
+          if [ ! -d "$GPIO_PATH" ]; then
+            echo "$PIN" > /sys/class/gpio/export
+          fi
+          echo "out" > "$GPIO_PATH/direction"
+        }
+
+        unexport_gpio() {
+          if [ -d "$GPIO_PATH" ]; then
+            echo "$PIN" > /sys/class/gpio/unexport
+          fi
+        }
+
+        case "$1" in
+          start)
+            echo "Enabling DAC on GPIO${PIN}"
+            export_gpio
+            echo "1" > "$GPIO_PATH/value"
+            ;;
+          stop)
+            echo "Disabling DAC on GPIO${PIN}"
+            if [ -d "$GPIO_PATH" ]; then
+              echo "0" > "$GPIO_PATH/value"
+            fi
+            ;;
+          *)
+            echo "Usage: $0 {start|stop}"
+            exit 1
+            ;;
+        esac
+    when: gpio_set_on_boot
+
+  - name: Create systemd service for DAC GPIO control
+    copy:
+      dest: "{{ service_path }}"
+      content: |
+        [Unit]
+        Description=DAC Enable GPIO Service (Filesystem)
+        After=multi-user.target
+
+        [Service]
+        Type=oneshot
+        ExecStart={{ enable_script }} start
+        ExecStop={{ enable_script }} stop
+        RemainAfterExit=yes
+        StandardOutput=journal
+
+        [Install]
+        WantedBy=multi-user.target
+
+  - name: Enable and start DAC GPIO service (only when GPIO control is used)
+    systemd:
+      name: "{{ service_name }}"
+      enabled: true
+      state: started
+      daemon_reload: true
+    when: gpio_set_on_boot
+
+  - name: Ensure dac-enable-gpio service is stopped and disabled when using w5500 overlay
+    systemd:
+      name: "{{ service_name }}"
+      state: stopped
+      enabled: false
+      daemon_reload: true
+    when: use_w5500_overlay
+    ignore_errors: yes
+
+  # Requires reboot due to hardaware configuration changes
+  - name: Reboot the machine (Wait for 5 min)
+    reboot:
+      reboot_timeout: 300
+
+  - name: List ALSA playback devices after reboot
+    ansible.builtin.command:
+      cmd: aplay -l
+    register: aplay_out
+    changed_when: false
+    failed_when: false
+
+  - name: Show aplay output
+    ansible.builtin.debug:
+      var: aplay_out.stdout_lines
