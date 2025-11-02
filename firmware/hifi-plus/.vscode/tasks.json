@@ -1,0 +1,33 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "echo",
+            "type": "shell",
+            "command": "echo Hello"
+        },
+        {
+            "label": "Compile custom HiFiBerry DAC+ overlay (3 Wire)",
+            "type": "shell",
+            "command": "sudo",
+            "args": [
+                "dtc",
+                "-I", "dts",
+                "-O", "dtb",
+                "-o", "/boot/firmware/overlays/hifiberry-dacplus-custom.dtbo",
+                "hifiberry-dacplus-3-wire.dts"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "dependsOn": []
+        }
+    ]
+}
