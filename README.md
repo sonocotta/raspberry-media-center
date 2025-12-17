@@ -22,6 +22,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
   - [Motivation](#motivation)
   - [Raspberry Pi HiFi Media Center and Hats](#raspberry-pi-hifi-media-center-and-hats)
   - [Amped Raspberry Pi Media Center and Hats](#amped-raspberry-pi-media-center-and-hats)
+    - [New TPA3128 design](#new-tpa3128-design)
   - [Loud Raspberry Pi Media Center and Hats](#loud-raspberry-pi-media-center-and-hats)
   - [Louder Raspberry Pi Media Center and Hats](#louder-raspberry-pi-media-center-and-hats)
   - [Dual TFT and OLED Hats](#dual-tft-and-oled-hats)
@@ -112,12 +113,17 @@ Amped Raspberry Hat is the lightweight implementation of the same DAC and power 
 
 Originally, amps could be shut down using GPIO pins, but in the latter version of the board, I removed that functionality. The reason is that TPA3110 doesn't have a dedicated MUTE pin, and I was using the SHDN pin for that purpose. Changing the voltage on that pin created a pop sound, no matter how slowly I changed the voltage. I'm planning to switch to a more modern TPA32XX series going forward to solve this issue.   
 
+### New TPA3128 design
+
 As of the end of 2025, I'm working on an upgraded version of the Amped Hat that uses a newer and more capable [TPA3128](https://www.ti.com/product/TPA3128D2) amp. There are a few benefits that the new amp brings
 
 - It is much more efficient (about half the heat with the same output power, compared to TPA3110), so the board can sustain higher power for longer
 - It has a true MUTE pin that can be connected to the Pi and shut down the output driver when no audio is playing
-- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a smaller power source
+- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power alone
 - Being a newer design, it has better audio quality. I can't hear it, but people say it sounds much better
+
+(image placeholder)
+
 
 ## Loud Raspberry Pi Media Center and Hats
 
