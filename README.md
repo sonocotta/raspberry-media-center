@@ -22,6 +22,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
   - [Motivation](#motivation)
   - [Raspberry Pi HiFi Media Center and Hats](#raspberry-pi-hifi-media-center-and-hats)
   - [Amped Raspberry Pi Media Center and Hats](#amped-raspberry-pi-media-center-and-hats)
+    - [New TPA3128 design](#new-tpa3128-design)
   - [Loud Raspberry Pi Media Center and Hats](#loud-raspberry-pi-media-center-and-hats)
   - [Louder Raspberry Pi Media Center and Hats](#louder-raspberry-pi-media-center-and-hats)
   - [Dual TFT and OLED Hats](#dual-tft-and-oled-hats)
@@ -112,12 +113,16 @@ Amped Raspberry Hat is the lightweight implementation of the same DAC and power 
 
 Originally, amps could be shut down using GPIO pins, but in the latter version of the board, I removed that functionality. The reason is that TPA3110 doesn't have a dedicated MUTE pin, and I was using the SHDN pin for that purpose. Changing the voltage on that pin created a pop sound, no matter how slowly I changed the voltage. I'm planning to switch to a more modern TPA32XX series going forward to solve this issue.   
 
+### New TPA3128 design
+
 As of the end of 2025, I'm working on an upgraded version of the Amped Hat that uses a newer and more capable [TPA3128](https://www.ti.com/product/TPA3128D2) amp. There are a few benefits that the new amp brings
 
 - It is much more efficient (about half the heat with the same output power, compared to TPA3110), so the board can sustain higher power for longer
 - It has a true MUTE pin that can be connected to the Pi and shut down the output driver when no audio is playing
-- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a smaller power source
+- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power alone
 - Being a newer design, it has better audio quality. I can't hear it, but people say it sounds much better
+
+<img width="3812" height="2520" alt="image" src="https://github.com/user-attachments/assets/94b7b191-065b-42a6-b149-b6d4b77b4c2f" />
 
 ## Loud Raspberry Pi Media Center and Hats
 
@@ -169,7 +174,7 @@ To add a visual touch to the above Hats, I developed two Hats that add two displ
 |---|---|---|---|---|
 | Image (Media Center) | ![DSC_0733 (copy 1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/990da9e7-b8fd-400c-b818-cb9352fd10a3) | ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8846389c-f06c-4c36-88a7-63c0c789e944) | ![DSC_0011-copy](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fbedd926-8ff9-4f8a-8948-a3f96b013a6f) | ![DSC_0009](https://github.com/user-attachments/assets/eeeb18d5-01fc-4678-ba52-fe4ac63d199b) |
 | Compatible with (Media Center) | Raspberry Pi Zero (W), Raspberry Pi Zero2 W | Raspberry Pi Zero (W), Raspberry Pi Zero2 W | Raspberry Pi Zero (W), Raspberry Pi Zero2 W | Raspberry Pi Zero (W), Raspberry Pi Zero2 W |
-| Image (Hat) | ![DSC_0122](https://github.com/user-attachments/assets/0b297b27-d3c7-4b82-b072-3d3edb96539f) | ![DSC_0179](https://github.com/user-attachments/assets/03e1fa11-a973-4318-b79f-261a4b1d878a) | ![DSC_0169](https://github.com/user-attachments/assets/6b883758-e5cc-466a-85cb-134cbc30f64b) | ![DSC_0131](https://github.com/user-attachments/assets/6f1eee69-138c-46ac-a04f-7b4bea8f79a3) |
+| Image (Hat) | ![DSC_0122](https://github.com/user-attachments/assets/0b297b27-d3c7-4b82-b072-3d3edb96539f) | ![DSC_0179](https://github.com/user-attachments/assets/03e1fa11-a973-4318-b79f-261a4b1d878a) | ![DSC_0169](https://github.com/user-attachments/assets/6b883758-e5cc-466a-85cb-134cbc30f64b) | <img width="3812" height="2520" alt="image" src="https://github.com/user-attachments/assets/6b412757-82b9-4639-952c-ec2004562ee8" /> |
 | Compatible with (1X Hat) | Every Pi | Every Pi | Every Pi | Every Pi |
 | Image (Hat, 2X) | ![DSC_0113](https://github.com/user-attachments/assets/e42a2fa6-db4e-4659-9651-801031f9721c) | ![DSC_0043](https://github.com/user-attachments/assets/5768a8c6-20bf-4841-bc8a-936c5d4e96a8) | ![DSC_0164](https://github.com/user-attachments/assets/5eb5781d-9d8b-42ee-bd18-dea1189071e4) | ![DSC_0018](https://github.com/user-attachments/assets/04fe822c-d98c-4780-80f8-5482f1c90cb7) |
 | Compatible with (2X Hat) | Raspberry Pi 5 | Raspberry Pi 5 | Raspberry Pi 5 | Raspberry Pi 5 |
