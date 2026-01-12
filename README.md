@@ -347,13 +347,16 @@ For Louder Raspberry, you'd need to perform a few more steps to configure a cust
 <details>
   <summary>Setup instructions</summary>
 
-First, get access to the terminal either from USB-Serial or from SSH. To enter the Serial terminal you'd need to add this line to `/boot/volumioconfig.txt`
+First, get access to the terminal either from USB-Serial or from SSH. To enter the Serial terminal, you'd need to add this line to `/boot/userconfig.txt` (create if missing)
 ```
 enable_uart=1
 ```
+
+Also, in the latest Volumio releases, you'd need to update `/boot/cmdline.txt` file, removing `quiet`, `nodebug` and `plymouth.ignore-serial-consoles` flags, and changing `loglevel=0` to `loglevel=7`. 
+
 You can enable SSH at [volumio.local/dev](http://volumio.local/dev) and log in using user `volumio` and password `volumio`
 
-We're about to build kernel modules, so we need to install a few dependencies first (all commands going forward are running on the target host, ie Raspberry Pi)
+We're about to build kernel modules, so we need to install a few dependencies first (all commands going forward are running on the target host, ie, Raspberry Pi)
 
 ```
 sudo apt update && sudo apt install git raspberrypi-kernel-headers build-essential -y
@@ -364,20 +367,20 @@ Assuming you're in, first install build prerequisites (this will take a while, g
 volumio kernelsource
 ```
 
-Next, pull the DAC driver from the GitHub
+Next, pull the DAC driver from GitHub
 ```
 cd ~
 git clone https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero
 cd tas5805m-for-raspbian-paspberry-pi-zero
 ```
 
-Build kernel driver
+Build a kernel driver
 ```
 cd /usr/src/rpi-linux && sudo find . -type d -exec chmod 755 {} \;  # no idea why permissions are not right, but this should fix it
 cd ~/tas5805m-for-raspbian-paspberry-pi-zero
 make all
 ```
-If all goes well you should see no errors in the console
+If all goes well, you should see no errors in the console
 ```
 make -C /lib/modules/6.1.77+/build M=/home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero modules
 make[1]: Entering directory '/usr/src/rpi-linux'
@@ -393,10 +396,34 @@ Copy over kernel drivers to the filesystem
 sudo make install
 ```
 
-Now let's compile and copy the device tree
+Now, let's compile and copy the device tree
 ```
 sudo apt install device-tree-compiler -y
 sudo ./compile-overlay.sh
+```
+
+At this stage, Volumio is not changing DT overlay automatically. I can't figure out why, but for now, let's add it manually to the end of the `/boot/config.txt` file
+```
+#### Volumio i2s setting below: do not alter ####
+#dtoverlay=hifiberry-dac <- comment out any other DAC you had before
+dtoverlay=tas5805m,i2creg=0x2d
+```
+
+After reboot, you should be able to see the new sound card via `aplay -l`
+```
+card 2: LouderRaspberry [Louder-Raspberry], device 0: bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0 [bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0] ^F Forward
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+```
+
+Also you can change it's settings via ALSA (including equilizer). It will be preserved across reboot
+
+<img width="1243" height="653" alt="image" src="https://github.com/user-attachments/assets/d9cef892-7b7c-4db0-9f1d-c8a7a270f4ae" />
+
+Perform a quick speaker test, to confirm that sound card is working
+
+```
+speaker-test -c 2 -t wav -D sysdefault:CARD=LouderRaspberry
 ```
 
 Next, we need to update the Volumio settings. Navigate to `/volumio/app/plugins/system_controller/i2s_dacs/dacs.json` file and add this line as the first choice in the Raspberry PI section
@@ -411,22 +438,9 @@ Restart the Volumio service
 sudo systemctl restart volumio.service
 ```
 
-Now you should be able to select Louder Raspberry in the DAC list, which will restart the Raspberry
+Now you should be able to select Louder Raspberry in the DAC list, which will enable output after Voliumio restart
 
 ![image](https://github.com/sonocotta/raspberry-media-center/assets/5459747/32c4cfeb-9b0b-4580-9f74-4d01c7ff4fa1)
-
-At this stage it is not changing DT overlay automatically, I need to figure out why, but for now let's add it manually to the end of the `/boot/config.txt` file
-```
-#### Volumio i2s setting below: do not alter ####
-dtoverlay=tas5805m,i2creg=0x2d
-```
-
-After reboot, you should be able to see the new sound card via `aplay -l`
-```
-card 2: LouderRaspberry [Louder-Raspberry], device 0: bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0 [bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0] ^F Forward
-  Subdevices: 1/1
-  Subdevice #0: subdevice #0
-```
 
 Volumio will start playing using the right DAC on its own. Congratulations!
 
