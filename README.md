@@ -159,7 +159,7 @@ TAS5805M DAC has a highly capable DSP that allows flexible configuration of each
 - Global device list synchronization for reliable initialization (DSP init triggered by I2S clock)
 - Independent ALSA controls per DAC for fine-tuning
 
-![image](https://github.com/user-attachments/assets/67d55c4e-90fa-4877-af64-10a7d82b5f9c)
+<img width="1831" height="418" alt="image" src="https://github.com/user-attachments/assets/5fc29150-565b-4bf8-ab53-f2c4cec67083" />
 
 ## Dual TFT and OLED Hats
 
