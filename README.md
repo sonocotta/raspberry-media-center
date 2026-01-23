@@ -148,12 +148,18 @@ Louder Raspberry Pi Media Center is a top-of-the-range model that uses a modern,
 |----|----|
 | ![DSC_0169](https://github.com/user-attachments/assets/6b883758-e5cc-466a-85cb-134cbc30f64b) | ![DSC_0164](https://github.com/user-attachments/assets/5eb5781d-9d8b-42ee-bd18-dea1189071e4)
 
-Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (opposed to 20V over PD) and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones. The 2X version is a bit special since it uses a TAS5805M capability to chain DACs using the same I2S data source and apply a DSP pipeline on every DAC to deliver flexible speaker combinations. This Hat specifically aimed to deliver a 2.1 speaker configuration with a power budget dedicated to the subwoofer around twice that of the satellite speaker.
+Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (opposed to 20V over PD) and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones. The 2X version uses dual TAS5805M DACs with single I2S interface to deliver a complete 2.1 speaker system with dedicated crossover filters. The power budget is optimized with ~45W for the subwoofer and ~22W per satellite speaker, specifically aimed at delivering a professional 2.1 speaker configuration.
 
-TAS5805M DAC has a highly capable DSP that allows flexible configuration of each channel to fit your needs. I'm currently working on Linux driver improvements that would allow changing DSP settings on the fly from the user space. This would allow changing the EQ settings, Mixer, Gain, and a few other key parameters on the fly.
+TAS5805M DAC has a highly capable DSP that allows flexible configuration of each channel to fit your needs. The DSP is now fully controllable from user space through ALSA, providing real-time control of EQ settings (including 15-band parametric EQ and crossover filters), Mixer modes, Analog Gain, Modulation scheme, and Switching frequency - all without reboots.
+
+**2X Hat Features:**
+- Primary DAC (0x2d): Stereo satellite speakers with HF crossover (high-pass, 60-150Hz), or full-range speakers with 15-band EQ
+- Secondary DAC (0x2e): Mono subwoofer in bridge mode with LF crossover (low-pass, 60-150Hz)
+- Linkwitz-Riley 4th order crossover filters
+- Global device list synchronization for reliable initialization (DSP init triggered by I2S clock)
+- Independent ALSA controls per DAC for fine-tuning
 
 ![image](https://github.com/user-attachments/assets/67d55c4e-90fa-4877-af64-10a7d82b5f9c)
-
 
 ## Dual TFT and OLED Hats
 
@@ -268,9 +274,26 @@ Note for 2X Loud Hat - it will probably require a dedicated device tree file, th
 
 ### DAC Configuration - Louder Raspberry Pi Media Center and Hat
 
-TAS5805M DAC is not supported by default Raspbian distribution, therefore, some work needs to be done to enable it. [Linked repo](https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
+TAS5805M DAC is not supported by default Raspbian distribution, therefore, some work needs to be done to enable it. [Linked repo](https://github.com/sonocotta/tas5805m-driver-for-raspbian) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
 
-Note for 2X Louder Hat - updated driver capable of driving all 2.1 speaker configurations is a work in progress and lives in a [dedicated branch](https://github.com/sonocotta/tas5805m-driver-for-raspbian/blob/features/louder-raspberry-2x-support/README.md).
+**1X Hat/Media Center:** Use the single DAC overlay:
+```
+dtoverlay=tas5805m,i2creg=0x2d
+```
+
+**2X Louder Hat (2.1 Audio):** The driver now includes full dual DAC support for 2.1 speaker configurations with crossover filters. Use the dual overlay:
+```
+dtoverlay=tas5805m-dual
+```
+
+This configuration provides:
+- Primary DAC (0x2d): Stereo satellite speakers with HF crossover (high-pass filter, 60-150Hz adjustable)
+- Secondary DAC (0x2e): Mono subwoofer in bridge mode with LF crossover (low-pass filter, 60-150Hz adjustable)
+- Synchronized initialization via global device list
+- Individual EQ mode control per DAC
+- Linkwitz-Riley 4th order crossover filters
+
+See the [driver README](https://github.com/sonocotta/tas5805m-driver-for-raspbian) for detailed configuration options.
 
 ### Bare OS Options
 
@@ -370,24 +393,24 @@ volumio kernelsource
 Next, pull the DAC driver from GitHub
 ```
 cd ~
-git clone https://github.com/sonocotta/tas5805m-for-raspbian-paspberry-pi-zero
-cd tas5805m-for-raspbian-paspberry-pi-zero
+git clone https://github.com/sonocotta/tas5805m-driver-for-raspbian
+cd tas5805m-driver-for-raspbian
 ```
 
 Build a kernel driver
 ```
 cd /usr/src/rpi-linux && sudo find . -type d -exec chmod 755 {} \;  # no idea why permissions are not right, but this should fix it
-cd ~/tas5805m-for-raspbian-paspberry-pi-zero
+cd ~/tas5805m-driver-for-raspbian
 make all
 ```
 If all goes well, you should see no errors in the console
 ```
-make -C /lib/modules/6.1.77+/build M=/home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero modules
+make -C /lib/modules/6.1.77+/build M=/home/volumio/dev/tas5805m-driver-for-raspbian modules
 make[1]: Entering directory '/usr/src/rpi-linux'
-  CC [M]  /home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero/tas5805m.o
-  MODPOST /home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero/Module.symvers
-  CC [M]  /home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero/tas5805m.mod.o
-  LD [M]  /home/volumio/dev/tas5805m-for-raspbian-paspberry-pi-zero/tas5805m.ko
+  CC [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas5805m.o
+  MODPOST /home/volumio/dev/tas5805m-driver-for-raspbian/Module.symvers
+  CC [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas5805m.mod.o
+  LD [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas5805m.ko
 make[1]: Leaving directory '/usr/src/rpi-linux'
 ```
 
@@ -460,14 +483,20 @@ On some systems, the W5500 driver will rotate the chip's MAC address on each boo
 
 ### TAS5805M DSP Capabilities
 
-TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside, which is mostly undiscovered by the community at the moment. Documentation of it is scarce. The only reasonable way to use it is to obtain a TI PurePath license and Hardware Development kit ($250 if you find it). This should allow the following skills
+TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside. The driver now provides extensive control over the DSP features through ALSA, eliminating the need for the $250 evaluation board for most use cases.
 
-- 2.0, 1.1, 2.1, 0.1, and pretty much any other speaker configuration
-- Loudness correction (or Tone correction)
-- Soft clipping
-- Individual EQ (16 of them I think)
-- True mono and other routing configurations
-- And many more
+**Currently Implemented:**
+- **EQ Modes:** 4 modes selectable via device tree (`ti,eq-mode`)
+  - OFF (0): No equalization
+  - 15-band parametric EQ (1): Full frequency control with adjustable Q and gain
+  - LF Crossover (2): Low-pass filter for subwoofers (60-150Hz, Linkwitz-Riley 4th order)
+  - HF Crossover (3): High-pass filter for satellite speakers (60-150Hz, Linkwitz-Riley 4th order)
+- **Speaker Configurations:** 2.0 stereo, 2.1 (with dual DAC), bridge/PBTL mono
+- **Mixer Controls:** Flexible channel routing (Stereo, Mono, Left only, Right only)
+- **Analog Gain:** 32 steps (0 to -15.5dB) for output level optimization
+- **Modulation Schemes:** BD, 1SPW, Hybrid (efficiency vs. quality tradeoffs)
+- **Switching Frequency:** 384kHz, 480kHz, 576kHz, 768kHz
+- **Bridge Mode:** PBTL for maximum mono power output
 
 <details>
   <summary>PurePath screenshots</summary>
@@ -497,19 +526,21 @@ In the picture above device is found on the `0x2d` address, while the driver hoo
 |------------|-----------|--------------|
 | `dtoverlay=tas5805m,i2creg=0x2d` | <img width="415" height="143" alt="image" src="https://github.com/user-attachments/assets/6e573494-fcdc-4757-bcc5-b0de835b7385" /> | <img width="678" height="158" alt="image" src="https://github.com/user-attachments/assets/53594da6-a387-42b9-ae68-6b4ceb95dbc0" /> |
 
-On the Louder 2X Hat, though, the driver only hooks up to the _master_ DAC, which drives satellite speakers, the _slave_ DAC configuration is handled within driver code. So the expected output from the `i2cdetect` command is `UU` mark on the master DAC and `0x2x` mark on the slave DAC
+On the Louder 2X Hat with dual DAC configuration, both DACs are independently controlled by the driver. The expected output from the `i2cdetect` command shows both devices with `UU` marks (indicating they're bound to the driver):
 
 ```
      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
 00:          -- -- -- -- -- -- -- -- -- -- -- -- --
 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-20: -- -- -- -- -- -- -- -- -- -- -- -- -- UU 2e --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- UU UU --
 30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 70: -- -- -- -- -- -- -- —
 ```
+
+Both DACs (primary at 0x2d, secondary at 0x2e) are configured via the device tree overlay and synchronized through a global device list. The primary DAC typically handles stereo satellite speakers with HF crossover, while the secondary handles the subwoofer with LF crossover in bridge mode.
 
 ## Hardware
 
