@@ -885,6 +885,7 @@ You may support our work by ordering these products
 - [Loud Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/)
 - [Louder Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/)
 - Louder Raspberry Pi Hat as [Tindie](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat/) and [Elecrow](https://www.elecrow.com/louder-raspberry-pi-hat.html)
+- Louder Raspberry Hat Plus - Coming soon!
 
 ## Press mentions
 
