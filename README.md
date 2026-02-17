@@ -44,8 +44,8 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [Third-party Media Software](#third-party-media-software)
     - [Volumio](#volumio)
     - [Rotating MAC address on the W5500](#rotating-mac-address-on-the-w5500)
-    - [TAS5805M DSP Capabilities](#tas5805m-dsp-capabilities)
-    - [TAS5805M DAC I2C address changes](#tas5805m-dac-i2c-address-changes)
+    - [TAS58xx DSP Capabilities (TAS5805M / TAS5825M)](#tas58xx-dsp-capabilities-tas5805m--tas5825m)
+    - [TAS58xx DAC I2C address changes](#tas58xx-dac-i2c-address-changes)
   - [Hardware](#hardware)
     - [HiFi Raspberry Pi Media Center](#hifi-raspberry-pi-media-center)
     - [HiFi Raspberry Hat](#hifi-raspberry-hat)
@@ -142,15 +142,23 @@ Loud Raspberry Pi Hat is the same DAC and audio circuitry in a cost-efficient Ha
 |---|---|
 | ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8dc35e18-1663-4a5e-8cae-7efb642978d4) | ![DSC_0100](https://github.com/user-attachments/assets/8c660fc9-387e-43e5-a9f5-8b0363ebc8e6)
 
-Louder Raspberry Pi Media Center is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it uses USB-C Power Delivery to pull up to 65W from the wall power adapter. Alternatively, the NOPD version will pull the power from a generic power adapter using a standard barrel jack. It can be used both with Wi-Fi and Ethernet (to make sure bad Wi-Fi does not interrupt the stream)
+Louder Raspberry Pi Media Center is a top-of-the-range model that uses modern, highly capable TI TAS58xx series DACs (TAS5805M/TAS5825M) and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it uses USB-C Power Delivery to pull up to 65W from the wall power adapter. Alternatively, the NOPD version will pull the power from a generic power adapter using a standard barrel jack. It can be used both with Wi-Fi and Ethernet (to make sure bad Wi-Fi does not interrupt the stream)
 
-| 1X | 2X |
-|----|----|
-| ![DSC_0169](https://github.com/user-attachments/assets/6b883758-e5cc-466a-85cb-134cbc30f64b) | ![DSC_0164](https://github.com/user-attachments/assets/5eb5781d-9d8b-42ee-bd18-dea1189071e4)
+| 1X | 2X | Plus |
+|----|----|----|
+| ![DSC_0169](https://github.com/user-attachments/assets/6b883758-e5cc-466a-85cb-134cbc30f64b) | ![DSC_0164](https://github.com/user-attachments/assets/5eb5781d-9d8b-42ee-bd18-dea1189071e4) | *Coming Soon* |
 
-Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (opposed to 20V over PD) and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones. The 2X version uses dual TAS5805M DACs with single I2S interface to deliver a complete 2.1 speaker system with dedicated crossover filters. The power budget is optimized with ~45W for the subwoofer and ~22W per satellite speaker, specifically aimed at delivering a professional 2.1 speaker configuration.
+Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (opposed to 20V over PD) and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones.
 
-TAS5805M DAC has a highly capable DSP that allows flexible configuration of each channel to fit your needs. The DSP is now fully controllable from user space through ALSA, providing real-time control of EQ settings (including 15-band parametric EQ and crossover filters), Mixer modes, Analog Gain, Modulation scheme, and Switching frequency - all without reboots.
+**Hat Variants:**
+- **1X**: Single TAS5805M DAC for stereo output (2.0)
+- **2X**: Dual TAS5805M DACs for 2.1 configuration with dedicated crossover filters (~45W subwoofer, ~22W per satellite)
+- **1X Plus**: Enhanced version featuring TAS5825M DAC with better power efficiency and richer DSP features
+- **2X Plus**: Dual TAS5825M DAC version for 2.1 configuration with dedicated crossover filters (~55W subwoofer, ~30W per satellite)
+
+The 2X version uses dual TAS5805M/TAS5825M DACs with single I2S interface to deliver a complete 2.1 speaker system with dedicated crossover filters. The power budget is optimized with 45..55W for the subwoofer and 22..30W per satellite speaker, specifically aimed at delivering a professional 2.1 speaker configuration.
+
+TAS58xx DACs (TAS5805M/TAS5825M) feature highly capable DSPs that allow flexible configuration of each channel to fit your needs. The DSP is now fully controllable from user space through ALSA, providing real-time control of EQ settings (including 15-band parametric EQ and crossover filters), Mixer modes, Analog Gain, Modulation scheme, and Switching frequency - all without reboots. The driver automatically detects the chip variant based on I2C address and provides appropriate controls.
 
 **2X Hat Features:**
 - Primary DAC (0x2d): Stereo satellite speakers with HF crossover (high-pass, 60-150Hz), or full-range speakers with 15-band EQ
@@ -274,16 +282,21 @@ Note for 2X Loud Hat - it will probably require a dedicated device tree file, th
 
 ### DAC Configuration - Louder Raspberry Pi Media Center and Hat
 
-TAS5805M DAC is not supported by default Raspbian distribution, therefore, some work needs to be done to enable it. [Linked repo](https://github.com/sonocotta/tas5805m-driver-for-raspbian) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
+TAS58xx DACs (TAS5805M/TAS5825M) are not supported by default Raspbian distribution, therefore, some work needs to be done to enable them. [Linked repo](https://github.com/sonocotta/tas5805m-driver-for-raspbian) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
 
-**1X Hat/Media Center:** Use the single DAC overlay:
+**1X Hat/Media Center (TAS5805M):** Use the single DAC overlay:
 ```
-dtoverlay=tas5805m,i2creg=0x2d
+dtoverlay=tas58xx,i2creg=0x2d
 ```
 
-**2X Louder Hat (2.1 Audio):** The driver now includes full dual DAC support for 2.1 speaker configurations with crossover filters. Use the dual overlay:
+**Plus Hat (TAS5825M):** The driver automatically detects TAS5825M based on I2C address:
 ```
-dtoverlay=tas5805m-dual
+dtoverlay=tas58xx,i2creg=0x4c
+```
+
+**2X Louder Hat (2.1 Audio):** The driver includes full dual DAC support for 2.1 speaker configurations with crossover filters. Use the dual overlay:
+```
+dtoverlay=tas58xx-dual
 ```
 
 This configuration provides:
@@ -292,6 +305,17 @@ This configuration provides:
 - Synchronized initialization via global device list
 - Individual EQ mode control per DAC
 - Linkwitz-Riley 4th order crossover filters
+- Runtime parameter overrides (eq_mode, mixer_mode, bridge_mode)
+
+**Advanced Configuration:**
+The driver supports runtime overrides via device tree parameters:
+```bash
+# Single DAC with custom settings
+dtoverlay=tas58xx,i2creg=0x4c,eq_mode=2,bridge_mode=1,mixer_mode=1
+
+# Dual DAC with individual settings
+dtoverlay=tas58xx-dual,eq_mode_primary=3,eq_mode_secondary=2,bridge_mode_secondary=1
+```
 
 See the [driver README](https://github.com/sonocotta/tas5805m-driver-for-raspbian) for detailed configuration options.
 
@@ -407,10 +431,10 @@ If all goes well, you should see no errors in the console
 ```
 make -C /lib/modules/6.1.77+/build M=/home/volumio/dev/tas5805m-driver-for-raspbian modules
 make[1]: Entering directory '/usr/src/rpi-linux'
-  CC [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas5805m.o
+  CC [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas58xx.o
   MODPOST /home/volumio/dev/tas5805m-driver-for-raspbian/Module.symvers
-  CC [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas5805m.mod.o
-  LD [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas5805m.ko
+  CC [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas58xx.mod.o
+  LD [M]  /home/volumio/dev/tas5805m-driver-for-raspbian/tas58xx.ko
 make[1]: Leaving directory '/usr/src/rpi-linux'
 ```
 
@@ -429,12 +453,12 @@ At this stage, Volumio is not changing DT overlay automatically. I can't figure 
 ```
 #### Volumio i2s setting below: do not alter ####
 #dtoverlay=hifiberry-dac <- comment out any other DAC you had before
-dtoverlay=tas5805m,i2creg=0x2d
+dtoverlay=tas58xx,i2creg=0x2d
 ```
 
 After reboot, you should be able to see the new sound card via `aplay -l`
 ```
-card 2: LouderRaspberry [Louder-Raspberry], device 0: bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0 [bcm2835-i2s-tas5805m-amplifier tas5805m-amplifier-0] ^F Forward
+card 2: LouderRaspberry [Louder-Raspberry], device 0: bcm2835-i2s-tas58xx-amplifier tas58xx-amplifier-0 [bcm2835-i2s-tas58xx-amplifier tas58xx-amplifier-0]
   Subdevices: 1/1
   Subdevice #0: subdevice #0
 ```
@@ -451,7 +475,7 @@ speaker-test -c 2 -t wav -D sysdefault:CARD=LouderRaspberry
 
 Next, we need to update the Volumio settings. Navigate to `/volumio/app/plugins/system_controller/i2s_dacs/dacs.json` file and add this line as the first choice in the Raspberry PI section
 ```
-{"id":"louder-raspberry","name":"Louder Raspberry","overlay":"tas5805m,i2creg=0x2d","alsanum":"2","alsacard":"LouderRaspberry","mixer":"Master","modules":"tas5805m","script":"","needsreboot":"yes"},
+{"id":"louder-raspberry","name":"Louder Raspberry","overlay":"tas58xx,i2creg=0x2d","alsanum":"2","alsacard":"LouderRaspberry","mixer":"Master","modules":"tas58xx","script":"","needsreboot":"yes"},
 ```
 ![image](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fdc339ac-3382-4a62-b817-cde6c5b81145)
 
@@ -481,9 +505,13 @@ On some systems, the W5500 driver will rotate the chip's MAC address on each boo
 - move the new .dtbo into the overlays directory: `sudo cp w5500-custom.dtbo /boot/overlays/w5500.dtbo`
 - reboot and ip a will report the new MAC address
 
-### TAS5805M DSP Capabilities
+### TAS58xx DSP Capabilities (TAS5805M / TAS5825M)
 
-TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside. The driver now provides extensive control over the DSP features through ALSA, eliminating the need for the $250 evaluation board for most use cases.
+Both TAS5805M and TAS5825M DACs feature sophisticated DSPs inside. The unified driver automatically detects which chip is connected based on I2C address and provides extensive control over DSP features through ALSA, eliminating the need for the $250+ evaluation board for most use cases.
+
+**Chip Detection:**
+- TAS5805M: I2C addresses 0x2c - 0x2f (automatically detected)
+- TAS5825M: I2C addresses 0x4c - 0x4f (automatically detected)
 
 **Currently Implemented:**
 - **EQ Modes:** 4 modes selectable via device tree (`ti,eq-mode`)
@@ -497,6 +525,12 @@ TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside
 - **Modulation Schemes:** BD, 1SPW, Hybrid (efficiency vs. quality tradeoffs)
 - **Switching Frequency:** 384kHz, 480kHz, 576kHz, 768kHz
 - **Bridge Mode:** PBTL for maximum mono power output
+- **Fault Monitoring:** Read-only ALSA controls for real-time hardware health monitoring
+  - Channel faults (overcurrent, DC fault)
+  - Power supply faults (PVDD under/overvoltage)
+  - Thermal warnings (4 levels: 112°C, 122°C, 134°C, 146°C)
+  - Clock and Digital Signal Processing faults
+  - Overcurrent warnings and shutdown detection
 
 <details>
   <summary>PurePath screenshots</summary>
@@ -510,21 +544,23 @@ TAS5805M DAC (and his big brother TAS5825M) has quite a sophisticated DSP inside
 
 I'm planning to dive deep into the topic (whenever I have time, haha) and provide optional settings for the most common configurations. This is a work in progress with no deadline set.
 
-### TAS5805M DAC I2C address changes
+### TAS58xx DAC I2C address changes
 
-While most of the boards come with an I2C address consistent with the driver's default value, some boards might appear on the 1-bit off address. It happens partially because I accidentally put a resistor with the wrong value on the 'address set' pin on one of the early batches, partially because of some other unknown quirks (it was once reported on the modern board). It seems that when TAS5805M reports an unexpected address, it sticks to it, so it is easy to fix.
+While most of the boards come with an I2C address consistent with the driver's default value, some boards might appear on the 1-bit off address. It happens partially because I accidentally put a resistor with the wrong value on the 'address set' pin on one of the early batches, partially because of some other unknown quirks (it was once reported on the modern board). It seems that when the DAC reports an unexpected address, it sticks to it, so it is easy to fix.
+
+**Address ranges**: TAS5805M uses addresses 0x2c-0x2f, while the new TAS5825M (used in the Plus variant) uses addresses 0x4c-0x4f.
 
 The indication of that is when `journalctl` spits out errors about I2C communication failure. In that case, one can confirm the address issue by running the `i2cdetect -y 1` command. 
 
 | config.txt | i2cdetect | journactl -k |
 |------------|-----------|--------------|
-| `dtoverlay=tas5805m,i2creg=0x2e` | <img width="374" height="142" alt="image" src="https://github.com/user-attachments/assets/e506a526-c56e-4d59-aa97-23d0d428d0c5" /> | <img width="669" height="164" alt="image" src="https://github.com/user-attachments/assets/4dcc8a87-dcf7-4690-94fc-27333c5bb771" />
+| `dtoverlay=tas58xx,i2creg=0x2e` | <img width="374" height="142" alt="image" src="https://github.com/user-attachments/assets/e506a526-c56e-4d59-aa97-23d0d428d0c5" /> | <img width="669" height="164" alt="image" src="https://github.com/user-attachments/assets/4dcc8a87-dcf7-4690-94fc-27333c5bb771" />
 
 In the picture above device is found on the `0x2d` address, while the driver hooks up to the `0x2e` address, indicated by the `UU` mark. In that case, the address needs to be changed in the `/boot/firmware/config.txt` file to reflect the actual address. The correct picture would look like below
 
 | config.txt | i2cdetect | journactl -k |
 |------------|-----------|--------------|
-| `dtoverlay=tas5805m,i2creg=0x2d` | <img width="415" height="143" alt="image" src="https://github.com/user-attachments/assets/6e573494-fcdc-4757-bcc5-b0de835b7385" /> | <img width="678" height="158" alt="image" src="https://github.com/user-attachments/assets/53594da6-a387-42b9-ae68-6b4ceb95dbc0" /> |
+| `dtoverlay=tas58xx,i2creg=0x2d` | <img width="415" height="143" alt="image" src="https://github.com/user-attachments/assets/6e573494-fcdc-4757-bcc5-b0de835b7385" /> | <img width="678" height="158" alt="image" src="https://github.com/user-attachments/assets/53594da6-a387-42b9-ae68-6b4ceb95dbc0" /> |
 
 On the Louder 2X Hat with dual DAC configuration, both DACs are independently controlled by the driver. The expected output from the `i2cdetect` command shows both devices with `UU` marks (indicating they're bound to the driver):
 
