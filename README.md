@@ -181,11 +181,6 @@ To add a visual touch to the above Hats, I developed two Hats that add two displ
 |-----------|---------|
 | ![DSC_0034](https://github.com/user-attachments/assets/48fb3fad-1429-46f3-9ce5-d13e16ebf292) | ![DSC_0048](https://github.com/user-attachments/assets/fd67ffb1-1b53-4117-bde3-3f122d1b2af7) |
 
-
-## Which device is right for me
-
-<img width="2102" height="1093" alt="image" src="https://github.com/user-attachments/assets/78b83243-9530-4cba-ae67-2a607f5e2c55" />
-
 ## Features
 
 |    |  [HiFi Raspberry Media Center](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/)  |  [Loud Raspberry Media Center](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/)  |  [Louder Raspberry Media Center](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat/)  |  [Louder Raspberry Hat Plus](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat-plus/)  |  [Amped Raspberry Media Center](https://www.tindie.com/products/sonocotta/amped-raspberry-pi-media-center/) and [Hat](https://www.tindie.com/products/sonocotta/hifi-amped-raspberry-pi-hat/)  |
@@ -195,7 +190,7 @@ To add a visual touch to the above Hats, I developed two Hats that add two displ
 |  Image (Hat)  |  ![DSC_0122](https://github.com/user-attachments/assets/0b297b27-d3c7-4b82-b072-3d3edb96539f)  |  ![DSC_0179](https://github.com/user-attachments/assets/03e1fa11-a973-4318-b79f-261a4b1d878a)  |  ![DSC_0169](https://github.com/user-attachments/assets/6b883758-e5cc-466a-85cb-134cbc30f64b)  | <img width="1705" height="1233" alt="image" src="https://github.com/user-attachments/assets/d27190d9-b295-4cb9-8db9-9b0343fa4398" /> |  <img width="3812" height="2520" alt="image" src="https://github.com/user-attachments/assets/6b412757-82b9-4639-952c-ec2004562ee8" />  |
 |  Compatible with (1X Hat)  |  Every Pi  |  Every Pi  |  Every Pi  |  Every Pi  |  Every Pi  |
 |  Image (Hat, 2X)  |  ![DSC_0113](https://github.com/user-attachments/assets/e42a2fa6-db4e-4659-9651-801031f9721c)  |  ![DSC_0043](https://github.com/user-attachments/assets/5768a8c6-20bf-4841-bc8a-936c5d4e96a8)  |  ![DSC_0164](https://github.com/user-attachments/assets/5eb5781d-9d8b-42ee-bd18-dea1189071e4)  | <img width="1711" height="1236" alt="image" src="https://github.com/user-attachments/assets/6ea40595-5bf0-4188-9f11-c08817e1e429" /> |  ![DSC_0018](https://github.com/user-attachments/assets/04fe822c-d98c-4780-80f8-5482f1c90cb7)  |
-|  Compatible with (2X Hat)  |  Raspberry Pi 5  |  Raspberry Pi 5  |  Raspberry Pi 5  |  Raspberry Pi 5  |  Raspberry Pi 5  |
+|  Compatible with (2X Hat)  |  Raspberry Pi 5  |  Raspberry Pi 5  |  Every Pi  |  Every Pi  |  Raspberry Pi 5  |
 |  DAC  |  Single [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  |  Dual (1X) or Quadruple (2X) I2S DAC [MAX98357](https://www.analog.com/en/products/max98357a.html) with built in D-Class amp  |  (1X) Stereo I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp<br><br>(2X) Dual (2.1) I2S DAC [TAS5805M](https://www.ti.com/product/TAS5805M) with built in D-Class amp  |  (1X) Stereo I2S DAC [TAS5825M](https://www.ti.com/product/TAS5825M) with built in D-Class amp<br><br>(2X) Dual (2.1) I2S DAC [TAS5825M](https://www.ti.com/product/TAS5825M) with built in D-Class amp  |  Single (1X) or Dual (2X) [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br>[TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp; [TPA3128](https://www.ti.com/product/TPA3128D2) starting from Rev E  |
 |  Output  |  2.1 VRMS Line level output  -100 dB typical noise level  |  [1X] 2x 3W (8Ω);   2x 5W (4Ω) <br><br>[2X] 4x 3W (8Ω);   4x 5W (4Ω)  |  [1X] 2x 22W (8Ω, 1% THD+N); 2x 32W (4Ω, 1% THD+N) at 20V <br>1x 45W (4Ω, 1% THD+N) at 20V <br><br>[2X]: 2x 22W (8Ω, 1% THD+N) + 1x 45W (4Ω, 1% THD+N)  |  [1X] 2x 32W (8Ω, 1% THD+N); 2x 45W (4Ω, 1% THD+N) at 20V <br>1x 53W (4Ω, 1% THD+N) at 20V <br><br>[2X]: 2x 32W (8Ω, 1% THD+N) + 1x 53W (4Ω, 1% THD+N)  |  Line-out (2.1V RMS) and<br><br>[1X]2x 25W (8Ω, 1% THD+N) at 22V; 2x 22W (4Ω, 1% THD+N) at 16V <br>1x 40W (4Ω, 1% THD+N) at 20V<br><br>[2X]4x 25W (8Ω, 1% THD+N) at 22V; 4x 22W (4Ω, 1% THD+N) at 16V <br>2x 40W (4Ω, 1% THD+N) at 20V<br>(TPA3128)<br>2x 22W (8Ω, 1% THD+N) at 20V<br> 2x 40W (4Ω, 1% THD+N) at 20V <br> 1x 60W (3Ω, 1% THD+N) at 20V (bridged)  |
 |  RGB LED  |  Media Center only  |  Media Center only  |  Media Center only  | no |  Media Center only  |
@@ -205,6 +200,10 @@ To add a visual touch to the above Hats, I developed two Hats that add two displ
 |  Power requirement  |  Media Center: 5V USB-C power adapter (up to 1 A)<br>Hat: 5V from the host<br>Internally:  [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO  |  Media Center: 5V USB-C power adapter (up to 3 A) <br><br>Hat: 5V from the host (up to 4A)<br>or 5V from screw connector (powering host)  |  65W USB-C PD power adapter <br><br>[NOPD] Up to 26V from external PSU<br><br>[Hat] 7..26V from external source<br>powering host (up to 3A cont.)  | 7..26V from external source<br>powering host (up to 3A cont.)  |  65W USB-C PD power adapter <br><br>[NOPD] 8..26V from external PSU<br><br>[Hat] 8..26V from external source<br>powering host (up to 3A cont.)  |
 |  Mechanical dimensions (WxHxD), Media Center  |  88mm x 38mm x 100mm  |  88mm x 38mm x 100mm  |  88mm x 38mm x 100mm  | n/a |  88mm x 38mm x 100mm  |
 |  Mechanical dimensions (WxHxD), Hat  |  65mm x 30mm x 15mm  |  65mm x 30mm x 20mm  |  65mm x 56mm x 20mm  |  65mm x 56mm x 20mm  |  70mm x 61mm x 20mm  |
+
+## Which device is right for me
+
+<img width="2102" height="1093" alt="image" src="https://github.com/user-attachments/assets/78b83243-9530-4cba-ae67-2a607f5e2c55" />
 
 ## Boards Pinout
 
