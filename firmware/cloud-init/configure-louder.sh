@@ -34,7 +34,7 @@ echo "[louder] Architecture: $KERNEL_ARCH → headers package: $KERNEL_HEADERS_P
 # Install required packages
 # ---------------------------------------------------------------------------
 apt-get update -y
-apt-get install -y git "$KERNEL_HEADERS_PKG" build-essential
+apt-get install -y git "$KERNEL_HEADERS_PKG" build-essential i2c-tools
 
 # ---------------------------------------------------------------------------
 # Clone or update the TAS5805M kernel driver repository
@@ -74,7 +74,6 @@ lineinfile() {
 # ---------------------------------------------------------------------------
 # Patch /boot/firmware/config.txt
 # ---------------------------------------------------------------------------
-lineinfile "$CONFIG_PATH" "^dtoverlay=w5500"   "dtoverlay=w5500"
 lineinfile "$CONFIG_PATH" "^dtoverlay=tas5805m" "dtoverlay=tas5805m,i2creg=${TAS5805M_I2C_ADDRESS}"
 
 # Disable HDMI audio output (comment out if present; no-op if already absent)
