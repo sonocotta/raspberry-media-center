@@ -79,7 +79,7 @@ raspi-config nonint do_i2c 0
 # ---------------------------------------------------------------------------
 # Patch /boot/firmware/config.txt
 # ---------------------------------------------------------------------------
-lineinfile "$CONFIG_PATH" "^dtoverlay=tas5805m" "dtoverlay=tas5805m,i2creg=${TAS5805M_I2C_ADDRESS}"
+lineinfile "$CONFIG_PATH" "^dtoverlay=tas58xx" "dtoverlay=tas58xx,i2creg=${TAS5805M_I2C_ADDRESS}"
 
 # Disable HDMI audio output (comment out if present; no-op if already absent)
 sed -i -E "s|^(dtparam=audio=on)|#\1|"    "$CONFIG_PATH"
