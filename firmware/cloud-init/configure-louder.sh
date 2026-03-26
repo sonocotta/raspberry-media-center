@@ -90,5 +90,5 @@ echo "[louder] Configuration written to $CONFIG_PATH"
 # ---------------------------------------------------------------------------
 # Reboot to apply hardware configuration changes
 # ---------------------------------------------------------------------------
-echo "[louder] Rebooting to apply changes..."
-reboot
+echo "[louder] Please reboot to apply changes..."
+#reboot
