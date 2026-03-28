@@ -14,21 +14,15 @@ TAS5805M_I2C_ADDRESS="0x2d"
 CONFIG_PATH="/boot/firmware/config.txt"
 
 # ---------------------------------------------------------------------------
-# Detect architecture and select appropriate kernel headers package
+# Pin kernel headers to the currently running kernel version.
+# Using the meta-package (linux-headers-rpi-v8) would install headers for the
+# LATEST available kernel, which may differ from the running one.  The make
+# step uses $(uname -r) to locate the build tree, so those newer headers are
+# never found and the build fails.  Installing linux-headers-$(uname -r)
+# guarantees the correct match without triggering an unwanted kernel upgrade.
 # ---------------------------------------------------------------------------
-KERNEL_ARCH=$(uname -m)
-case "$KERNEL_ARCH" in
-    aarch64|arm64)
-        KERNEL_HEADERS_PKG="linux-headers-rpi-v8"
-        ;;
-    armv7l)
-        KERNEL_HEADERS_PKG="linux-headers-rpi-v7"
-        ;;
-    *)
-        KERNEL_HEADERS_PKG="linux-headers-rpi-v6"
-        ;;
-esac
-echo "[louder] Architecture: $KERNEL_ARCH → headers package: $KERNEL_HEADERS_PKG"
+KERNEL_HEADERS_PKG="linux-headers-$(uname -r)"
+echo "[louder] Running kernel: $(uname -r) → headers package: $KERNEL_HEADERS_PKG"
 
 # ---------------------------------------------------------------------------
 # Install required packages
