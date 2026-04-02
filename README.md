@@ -26,8 +26,8 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
   - [Loud Raspberry Pi Media Center and Hats](#loud-raspberry-pi-media-center-and-hats)
   - [Louder Raspberry Pi Media Center and Hats](#louder-raspberry-pi-media-center-and-hats)
   - [Dual TFT and OLED Hats](#dual-tft-and-oled-hats)
-  - [Which device is right for me](#which-device-is-right-for-me)
   - [Features](#features)
+  - [Which device is right for me](#which-device-is-right-for-me)
   - [Boards Pinout](#boards-pinout)
     - [Audio](#audio)
     - [Amped Hat (rev E)](#amped-hat-rev-e)
@@ -286,6 +286,15 @@ Note for 2X Loud Hat - it will probably require a dedicated device tree file, th
 ### DAC Configuration - Louder Raspberry Pi Media Center and Hat
 
 TAS58xx DACs (TAS5805M/TAS5825M) are not supported by default Raspbian distribution, therefore, some work needs to be done to enable them. [Linked repo](https://github.com/sonocotta/tas5805m-driver-for-raspbian) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
+
+Alternatively, it is possible to install driver and configure DAC using a single shell script (it assumes you have internet connection set up already, 64-bit system only):
+
+```
+curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder.sh | sudo bash
+```
+
+Works on the 64-bit systems only at the moment. Make sure to check what is inside that script, as you should not `curl internet.links | sudo bash` in general ;)
+
 
 **1X Hat/Media Center (TAS5805M):** Use the single DAC overlay:
 ```
