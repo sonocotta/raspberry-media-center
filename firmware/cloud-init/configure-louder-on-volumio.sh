@@ -24,7 +24,7 @@ apt install -y git raspberrypi-kernel-headers build-essential i2c-tools device-t
 # Install Volumio kernel build prerequisites (this step takes several minutes)
 # ---------------------------------------------------------------------------
 echo "[louder] Running 'volumio kernelsource' — this may take a while..."
-volumio kernelsource
+# volumio kernelsource
 
 # ---------------------------------------------------------------------------
 # Clone or update the TAS5805M kernel driver repository
@@ -70,6 +70,11 @@ lineinfile() {
 # ---------------------------------------------------------------------------
 # Patch /boot/config.txt
 # ---------------------------------------------------------------------------
+# Volumio writes just "dtoverlay=tas58xx" (without parameters) when it applies
+# a DAC setting, leaving "i2creg=0x2d" as an orphaned second line.
+# Clean up any such split before applying the correct single-line overlay.
+sed -i -E '/^dtoverlay=tas58xx[[:space:]]*$/d; /^,i2creg=/d' "$CONFIG_PATH"
+
 lineinfile "$CONFIG_PATH" "^dtoverlay=tas58xx" "dtoverlay=tas58xx,i2creg=${TAS5805M_I2C_ADDRESS}"
 
 # Disable HDMI audio output (comment out if present; no-op if already absent)
