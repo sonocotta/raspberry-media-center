@@ -290,7 +290,7 @@ TAS58xx DACs (TAS5805M/TAS5825M) are not supported by default Raspbian distribut
 Alternatively, it is possible to install driver and configure DAC using a single shell script (it assumes you have internet connection set up already, 64-bit system only):
 
 ```
-curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder-raspbian.sh | sudo bash
 ```
 
 Works on the 64-bit systems only at the moment. Make sure to check what is inside that script, as you should not `curl internet.links | sudo bash` in general ;)
@@ -401,10 +401,16 @@ With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are
 dtoverlay=w5500
 ```
 
-For Louder Raspberry, you'd need to perform a few more steps to configure a custom DAC.
+For Louder Raspberry, you'd need to perform a few more steps to configure a custom DAC. Once you have SSH access (enable it at [volumio.local/dev](http://volumio.local/dev)), you can run a single script that handles everything automatically:
+
+```
+curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder-on-volumio.sh | sudo bash
+```
+
+Make sure to check what is inside that script, as you should not `curl internet.links | sudo bash` in general ;)
 
 <details>
-  <summary>Setup instructions</summary>
+  <summary>Manual setup instructions</summary>
 
 First, get access to the terminal either from USB-Serial or from SSH. To enter the Serial terminal, you'd need to add this line to `/boot/userconfig.txt` (create if missing)
 ```
