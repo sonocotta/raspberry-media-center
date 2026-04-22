@@ -393,6 +393,8 @@ This setup integrates cleanly with Home Assistant, LMS, Mopidy, and other source
 
 ### Volumio
 
+UPD.: As of April 2026, the below instruction no longer works, due to the way kernel source is pulled into volumio. At this moment, I can't find a way to add the TAS58XX driver to Volumio. If you find otherwise, please let me know.
+
 [Volumio](https://volumio.com/get-started/) is a great piece of software, extremely popular with media center devices like Raspberry Media Center. 
 
 With HiFi Raspberry and Loud Raspberry, things are fairly simple. Those DACs are supported out of the box. Select `HiFiBerry DAC` and `Adafruit MAX98357` in the DAC Model settings accordingly. Optionally, you may also create a `/boot/userconfig.txt` file and add the following config to enable W5500 Ethernet
