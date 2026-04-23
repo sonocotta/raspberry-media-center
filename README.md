@@ -287,13 +287,21 @@ Note for 2X Loud Hat - it will probably require a dedicated device tree file, th
 
 TAS58xx DACs (TAS5805M/TAS5825M) are not supported by default Raspbian distribution, therefore, some work needs to be done to enable them. [Linked repo](https://github.com/sonocotta/tas5805m-driver-for-raspbian) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
 
-Alternatively, it is possible to install driver and configure DAC using a single shell script (it assumes you have internet connection set up already, 64-bit system only):
+Alternatively, it is possible to install the driver and configure the DAC using a single shell script (assumes internet connection is set up, 64-bit system only).
 
-```
+**Raspbian / Raspberry Pi OS:**
+```bash
 curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder.sh | sudo bash
 ```
 
-Works on the 64-bit systems only at the moment. Make sure to check what is inside that script, as you should not `curl internet.links | sudo bash` in general ;)
+**DietPi:**
+```bash
+curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder-diet-pi.sh | sudo bash
+```
+
+The DietPi variant handles DietPi-specific differences automatically: it detects the correct boot config and overlays path (`/boot/firmware/` on newer images, `/boot/` on older ones), and uses `dietpi-set_hardware` to enable I2C instead of `raspi-config` (which is not present on DietPi).
+
+Make sure to check what is inside these scripts, as you should not `curl internet.links | sudo bash` in general ;)
 
 
 **1X Hat/Media Center (TAS5805M):** Use the single DAC overlay:
