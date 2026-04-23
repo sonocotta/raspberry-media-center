@@ -1,11 +1,8 @@
 # Raspberry Pi Media Center and Hats
 
-![Open Source Hardware](/images/open-source-hardware-logo.png)
-![Open Source Software](/images/open-source-software-logo.png)
-<a href="https://www.tindie.com/stores/sonocotta/?ref=offsite_badges&utm_source=sellers_andrey-malyshenko&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
-<br />
-[![Dev Chat](https://img.shields.io/discord/1233306441469657140?logo=discord&label=discord&style=flat-square)](https://discord.gg/PtnaAaQMpS)
+<a href="https://lectronz.com/stores/sonocotta" alt="I sell on Lectronz"><img src="https://lectronz-images.b-cdn.net/static/badges/i-sell-on-lectronz-medium.png" /></a><a href="https://www.tindie.com/stores/sonocotta/?ref=offsite_badges&utm_source=sellers_andrey-malyshenko&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
 
+[![Dev Chat](https://img.shields.io/discord/1233306441469657140?logo=discord&label=discord&style=flat-square)](https://discord.gg/PtnaAaQMpS)
 
 ![DSC_0005](https://github.com/sonocotta/raspberry-media-center/assets/5459747/37bf52d2-3fde-4fbb-b98e-35fb1b48ebe4)
 
@@ -898,14 +895,14 @@ At this point, all Hats with 1X marking a single DAC version that can be used wi
 
 You may support our work by ordering these products
 - [HiFi Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
-- HiFi Raspberry Pi Hat at [Tindie](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/) and [Elecrow](https://www.elecrow.com/hifi-raspberry-pi-hat.html)
+- HiFi Raspberry Pi Hat at [Elecrow](https://www.elecrow.com/hifi-raspberry-pi-hat.html) and [Tindie](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/)
 - [Amped Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/amped-raspberry-pi-media-center)
 - [Amped Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/hifi-amped-raspberry-pi-hat/)
 - [Loud Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/)
 - [Loud Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/)
 - [Louder Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/)
-- Louder Raspberry Pi Hat as [Tindie](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat/) and [Elecrow](https://www.elecrow.com/louder-raspberry-pi-hat.html)
-- Louder Raspberry Hat Plus - Coming soon!
+- Louder Raspberry Pi Hat at [Lectronz](https://lectronz.com/products/louder-raspberry-hat), [Elecrow](https://www.elecrow.com/louder-raspberry-pi-hat.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat/) 
+- Louder Raspberry Hat Plus - [Lectronz](https://lectronz.com/products/louder-raspberry-hat-plus), Elecrow (coming soon), and [Tindie](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat-plus/) 
 
 ## Press mentions
 
