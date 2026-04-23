@@ -290,16 +290,18 @@ TAS58xx DACs (TAS5805M/TAS5825M) are not supported by default Raspbian distribut
 Alternatively, it is possible to install the driver and configure the DAC using a single shell script (assumes internet connection is set up, 64-bit system only).
 
 **Raspbian / Raspberry Pi OS:**
+
 ```bash
 curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder.sh | sudo bash
 ```
 
 **DietPi:**
+
 ```bash
 curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder-diet-pi.sh | sudo bash
 ```
 
-The DietPi variant handles DietPi-specific differences automatically: it detects the correct boot config and overlays path (`/boot/firmware/` on newer images, `/boot/` on older ones), and uses `dietpi-set_hardware` to enable I2C instead of `raspi-config` (which is not present on DietPi).
+The DietPi variant handles DietPi-specific differences automatically: it detects the correct boot config and overlays path (`/boot/firmware/` on newer images, `/boot/` on older ones), and uses `dietpi-set_hardware` to enable I2C instead of `raspi-config` (which is not present on DietPi). This script assumes that you already had initial configuration steps done, like configuring network and setting up the dierpi/root user.
 
 Make sure to check what is inside these scripts, as you should not `curl internet.links | sudo bash` in general ;)
 
