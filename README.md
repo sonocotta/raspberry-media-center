@@ -894,8 +894,8 @@ At this point, all Hats with 1X marking a single DAC version that can be used wi
 ## Where to buy
 
 You may support our work by ordering these products
-- [HiFi Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
-- HiFi Raspberry Pi Hat at [Elecrow](https://www.elecrow.com/hifi-raspberry-pi-hat.html) and [Tindie](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/)
+- HiFi Raspberry Pi Media Center at [Lectronz](https://lectronz.com/products/hifi-raspberry-pi-media-center) and [Tindie](https://www.tindie.com/products/sonocotta/raspberry-pi-media-center/)
+- HiFi Raspberry Pi Hat at [Lectronz](https://lectronz.com/products/hifi-raspberry-pi-hat), [Elecrow](https://www.elecrow.com/hifi-raspberry-pi-hat.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/)
 - [Amped Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/amped-raspberry-pi-media-center)
 - [Amped Raspberry Pi Hat](https://www.tindie.com/products/sonocotta/hifi-amped-raspberry-pi-hat/)
 - [Loud Raspberry Pi Media Center](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/)
