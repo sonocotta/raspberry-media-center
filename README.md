@@ -899,7 +899,7 @@ You may support our work by ordering these products
 - Loud Raspberry Hat at [Lectronz](https://lectronz.com/products/loud-raspberry-hat) and [Tindie](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/)
 - Loud Raspberry Media Center at [Lectronz](https://lectronz.com/products/loud-raspberry-media-center) and [Tindie](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/)
 - Louder Raspberry Hat at [Lectronz](https://lectronz.com/products/louder-raspberry-hat), [Elecrow](https://www.elecrow.com/louder-raspberry-pi-hat.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-hat/) 
-- Louder Raspberry Hat Plus - [Lectronz](https://lectronz.com/products/louder-raspberry-hat-plus), Elecrow (coming soon), and [Tindie](https://www.tindie.com/products/sonocotta/louder-raspberry-hat-plus/) 
+- Louder Raspberry Hat Plus - [Lectronz](https://lectronz.com/products/louder-raspberry-hat-plus), [Elecrow](https://www.elecrow.com/louder-raspberry-hat-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-raspberry-hat-plus/) 
 - Louder Raspberry Media Center at [Lectronz](https://lectronz.com/products/louder-raspberry-media-center) and [Tindie](https://www.tindie.com/products/sonocotta/louder-raspberry-pi-media-center/)
 - Amped Raspberry Hat at [Lectronz](https://lectronz.com/products/amped-raspberry-hat) and [Tindie](https://www.tindie.com/products/sonocotta/hifi-amped-raspberry-pi-hat/)
 - Amped Raspberry Media Center at [Lectronz](https://lectronz.com/products/amped-raspberry-media-center) and [Tindie](https://www.tindie.com/products/sonocotta/amped-raspberry-pi-media-center/)
