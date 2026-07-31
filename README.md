@@ -113,7 +113,10 @@ Raspberry Pi HiFi Hat is the lightweight implementation of the same DAC and powe
 
 ## Raspberry Pi HiFi Plus Hat
 
-<img width="1663" height="1188" alt="image" src="https://github.com/user-attachments/assets/9e2c8c34-bcf8-42fe-b1a7-7631fe93952a" />
+| Hat | Hat on the Pi |
+|----|----|
+| ![hat image](https://github.com/user-attachments/assets/9e2c8c34-bcf8-42fe-b1a7-7631fe93952a) | ![hat on the Pi image](https://github.com/user-attachments/assets/53181a48-1f9a-405d-b35a-c924e6e7f404)
+
 
 Raspberry Pi HiFi Plus Hat uses a more advanced PCM5122 DAC and adds an audio-grade PCM1863 ADC onboard. The main benefit of using PCM5122 is a built-in digital volume control that makes sure that audio resolution is not lost at low volume. It also has built-in DSP with 6x BQ filters, but software support in Linux for it is absent at the moment, so you might need to develop it yourself (or wait for it to be added by the community).
 
