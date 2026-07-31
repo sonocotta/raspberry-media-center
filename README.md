@@ -88,7 +88,7 @@ dtoverlay=hifiberry-dac
 
 Believe it or not, all the device tree definitions, kernel drivers, and dependency packages are already in place. 
 
-Sure, compared to the ESP32 platform, it is not as lightweight. It requires more power, it takes some time to boot. But when it comes to rapid development, there is nothing like the Raspberry Pi.
+Sure, compared to the ESP32 platform, it is not as lightweight. It requires more power, and it takes some time to boot. But when it comes to rapid development, there is nothing like the Raspberry Pi.
 
 ## Raspberry Pi HiFi Hats and Media Center
 
@@ -100,7 +100,7 @@ Raspberry Pi HiFi Media Center is a first-in-line product that uses the legendar
 |----|----|
 | ![DSC_0122](https://github.com/user-attachments/assets/0b297b27-d3c7-4b82-b072-3d3edb96539f) | ![DSC_0113](https://github.com/user-attachments/assets/e42a2fa6-db4e-4659-9651-801031f9721c) |
 
-Raspberry Pi HiFi Hat is the lightweight implementation of the same DAC and power circuitry in a Hat shape. It has two flavors: **1X** is a traditional DAC that works with any Raspberry Pi out there, while **2X** is specifically designed for Raspberry Pi 5 and implements two stereo-DACs, which Raspberry Pi 5 users can use independently. Using two of them, you can have up to 4 stereo outputs, totalling 8 channels of audio.
+Raspberry Pi HiFi Hat is the lightweight implementation of the same DAC and power circuitry in a Hat shape. It has two flavors: **1X** is a traditional DAC that works with any Raspberry Pi out there, while **2X** is specifically designed for Raspberry Pi 5 and implements two stereo DACs, which Raspberry Pi 5 users can use independently. Using two of them, you can have up to 4 stereo outputs, totalling 8 channels of audio.
 
 ### Key features
 
@@ -113,11 +113,11 @@ Raspberry Pi HiFi Hat is the lightweight implementation of the same DAC and powe
 
 ## Raspberry Pi HiFi Plus Hat
 
-*image placeholder*
+<img width="1663" height="1188" alt="image" src="https://github.com/user-attachments/assets/9e2c8c34-bcf8-42fe-b1a7-7631fe93952a" />
 
-Raspberry Pi HiFi Plus Hat uses higher grade PCM5122 DAC, and adds audio-grade PCM1863 ADC onboard. The main benefor of using PCM5122 is a built-in digital volume control, that makes sure that audio resolution is not lost on low volume. It also has built-in DSP with 6x BQ filters, but software support in linux for it is absent at the moment, so you might need to develop it yourself (or wait for it to be added by the community).
+Raspberry Pi HiFi Plus Hat uses a more advanced PCM5122 DAC and adds an audio-grade PCM1863 ADC onboard. The main benefit of using PCM5122 is a built-in digital volume control that makes sure that audio resolution is not lost at low volume. It also has built-in DSP with 6x BQ filters, but software support in Linux for it is absent at the moment, so you might need to develop it yourself (or wait for it to be added by the community).
 
-The HiFi Plus hat is fairly similar functionally to [HifiBerry DAC+ ADC](https://www.hifiberry.com/docs/data-sheets/datasheet-dac-adc/), but developed from the scratch to validate DAC/ADC schematics for the [sister product](https://github.com/sonocotta/esp32-audio-dock/) based on the ESP32
+The HiFi Plus Hat is fairly similar functionally to [HifiBerry DAC+ ADC](https://www.hifiberry.com/docs/data-sheets/datasheet-dac-adc/), but developed from scratch to validate DAC/ADC schematics for the [sister product](https://github.com/sonocotta/esp32-audio-dock/) based on the ESP32
 
 ### Key features
 
@@ -130,12 +130,12 @@ The HiFi Plus hat is fairly similar functionally to [HifiBerry DAC+ ADC](https:/
 - Built-in DSP with 6xBQ filters, DRC, AGL
 - I2S + I2C interface
 
-- [PCM1863](https://www.ti.com/product/PCM1863) ADC with line-livel and analog mic inputs
+- [PCM1863](https://www.ti.com/product/PCM1863) ADC with line-level and analog mic inputs
 - -110 dB typical noise level
 - 2.1V RMS output
 - Up to 32-bit resolution
 - Up to 192 kHz sampling rate
-- Software controlled gain (-12..32 dB)
+- Software-controlled gain (-12..32 dB)
 - I2S + I2C interface
 
 ## Amped Raspberry Pi Media Center and Hats 
@@ -181,7 +181,7 @@ As of the end of 2025, I'm working on an upgraded version of the Amped Hat that 
 
 ![DSC_0013](https://github.com/sonocotta/raspberry-media-center/assets/5459747/a998abe0-6069-443d-b7e2-b12694eca55d)
 
-Loud Raspberry Pi Media Center uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
+Loud Raspberry Pi Media Center uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When the DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
 
 | 1X | 2X |
 |----|----|
@@ -207,7 +207,7 @@ Louder Raspberry Pi Media Center is a top-of-the-range model that uses modern, h
 |----|----|
 | <img width="1707" height="1241" alt="image" src="https://github.com/user-attachments/assets/c3ac5ac5-5a39-48e0-97df-07f8b04368ea" /> | <img width="1710" height="1222" alt="image" src="https://github.com/user-attachments/assets/ab41430d-effd-416b-b02f-6d5448cf2df6" /> | 
 
-Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (opposed to 20V over PD) and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones.
+Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up to 28V (as opposed to 20V over PD) and has a step-down converter onboard to deliver 5V to the Pi, so you need only a single power source for everything. Otherwise, it delivers audio through the same highly capable DAC, capable of driving large speakers or tearing apart small ones.
 
 **Hat Variants:**
 - **1X**: Single [TAS5805M](https://www.ti.com/product/TAS5805M) DAC for stereo output (2.0)
@@ -215,7 +215,7 @@ Louder Raspberry Pi Hat drops the USB-PD in favor of an external power supply up
 - **1X Plus**: Enhanced version featuring [TAS5825M](https://www.ti.com/product/TAS5825M) DAC with better power efficiency and richer DSP features
 - **2X Plus**: Dual [TAS5825M](https://www.ti.com/product/TAS5825M) DAC version for 2.1 configuration with dedicated crossover filters (~55W subwoofer, ~30W per satellite)
 
-The 2X version uses dual TAS5805M/TAS5825M DACs with single I2S interface to deliver a complete 2.1 speaker system with dedicated crossover filters. The power budget is optimized with 45..55W for the subwoofer and 22..30W per satellite speaker, specifically aimed at delivering a professional 2.1 speaker configuration.
+The 2X version uses dual TAS5805M/TAS5825M DACs with a single I2S interface to deliver a complete 2.1 speaker system with dedicated crossover filters. The power budget is optimized with 45..55W for the subwoofer and 22..30W per satellite speaker, specifically aimed at delivering a professional 2.1 speaker configuration.
 
 | 1X Plus model | 2X Plus model |
 |----|----|
@@ -226,7 +226,7 @@ TAS58xx DACs (TAS5805M/TAS5825M) feature highly capable DSPs that allow flexible
 **2X Hat Features:**
 - Primary DAC (0x2d/0x4c): Stereo satellite speakers with HF crossover (high-pass, 60-150Hz), or full-range speakers with 15-band EQ
 - Secondary DAC (0x2e/0x4d): Mono subwoofer in bridge mode with LF crossover (low-pass, 60-150Hz)
-- Linkwitz-Riley 4th order crossover filters
+- Linkwitz-Riley 4th-order crossover filters
 - Global device list synchronization for reliable initialization (DSP init triggered by I2S clock)
 - Independent ALSA controls per DAC for fine-tuning
 
@@ -234,7 +234,7 @@ TAS58xx DACs (TAS5805M/TAS5825M) feature highly capable DSPs that allow flexible
 
 ## Dual TFT and OLED Hats
 
-To add a visual touch to the above Hats, I developed two Hats that add two displays each: Dual OLED Hat adds 1.3" 128x64 px OLED displays, and Dual TFT Hat that adds two 2.0" 240x320 px TFT displays. These can be used to add visualisations, current track playing, and whatever else comes to your mind. Both options use the SPI bus, and this means two things: they are not very fast, you should count on a 30 fps frame rate at best; but also, they are very easy to use from user space, using popular Adafruit and Pimoroni Python libraries. But most importantly, they are dead cheap, costing only $5 a piece, definitely not going to drain your budget.
+To add a visual touch to the above Hats, I developed two Hats that add two displays each: the Dual OLED Hat adds 1.3" 128x64 px OLED displays, and the Dual TFT Hat adds two 2.0" 240x320 px TFT displays. These can be used to add visualisations, current track playing, and whatever else comes to your mind. Both options use the SPI bus, and this means two things: they are not very fast; you should count on a 30 fps frame rate at best; but also, they are very easy to use from user space, using popular Adafruit and Pimoroni Python libraries. But most importantly, they are dead cheap, costing only $5 a piece, definitely not going to drain your budget.
 
 |  Dual OLED Hat | Dual TFT Hat |
 |-----------|---------|
@@ -246,7 +246,7 @@ To add a visual touch to the above Hats, I developed two Hats that add two displ
 |---|---|---|---|---|---|---|
 | Image (Media Center) | ![DSC_0733 (copy 1)](https://github.com/sonocotta/raspberry-media-center/assets/5459747/990da9e7-b8fd-400c-b818-cb9352fd10a3) | n/a | ![DSC_0008](https://github.com/sonocotta/raspberry-media-center/assets/5459747/8846389c-f06c-4c36-88a7-63c0c789e944) | ![DSC_0011-copy](https://github.com/sonocotta/raspberry-media-center/assets/5459747/fbedd926-8ff9-4f8a-8948-a3f96b013a6f) | n/a | ![DSC_0009](https://github.com/user-attachments/assets/eeeb18d5-01fc-4678-ba52-fe4ac63d199b) |
 | Compatible with (Media Center) | Raspberry Pi Zero (W), Raspberry Pi Zero2 W | n/a | Raspberry Pi Zero (W), Raspberry Pi Zero2 W | Raspberry Pi Zero (W), Raspberry Pi Zero2 W | n/a | Raspberry Pi Zero (W), Raspberry Pi Zero2 W |
-| Image (Hat) | ![DSC_0122](https://github.com/user-attachments/assets/0b297b27-d3c7-4b82-b072-3d3edb96539f) | image placeholder | ![DSC_0179](https://github.com/user-attachments/assets/03e1fa11-a973-4318-b79f-261a4b1d878a) | ![DSC_0169](https://github.com/user-attachments/assets/6b883758-e5cc-466a-85cb-134cbc30f64b) | ![image](https://github.com/user-attachments/assets/d27190d9-b295-4cb9-8db9-9b0343fa4398) | ![image](https://github.com/user-attachments/assets/6b412757-82b9-4639-952c-ec2004562ee8) |
+| Image (Hat) | ![DSC_0122](https://github.com/user-attachments/assets/0b297b27-d3c7-4b82-b072-3d3edb96539f) | ![image](https://github.com/user-attachments/assets/9e2c8c34-bcf8-42fe-b1a7-7631fe93952a) | ![DSC_0179](https://github.com/user-attachments/assets/03e1fa11-a973-4318-b79f-261a4b1d878a) | ![DSC_0169](https://github.com/user-attachments/assets/6b883758-e5cc-466a-85cb-134cbc30f64b) | ![image](https://github.com/user-attachments/assets/d27190d9-b295-4cb9-8db9-9b0343fa4398) | ![image](https://github.com/user-attachments/assets/6b412757-82b9-4639-952c-ec2004562ee8) |
 | Compatible with (1X Hat) | Every Pi | Every Pi | Every Pi | Every Pi | Every Pi | Every Pi |
 | Image (Hat, 2X) | ![DSC_0113](https://github.com/user-attachments/assets/e42a2fa6-db4e-4659-9651-801031f9721c) | n/a | ![DSC_0043](https://github.com/user-attachments/assets/5768a8c6-20bf-4841-bc8a-936c5d4e96a8) | ![DSC_0164](https://github.com/user-attachments/assets/5eb5781d-9d8b-42ee-bd18-dea1189071e4) | ![image](https://github.com/user-attachments/assets/6ea40595-5bf0-4188-9f11-c08817e1e429) | ![DSC_0018](https://github.com/user-attachments/assets/04fe822c-d98c-4780-80f8-5482f1c90cb7) |
 | Compatible with (2X Hat) | Raspberry Pi 5 | n/a | Raspberry Pi 5 | Every Pi | Every Pi | Raspberry Pi 5 |
@@ -318,7 +318,7 @@ dtoverlay=hifiberry-dac
 
 ### DAC Configuration - HiFi Plus Hat
 
-Similar to HiFi Hat all you need is a device tree inclusion in the `/boot/config.txt`
+Similar to HiFi Hat, all you need is a device tree inclusion in `/boot/config.txt`
 
 ```
 dtoverlay=gpio-ir,gpio_pin=23
@@ -327,19 +327,19 @@ dtoverlay=hifiberry-dacplusadc
 
 ### DAC Configuration - Amped Raspberry Media Center and Hat
 
-A simple setup should only include a single line into `/boot/config.txt`, the amp will be powered on all the time by default.
+A simple setup should only include a single line in `/boot/config.txt`; the amp will be powered on all the time by default.
 
 ```
 dtoverlay=hifiberry-dac
 ```
 
-[Revisions A and B] If you want to control the amp using GPIO you may use software integration to pull GPIO5/6 HIGH or LOW to switch the amp ON and OFF.
+[Revisions A and B] If you want to control the amp using GPIO, you may use software integration to pull GPIO5/6 HIGH or LOW to switch the amp ON and OFF.
 
-Starting from revision C it will be possible to use device-tree configuration to switch the amp ON and OFF when audio is playing (it is possible in earlier revisions as well, but I didn't manage to avoid fully the speakers popping sound)
+Starting from revision C, it will be possible to use device-tree configuration to switch the amp ON and OFF when audio is playing (it is possible in earlier revisions as well, but I didn't manage to avoid the speakers popping sound fully)
 
 ### DAC Configuration - Loud Raspberry Pi Media Center and Hat
 
-As simple as the HiFi model, just add 3 lines to the `/boot/config.txt`
+As simple as the HiFi model, just add 3 lines to`/boot/config.txt`
 
 ```
 dtoverlay=gpio-ir,gpio_pin=23
@@ -351,13 +351,13 @@ dtoverlay=max98357a,sdmode-pin=4
 
 Note that for Hat only the last line is applicable
 
-Note for 2X Loud Hat - it will probably require a dedicated device tree file, that's a work in progress still
+Note for 2X Loud Hat - it will probably require a dedicated device tree file; that's still a work in progress
 
 ### DAC Configuration - Louder Raspberry Pi Media Center and Hat
 
-TAS58xx DACs (TAS5805M/TAS5825M) are not supported by default Raspbian distribution, therefore, some work needs to be done to enable them. [Linked repo](https://github.com/sonocotta/tas5805m-driver-for-raspbian) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
+TAS58xx DACs (TAS5805M/TAS5825M) are not supported by default Raspbian distribution; therefore, some work needs to be done to enable them. [Linked repo](https://github.com/sonocotta/tas5805m-driver-for-raspbian) contains code and instructions on how to configure it. It will take you 5 minutes and one reboot.
 
-Alternatively, it is possible to install the driver and configure the DAC using a single shell script (assumes internet connection is set up, 64-bit system only).
+Alternatively, it is possible to install the driver and configure the DAC using a single shell script (assumes an internet connection is set up, 64-bit system only).
 
 **Raspbian / Raspberry Pi OS:**
 
@@ -371,9 +371,9 @@ curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs
 curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder-diet-pi.sh | sudo bash
 ```
 
-The DietPi variant handles DietPi-specific differences automatically: it detects the correct boot config and overlays path (`/boot/firmware/` on newer images, `/boot/` on older ones), and uses `dietpi-set_hardware` to enable I2C instead of `raspi-config` (which is not present on DietPi). This script assumes that you already had initial configuration steps done, like configuring network and setting up the dierpi/root user.
+The DietPi variant handles DietPi-specific differences automatically: it detects the correct boot config and overlays path (`/boot/firmware/` on newer images, `/boot/` on older ones), and uses `dietpi-set_hardware` to enable I2C instead of `raspi-config` (which is not present on DietPi). This script assumes that you already have initial configuration steps done, like configuring the network and setting up the dierpi/root user.
 
-Make sure to check what is inside these scripts, as you should not `curl internet.links | sudo bash` in general ;)
+Make sure to check what is inside these scripts, as you should not `curl link-from-the-internet | sudo bash` in general ;)
 
 
 **1X Hat/Media Center (TAS5805M):** Use the single DAC overlay:
@@ -957,7 +957,7 @@ The configuration value that allows this is quite simply
 dtoverlay=hifiberry-dac8x
 ```
 
-At this point, all Hats with 1X marking a single DAC version that can be used with every Pi, including Pi 5. The 2X version uses two data lines of the Pi5 and will work out-of-the-box with it. It can be changed to use a second set of data lines, so 2 boards stacked together will utilize 4 DACs or 8 channels of audio. You can short data lines together and use 2X Hat with Pi2/3/4, having 2 parallel DAC channels.
+At this point, all Hats with 1X marking are a single DAC version that can be used with every Pi, including Pi 5. The 2X version uses two data lines of the Pi5 and will work out of the box with it. It can be changed to use a second set of data lines, so 2 boards stacked together will utilize 4 DACs or 8 channels of audio. You can short data lines together and use a 2X Hat with Pi2/3/4, having 2 parallel DAC channels.
 
 
 ## Demo
