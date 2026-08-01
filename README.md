@@ -971,6 +971,7 @@ At this point, all Hats with 1X marking are a single DAC version that can be use
 
 You may support our work by ordering these products
 - HiFi Raspberry Hat at [Lectronz](https://lectronz.com/products/hifi-raspberry-hat), [Elecrow](https://www.elecrow.com/hifi-raspberry-pi-hat.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-hat/)
+- HiFi Raspberry Hat Plus at [Lectronz](https://lectronz.com/products/hifi-raspberry-hat-plus), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-plus-raspberry-pi-hat/)
 - HiFi Raspberry Media Center at [Lectronz](https://lectronz.com/products/hifi-raspberry-media-center) and [Tindie](https://www.tindie.com/products/sonocotta/hifi-raspberry-pi-media-center/)
 - Loud Raspberry Hat at [Lectronz](https://lectronz.com/products/loud-raspberry-hat) and [Tindie](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-hat/)
 - Loud Raspberry Media Center at [Lectronz](https://lectronz.com/products/loud-raspberry-media-center) and [Tindie](https://www.tindie.com/products/sonocotta/loud-raspberry-pi-media-center/)
