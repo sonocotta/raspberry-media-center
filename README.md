@@ -23,7 +23,7 @@ Raspberry Pi Media Center Hats are cost-effective versions of the above devices,
     - [Key features](#key-features-1)
   - [Amped Raspberry Pi Media Center and Hats](#amped-raspberry-pi-media-center-and-hats)
     - [Key features](#key-features-2)
-    - [New TPA3128 design](#new-tpa3128-design)
+    - [New TPA3118/TPA3128 design](#new-tpa3118tpa3128-design)
   - [Loud Raspberry Pi Media Center and Hats](#loud-raspberry-pi-media-center-and-hats)
     - [Key features](#key-features-3)
   - [Louder Raspberry Pi Media Center and Hats](#louder-raspberry-pi-media-center-and-hats)
@@ -169,16 +169,26 @@ Originally, amps could be shut down using GPIO pins, but in the latter version o
 - Up to 1x 130W at 2 Ohm at 26V (1% THD+N)
 - 90% efficiency
 
-### New TPA3128 design
+### New TPA3118/TPA3128 design
 
-As of the end of 2025, I'm working on an upgraded version of the Amped Hat that uses a newer and more capable [TPA3128](https://www.ti.com/product/TPA3128D2) amp. There are a few benefits that the new amp brings
+Originally, I used the TPA3110 amp with Amped Raspberry Pi boards for its simplicity and availability. The only issue with TAP3110 is that it lacks the MUTE pin. It does have an STBY pin, but as it turned out, it is not pop-free, meaning each time you switch it on and off, the amp makes a loud pop in the speakers. I tried changing the level slowly, but it didn't help.
 
-- It is much more efficient (about half the heat with the same output power, compared to TPA3110), so the board can sustain higher power for longer
-- It has a true MUTE pin that can be connected to the Pi and shut down the output driver when no audio is playing
-- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power alone
-- Being a newer design, it has better audio quality. I can't hear it, but people say it sounds much better
+Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
+
+- It does have a true MUTE pin, and now it is software-controlled on Amped Raspberry boards. It means that the board starts dead-quiet, and it stays quiet when the audio is paused
+- It can work with 4.5V, so it plays even when powered from a simple 5V source, similar to Louder-Raspberry. TPA3110 needs at least 8V to spin up
+- TPA3128 has a marginally better audio quality, as they say. I cannot hear the difference 😉
+
+⚠️ TPA3128 boards default to 1SPW modulation, which causes audible pops when exiting MUTE and a quiet static noise afterward. See [errata: TPA3128 1SPW modulation pop and static noise issue](/errata/tpa3128-1spw-pop-noise.md) for a permanent hardware fix.
 
 <img width="3812" height="2520" alt="image" src="https://github.com/user-attachments/assets/94b7b191-065b-42a6-b149-b6d4b77b4c2f" />
+
+On the latest revisions I'm switching over to the TPA3118 amp, replacing TPA3128 for a few reasons:
+
+- MUTE schematic is updated to slow down voltage ramping speed on turn on – this helps reduce pop noise to “I can no longer hear it” level
+- Modulation is hardwired to BD (1SPW is more efficient, but caused pops as well)
+- Gain is fixed at a 20dB level – also helps with pops
+- I added a band-pass input filter network to make sure it is noise-free.
 
 ## Loud Raspberry Pi Media Center and Hats
 
