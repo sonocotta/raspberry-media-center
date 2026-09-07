@@ -638,6 +638,11 @@ Both TAS5805M and TAS5825M DACs feature sophisticated DSPs inside. The unified d
   - Thermal warnings (4 levels: 112°C, 122°C, 134°C, 146°C)
   - Clock and Digital Signal Processing faults
   - Overcurrent warnings and shutdown detection
+- **Custom DSP Configuration:** For cases where the built-in EQ/mixer controls aren't enough, the driver can load a full DSP program exported from [TI PurePath Console (PPC3)](https://www.ti.com/tool/PUREPATHCONSOLE) as a plain-text .cfg register dump (`ti,dsp-config-name` / `firmware=` overlay parameter), so nearly anything achievable in the PPC3 tuning software can be baked into a config file and loaded at boot
+  - A single exported file can hold register writes for several DACs at different I2C addresses; the driver only applies the lines matching its own address, so one config file can cover both DACs on a 2X/2X Plus board
+  - Once a config loads successfully for a DAC, its built-in Equalizer/Crossover, Mixer, and per-channel volume ALSA controls are automatically hidden, since the loaded program already drives those DSP registers directly
+
+More details can be found in the [linked repo](https://github.com/sonocotta/tas5805m-driver-for-raspbian#kernel-module---loading-custom-dsp-configuration)
 
 <details>
   <summary>PurePath screenshots</summary>
