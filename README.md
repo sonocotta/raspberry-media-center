@@ -506,13 +506,17 @@ Louder Raspberry needs the TAS58xx driver, which Volumio doesn't include. A scri
    It downloads about 250 MB and needs about 2.5 GB of free space while it builds. It takes a few minutes on a Pi 4 or Pi 5 and a lot longer on a Pi Zero.
 3. In Volumio, open **Settings > Playback Options**, turn on **I2S DAC**, and pick your board under **DAC Model**:
    - `Louder Raspberry` for the 1X Hat and the Media Center (TAS5805M)
-   - `Louder Raspberry Plus` for the Plus Hat (TAS5825M)
-   - `Louder Raspberry 2X` for the 2X Hat (2.1 output with two DACs)
+   - `Louder Raspberry Plus` for the 1X Plus Hat (TAS5825M)
+   - `Louder Raspberry 2X` for the 2X Hat (2.1 output with two TAS5805M)
+   - `Louder Raspberry 2X Plus` for the 2X Plus Hat (2.1 output with two TAS5825M)
 
    ![image](https://github.com/sonocotta/raspberry-media-center/assets/5459747/32c4cfeb-9b0b-4580-9f74-4d01c7ff4fa1)
 4. Save, and reboot when Volumio asks.
+5. 2X and 2X Plus only: under **Volume options**, set **Mixer Type** to **Software**. The two amplifiers have separate volume controls, and otherwise Volumio's volume slider only changes the subwoofer.
 
-**Run the script again after every Volumio update.** Updates bring a new kernel, and the driver has to be rebuilt for it. If the Louder boards are missing from the DAC list afterwards, select yours again once the script has finished.
+The script is written for Volumio 4. On Volumio 3 (based on Debian Buster) it can't build for a Pi 5, and on other Pis it needs Buster's package mirrors, which have moved to `legacy.raspbian.org`.
+
+**Run the script again after every Volumio update.** Updates bring a new kernel, and the driver has to be rebuilt for it. The script also puts the Louder boards back in the DAC list if the update removed them. If your board is still selected, it tells you to reboot; otherwise pick it again.
 
 Make sure to check what is inside that script, as you should not `curl internet.links | sudo bash` in general ;)
 
@@ -522,10 +526,13 @@ Make sure to check what is inside that script, as you should not `curl internet.
 What the script does:
 - It reads the running kernel version (`uname -r`) and the firmware revision Volumio installed (`/boot/.firmware_revision`). It then downloads the matching kernel source and symbol versions (`Module.symvers`, `Module7.symvers`, `Module7l.symvers` or `Module8.symvers`) from the Raspberry Pi firmware repository. Volumio's own `volumio kernelsource` helper uses the v7 symbols on a Pi 4 (v7l) kernel, and the kernel then refuses to load the module.
 - It builds `tas58xx.ko`, installs it as `snd-soc-tas58xx.ko`, and compiles the `tas58xx` and `tas58xx-dual` overlays into `/boot/overlays`. A Pi 5 runs a 64-bit kernel under Volumio's 32-bit system, so there the script cross-compiles.
-- It adds three entries to `/volumio/app/plugins/system_controller/i2s_dacs/dacs.json` and keeps the original as `dacs.json.orig`. When you pick one, Volumio writes the overlay line to `/boot/config.txt` itself. The entries leave the `modules` field empty. With a value there, Volumio skips the overlay and overwrites `/etc/modules`, which is what happened with the entry in earlier versions of these instructions. The script repairs `/etc/modules` if it finds that damage.
+- It adds four entries to `/volumio/app/plugins/system_controller/i2s_dacs/dacs.json` and keeps the original as `dacs.json.orig`. When you pick one, Volumio writes the overlay line to `/boot/config.txt` itself. The entries leave the `modules` field empty. With a value there, Volumio skips the overlay and overwrites `/etc/modules`, which is what happened with the entry in earlier versions of these instructions.
+- It cleans up after those earlier instructions: it removes `tas58xx` overlay lines that were added to `/boot/config.txt` by hand (keeping a backup as `config.txt.louder-backup`), so the overlay isn't loaded twice, and it repairs `/etc/modules`.
+- If a Louder board is already selected in Volumio, it writes that board's overlay line below Volumio's banner in `/boot/config.txt` itself. Volumio only rewrites that line when you switch to a different DAC, so picking the same board again wouldn't apply a changed address. In that case the script tells you to reboot instead of picking a board.
 
 Options go between `sudo` and `bash`, for example `... | sudo LOUDER_I2C_ADDRESS=0x2e bash`:
-- `LOUDER_I2C_ADDRESS`: I2C address for the `Louder Raspberry` entry (default `0x2d`). Some early 1X boards answer on `0x2e`. If no sound card appears, run `sudo i2cdetect -y 1`, and if the amplifier shows up as `2e`, re-run the script with `LOUDER_I2C_ADDRESS=0x2e` and select `Louder Raspberry` again.
+- `LOUDER_I2C_ADDRESS`: I2C address for the `Louder Raspberry` entry (default `0x2d`). Some early 1X boards answer on `0x2e`. If no sound card appears, run `sudo i2cdetect -y 1`, and if the amplifier shows up as `2e`, re-run the script with `LOUDER_I2C_ADDRESS=0x2e` and reboot.
+- `LOUDER_PLUS_I2C_ADDRESS`: I2C address for the `Louder Raspberry Plus` entry (default `0x4c`). TAS5825M boards use `0x4c` to `0x4f`. If `i2cdetect` shows the amplifier at a different one of these, for example `4d`, re-run the script with `LOUDER_PLUS_I2C_ADDRESS=0x4d` and reboot.
 - `TAS58XX_REF`: driver branch, tag or commit to build (default `main`).
 - `LOUDER_WORK_DIR`: where to download and build (default `/home/volumio/louder-build`).
 - `KEEP_BUILD=1`: keep the kernel source after a successful build.
@@ -547,7 +554,7 @@ Perform a quick speaker test, to confirm that sound card is working
 speaker-test -c 2 -t wav -D sysdefault:CARD=LouderRaspberry
 ```
 
-Volume: the `Louder Raspberry` and `Louder Raspberry Plus` entries use the amplifier's `Digital` control as a hardware mixer. The `Louder Raspberry 2X` entry uses Volumio's software volume, because its two amplifiers each have their own control (`2.0 Digital` and `0.1 Digital`).
+Volume: the `Louder Raspberry` and `Louder Raspberry Plus` entries use the amplifier's `Digital` control as a hardware mixer. On the 2X boards each amplifier has its own controls (`2.0 Digital` for the speakers, `0.1 Digital` for the subwoofer), so there's no single control for Volumio to use. Without a mixer named in the DAC entry, Volumio picks the first control it finds, which belongs to the subwoofer. That's why step 5 sets the Mixer Type to Software.
 
 </details>
 

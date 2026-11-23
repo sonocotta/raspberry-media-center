@@ -6,19 +6,23 @@
 #   curl -sL https://raw.githubusercontent.com/sonocotta/raspberry-media-center/refs/heads/main/firmware/cloud-init/configure-louder-on-volumio.sh | sudo bash
 #
 # Then pick your board in Settings > Playback Options > DAC Model, save, and reboot.
+# For the 2X and 2X Plus boards, also set Volume options > Mixer Type to Software.
 #
 # Run it again after every Volumio update. Updates change the kernel, and the
 # driver has to be rebuilt for the new one.
 #
 # The build takes a few minutes on a Pi 4 or Pi 5 and much longer on a Pi Zero,
 # downloads about 250 MB and needs about 2.5 GB of free space while it runs.
+# Written for Volumio 4 (Debian Bookworm). On Volumio 3 (Debian Buster) a Pi 5
+# isn't supported, and other Pis need working Buster package mirrors.
 #
 # Optional settings (put them after sudo, e.g. "... | sudo LOUDER_I2C_ADDRESS=0x2e bash"):
-#   LOUDER_I2C_ADDRESS  I2C address for the "Louder Raspberry" (1X) entry. Default 0x2d.
-#                       Some early 1X boards answer on 0x2e instead.
-#   TAS58XX_REF         Driver branch, tag or commit to build. Default main.
-#   LOUDER_WORK_DIR     Where to download and build. Default /home/volumio/louder-build.
-#   KEEP_BUILD=1        Keep the downloaded kernel source after a successful build.
+#   LOUDER_I2C_ADDRESS       I2C address for the "Louder Raspberry" (1X) entry. Default 0x2d.
+#                            Some early 1X boards answer on 0x2e instead.
+#   LOUDER_PLUS_I2C_ADDRESS  I2C address for the "Louder Raspberry Plus" entry. Default 0x4c.
+#   TAS58XX_REF              Driver branch, tag or commit to build. Default main.
+#   LOUDER_WORK_DIR          Where to download and build. Default /home/volumio/louder-build.
+#   KEEP_BUILD=1             Keep the downloaded kernel source after a successful build.
 #
 # Why this doesn't use `volumio kernelsource`: on a Pi 4 that helper prepares the
 # kernel with the v7 Module.symvers instead of v7l. Many of the kernel symbols this
@@ -32,7 +36,9 @@ set -euo pipefail
 TAS58XX_REPO="https://github.com/sonocotta/tas5805m-driver-for-raspbian"
 TAS58XX_REF="${TAS58XX_REF:-main}"
 LOUDER_I2C_ADDRESS="${LOUDER_I2C_ADDRESS:-0x2d}"
-WORK_DIR="${LOUDER_WORK_DIR:-/home/volumio/louder-build}"
+LOUDER_PLUS_I2C_ADDRESS="${LOUDER_PLUS_I2C_ADDRESS:-0x4c}"
+# Absolute path: the module build runs make from inside the kernel tree.
+WORK_DIR="$(realpath -m "${LOUDER_WORK_DIR:-/home/volumio/louder-build}")"
 KEEP_BUILD="${KEEP_BUILD:-0}"
 
 RPI_FIRMWARE_RAW="https://raw.githubusercontent.com/raspberrypi/rpi-firmware"
@@ -40,9 +46,11 @@ RPI_LINUX_ARCHIVE="https://github.com/raspberrypi/linux/archive"
 BOOT_DIR="/boot"
 MODULES_ROOT="/lib/modules"
 OS_RELEASE="/etc/os-release"
+DT_MODEL="/proc/device-tree/model"
 PROC_CONFIG="/proc/config.gz"
 ETC_MODULES="/etc/modules"
 DACS_JSON="/volumio/app/plugins/system_controller/i2s_dacs/dacs.json"
+I2S_CONFIG="/data/configuration/system_controller/i2s_dacs/config.json"
 MIN_FREE_MB=2500
 
 log() { echo "[louder] $*"; }
@@ -53,10 +61,23 @@ die() { echo "[louder] ERROR: $*" >&2; exit 1; }
 # ---------------------------------------------------------------------------
 check_system() {
     [ "$(id -u)" -eq 0 ] || die "Run this as root: curl -sL <script url> | sudo bash"
-    grep -q 'VOLUMIO_HARDWARE="pi"' "$OS_RELEASE" 2>/dev/null ||
-        die "This script is for Volumio on a Raspberry Pi. On Raspberry Pi OS use configure-louder.sh."
-    [[ "$LOUDER_I2C_ADDRESS" =~ ^0x[0-9a-fA-F]{2}$ ]] ||
-        die "LOUDER_I2C_ADDRESS must look like 0x2d (got '$LOUDER_I2C_ADDRESS')"
+    # Volumio's Pi images report VOLUMIO_HARDWARE as pi, pi-kiosk, cm0, cm4 or cm5,
+    # so check for Volumio and for a Raspberry Pi separately.
+    grep -q '^VOLUMIO_HARDWARE=' "$OS_RELEASE" 2>/dev/null ||
+        die "This script is for Volumio. On Raspberry Pi OS use configure-louder.sh."
+    local model=""
+    if [ -r "$DT_MODEL" ]; then
+        model="$(tr -d '\0' <"$DT_MODEL")"
+    fi
+    [[ "$model" == "Raspberry Pi"* ]] ||
+        die "This script is for Volumio on a Raspberry Pi, but this device reports '${model:-unknown model}'."
+    DEBIAN_CODENAME="$(sed -n 's/^VERSION_CODENAME=//p' "$OS_RELEASE" | tr -d '"')"
+
+    local address
+    for address in "$LOUDER_I2C_ADDRESS" "$LOUDER_PLUS_I2C_ADDRESS"; do
+        [[ "$address" =~ ^0x[0-9a-fA-F]{2}$ ]] ||
+            die "I2C addresses must look like 0x2d (got '$address')"
+    done
 }
 
 # ---------------------------------------------------------------------------
@@ -91,6 +112,9 @@ detect_kernel() {
     CROSS_COMPILE=""
     CROSS_PKGS=()
     if [ "$user_arch" != "$KARCH" ]; then
+        if [ "$DEBIAN_CODENAME" = buster ]; then
+            die "Kernel $KREL is 64-bit, and Volumio 3 (Debian Buster) has no cross compiler to build for it. Update to Volumio 4 and run this script again."
+        fi
         if [ "$KARCH" = arm64 ]; then
             CROSS_COMPILE=aarch64-linux-gnu-
             CROSS_PKGS=(gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu)
@@ -147,18 +171,29 @@ find_kernel_source() {
 install_packages() {
     log "Installing build tools..."
     export DEBIAN_FRONTEND=noninteractive
-    apt-get update </dev/null
+    if ! apt-get update </dev/null; then
+        if [ "$DEBIAN_CODENAME" = buster ]; then
+            die "apt-get update failed. Volumio 3 is based on Debian Buster, whose Raspbian packages moved to legacy.raspbian.org. Update to Volumio 4, or point /etc/apt/sources.list at http://legacy.raspbian.org/raspbian/, then run this script again."
+        fi
+        die "apt-get update failed. Check the network connection and run this script again."
+    fi
     apt-get install -y --no-install-recommends \
         build-essential bc bison flex libssl-dev curl ca-certificates xz-utils \
         device-tree-compiler i2c-tools kmod "${CROSS_PKGS[@]}" </dev/null
 }
 
+remove_build_files() {
+    rm -rf "$WORK_DIR"/linux-[0-9]* "$WORK_DIR/linux.tar.gz" "$WORK_DIR/tas5805m-driver-for-raspbian"
+}
+
 check_disk_space() {
     mkdir -p "$WORK_DIR"
+    # A failed run keeps its files for troubleshooting; don't count them.
+    remove_build_files
     local free_mb
     free_mb="$(df -Pm "$WORK_DIR" | awk 'NR == 2 {print $4}')"
     [ "$free_mb" -ge "$MIN_FREE_MB" ] ||
-        die "Need ${MIN_FREE_MB} MB free in $WORK_DIR but only ${free_mb} MB is available. Set LOUDER_WORK_DIR to a location with more space."
+        die "Need ${MIN_FREE_MB} MB free in $WORK_DIR but only ${free_mb} MB is available. Free up space, or set LOUDER_WORK_DIR to a location with more space."
 }
 
 # ---------------------------------------------------------------------------
@@ -233,18 +268,69 @@ install_overlays() {
 }
 
 # ---------------------------------------------------------------------------
-# Earlier instructions used a DAC entry with "modules":"tas58xx". For Pi DACs
-# Volumio expects that field to be empty: with a value it skips writing the
-# overlay to config.txt and instead rewrites /etc/modules with one letter per
-# line, dropping i2c-dev. Undo that if it happened.
+# Undo what the earlier manual instructions left behind.
+#
+# They had users add the overlay to /boot/config.txt by hand, under a copy of
+# Volumio's banner and a commented-out line for the previous DAC. Volumio only
+# manages an overlay line directly below its banner, so a hand-added line stays
+# active next to the one Volumio writes when a board is selected. Remove tas58xx
+# lines that aren't directly below the banner, and banners left without an
+# overlay line (with the commented-out lines below them). A line Volumio wrote
+# on an earlier run of this script is kept.
 # ---------------------------------------------------------------------------
+repair_config_txt() {
+    local config="$BOOT_DIR/config.txt"
+    [ -f "$config" ] || return 0
+
+    local removed
+    removed="$(node - "$config" <<'EOF'
+const fs = require('fs');
+const file = process.argv[2];
+const BANNER = '#### Volumio i2s setting below: do not alter ####';
+const lines = fs.readFileSync(file, 'utf8').split('\n');
+
+const kept = lines.filter((line, i) => !(/^\s*dtoverlay=tas58xx/.test(line) && lines[i - 1] !== BANNER));
+const out = [];
+for (let i = 0; i < kept.length; i++) {
+  if (kept[i] === BANNER && !/^dtoverlay=/.test(kept[i + 1] || '')) {
+    while (/^#\s*dtoverlay=/.test(kept[i + 1] || '')) i++;
+    continue;
+  }
+  out.push(kept[i]);
+}
+if (out.length !== lines.length) {
+  fs.copyFileSync(file, file + '.louder-backup');
+  fs.writeFileSync(file, out.join('\n'));
+}
+console.log(lines.length - out.length);
+EOF
+)"
+    if [ "$removed" -gt 0 ]; then
+        log "Removed $removed hand-added line(s) from $config (backup in $config.louder-backup)"
+    fi
+
+    if grep -qE '^\s*dtoverlay=tas58xx' "$BOOT_DIR/userconfig.txt" 2>/dev/null; then
+        log "WARNING: $BOOT_DIR/userconfig.txt also loads a tas58xx overlay. Remove that line,"
+        log "         or the amplifier is set up twice once you pick a board in Volumio."
+    fi
+}
+
+# The old DAC entry had "modules":"tas58xx". For Pi DACs Volumio expects that
+# field to be empty: with a value it skips the overlay and rewrites /etc/modules
+# with one letter per line, dropping i2c-dev.
 repair_etc_modules() {
     [ -f "$ETC_MODULES" ] || return 0
     if grep -qxE '[[:alnum:]]' "$ETC_MODULES"; then
         log "Repairing $ETC_MODULES (removing single-letter lines left by the old DAC entry)"
         sed -i -E '/^[[:alnum:]]$/d' "$ETC_MODULES"
     fi
-    grep -qx 'i2c-dev' "$ETC_MODULES" || echo 'i2c-dev' >>"$ETC_MODULES"
+    if ! grep -qx 'i2c-dev' "$ETC_MODULES"; then
+        # Start a new line if the file doesn't end with one
+        if [ -n "$(tail -c 1 "$ETC_MODULES")" ]; then
+            echo >>"$ETC_MODULES"
+        fi
+        echo 'i2c-dev' >>"$ETC_MODULES"
+    fi
 }
 
 # ---------------------------------------------------------------------------
@@ -252,8 +338,16 @@ repair_etc_modules() {
 # Volumio writes the overlay line to /boot/config.txt when a board is selected.
 # alsacard is the ALSA card ID: the overlay label without dashes, cut to 15
 # characters, so both overlays produce "LouderRaspberry".
-# The 2X board has two amplifiers with separate volume controls, so it uses
-# Volumio's software volume.
+# The 2X boards have two amplifiers with separate volume controls ("2.0 Digital"
+# for the speakers, "0.1 Digital" for the subwoofer). There is no single control
+# to name, and with an empty mixer Volumio picks the first control it finds,
+# which is the subwoofer's. Users of those boards set Mixer Type to Software.
+#
+# Volumio only rewrites config.txt when the selected DAC's name changes. If a
+# Louder board is already selected (an earlier install, or a re-run with a new
+# I2C address), picking it again does nothing, so write its overlay line here
+# the same way Volumio does: directly below Volumio's banner.
+# Run this while Volumio is stopped, since it edits Volumio's settings.
 # ---------------------------------------------------------------------------
 register_dacs() {
     [ -f "$DACS_JSON" ] || die "Can't find Volumio's DAC list at $DACS_JSON"
@@ -263,10 +357,11 @@ register_dacs() {
     if [ "${LOUDER_I2C_ADDRESS,,}" != "0x2d" ]; then
         overlay_1x="tas58xx,i2creg=${LOUDER_I2C_ADDRESS,,}"
     fi
+    local overlay_plus="tas58xx,i2creg=${LOUDER_PLUS_I2C_ADDRESS,,}"
 
-    node - "$DACS_JSON" "$overlay_1x" <<'EOF'
+    SELECTED_BOARD="$(node - "$DACS_JSON" "$I2S_CONFIG" "$BOOT_DIR/config.txt" "$overlay_1x" "$overlay_plus" <<'EOF'
 const fs = require('fs');
-const [file, overlay1x] = process.argv.slice(2);
+const [file, i2sConfigFile, configTxtFile, overlay1x, overlayPlus] = process.argv.slice(2);
 
 const entry = (id, name, overlay, mixer) => ({
   id, name, overlay,
@@ -275,8 +370,10 @@ const entry = (id, name, overlay, mixer) => ({
 });
 const entries = [
   entry('louder-raspberry', 'Louder Raspberry', overlay1x, 'Digital'),
-  entry('louder-raspberry-plus', 'Louder Raspberry Plus', 'tas58xx,i2creg=0x4c', 'Digital'),
+  entry('louder-raspberry-plus', 'Louder Raspberry Plus', overlayPlus, 'Digital'),
   entry('louder-raspberry-2x', 'Louder Raspberry 2X', 'tas58xx-dual', ''),
+  entry('louder-raspberry-2x-plus', 'Louder Raspberry 2X Plus',
+        'tas58xx-dual,i2creg_primary=0x4c,i2creg_secondary=0x4d', ''),
 ];
 
 const data = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -291,8 +388,47 @@ if (!pi) {
 }
 pi.data.unshift(...entries);
 fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n');
+
+// Is a Louder board already selected in Volumio?
+let i2s;
+try {
+  i2s = JSON.parse(fs.readFileSync(i2sConfigFile, 'utf8'));
+} catch (e) {
+  process.exit(0);
+}
+const enabled = i2s.i2s_enabled && i2s.i2s_enabled.value === true;
+const selected = enabled && i2s.i2s_dac && entries.find((e) => e.name === i2s.i2s_dac.value);
+if (!selected) process.exit(0);
+
+const BANNER = '#### Volumio i2s setting below: do not alter ####\n';
+const overlayLine = 'dtoverlay=' + selected.overlay + '\n';
+const escaped = BANNER.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const managed = new RegExp(escaped + 'dtoverlay=.*\n');
+const configTxt = fs.readFileSync(configTxtFile, 'utf8');
+const newConfigTxt = managed.test(configTxt)
+  ? configTxt.replace(managed, BANNER + overlayLine)
+  : configTxt + (configTxt.endsWith('\n') ? '' : '\n') + '\n' + BANNER + overlayLine;
+const changed = newConfigTxt !== configTxt;
+if (changed) fs.writeFileSync(configTxtFile, newConfigTxt);
+
+// Volumio stores the overlay as i2s_id for overlay-based DACs
+if (!i2s.i2s_id || i2s.i2s_id.value !== selected.overlay) {
+  i2s.i2s_id = { type: 'string', value: selected.overlay };
+  fs.writeFileSync(i2sConfigFile, JSON.stringify(i2s, null, 2));
+}
+console.log((changed ? 'updated' : 'unchanged') + ' ' + selected.name);
 EOF
-    log "Added Louder Raspberry, Louder Raspberry Plus and Louder Raspberry 2X to $DACS_JSON"
+)"
+    log "Added Louder Raspberry, Plus, 2X and 2X Plus to $DACS_JSON"
+    if [ -n "$SELECTED_BOARD" ]; then
+        local overlay_state="${SELECTED_BOARD%% *}"
+        SELECTED_BOARD="${SELECTED_BOARD#* }"
+        if [ "$overlay_state" = updated ]; then
+            log "$SELECTED_BOARD is already selected in Volumio; updated its overlay line in $BOOT_DIR/config.txt"
+        else
+            log "$SELECTED_BOARD is already selected in Volumio; its overlay line in $BOOT_DIR/config.txt is up to date"
+        fi
+    fi
 }
 
 # ---------------------------------------------------------------------------
@@ -300,10 +436,13 @@ EOF
 # ---------------------------------------------------------------------------
 cleanup() {
     local rc=$?
+    if [ "${VOLUMIO_STOPPED:-0}" = 1 ]; then
+        systemctl start volumio.service || true
+    fi
     if [ "$rc" -ne 0 ]; then
         echo "[louder] Build files kept in $WORK_DIR for troubleshooting" >&2
     elif [ "$KEEP_BUILD" != 1 ]; then
-        rm -rf "$WORK_DIR/linux-${KREL:-}" "$WORK_DIR/linux.tar.gz" "$WORK_DIR/tas5805m-driver-for-raspbian"
+        remove_build_files
         rmdir "$WORK_DIR" 2>/dev/null || true
     fi
 }
@@ -318,16 +457,32 @@ main() {
     prepare_kernel
     build_driver
     install_overlays
+
+    log "Stopping Volumio while its settings are updated..."
+    systemctl stop volumio.service
+    VOLUMIO_STOPPED=1
+    repair_config_txt
     repair_etc_modules
     register_dacs
+    log "Starting Volumio..."
+    systemctl start volumio.service
+    VOLUMIO_STOPPED=0
 
-    log "Restarting Volumio..."
-    systemctl restart volumio.service
-
-    log "Done. Next steps:"
-    log "  1. In Volumio, open Settings > Playback Options and turn on I2S DAC."
-    log "  2. Under DAC Model, pick Louder Raspberry, Louder Raspberry Plus or Louder Raspberry 2X."
-    log "  3. Save and reboot when asked."
+    if [ -n "$SELECTED_BOARD" ]; then
+        log "Done. Reboot to load the driver: sudo reboot"
+    else
+        log "Done. Next steps:"
+        log "  1. In Volumio, open Settings > Playback Options and turn on I2S DAC."
+        log "  2. Under DAC Model, pick your board: Louder Raspberry, Louder Raspberry Plus,"
+        log "     Louder Raspberry 2X or Louder Raspberry 2X Plus."
+        log "  3. Save and reboot when asked."
+    fi
+    case "$SELECTED_BOARD" in
+        "" | *2X*)
+            log "2X and 2X Plus only: under Volume options, set Mixer Type to Software,"
+            log "or the volume slider only changes the subwoofer."
+            ;;
+    esac
     log "Run this script again after each Volumio update."
 }
 
