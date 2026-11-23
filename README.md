@@ -516,7 +516,7 @@ Louder Raspberry needs the TAS58xx driver, which Volumio doesn't include. A scri
 
 The script is written for Volumio 4. On Volumio 3 (based on Debian Buster) it can't build for a Pi 5, and on other Pis it needs Buster's package mirrors, which have moved to `legacy.raspbian.org`.
 
-**Run the script again after every Volumio update.** Updates bring a new kernel, and the driver has to be rebuilt for it. The script also puts the Louder boards back in the DAC list if the update removed them. If your board is still selected, it tells you to reboot; otherwise pick it again.
+**Run the script again after every Volumio update.** Updates bring a new kernel, and the driver has to be rebuilt for it. The script also puts the Louder boards back in the DAC list if the update removed them. If your board is still selected, the script keeps the address and any options on its overlay line and tells you to reboot; otherwise pick it again.
 
 Make sure to check what is inside that script, as you should not `curl internet.links | sudo bash` in general ;)
 
@@ -527,15 +527,16 @@ What the script does:
 - It reads the running kernel version (`uname -r`) and the firmware revision Volumio installed (`/boot/.firmware_revision`). It then downloads the matching kernel source and symbol versions (`Module.symvers`, `Module7.symvers`, `Module7l.symvers` or `Module8.symvers`) from the Raspberry Pi firmware repository. Volumio's own `volumio kernelsource` helper uses the v7 symbols on a Pi 4 (v7l) kernel, and the kernel then refuses to load the module.
 - It builds `tas58xx.ko`, installs it as `snd-soc-tas58xx.ko`, and compiles the `tas58xx` and `tas58xx-dual` overlays into `/boot/overlays`. A Pi 5 runs a 64-bit kernel under Volumio's 32-bit system, so there the script cross-compiles.
 - It adds four entries to `/volumio/app/plugins/system_controller/i2s_dacs/dacs.json` and keeps the original as `dacs.json.orig`. When you pick one, Volumio writes the overlay line to `/boot/config.txt` itself. The entries leave the `modules` field empty. With a value there, Volumio skips the overlay and overwrites `/etc/modules`, which is what happened with the entry in earlier versions of these instructions.
-- It cleans up after those earlier instructions: it removes `tas58xx` overlay lines that were added to `/boot/config.txt` by hand (keeping a backup as `config.txt.louder-backup`), so the overlay isn't loaded twice, and it repairs `/etc/modules`.
-- If a Louder board is already selected in Volumio, it writes that board's overlay line below Volumio's banner in `/boot/config.txt` itself. Volumio only rewrites that line when you switch to a different DAC, so picking the same board again wouldn't apply a changed address. In that case the script tells you to reboot instead of picking a board.
+- It cleans up after those earlier instructions: it removes `tas58xx` overlay lines that were added to `/boot/config.txt` by hand, so the overlay isn't loaded twice, and it repairs `/etc/modules`. If `config.txt` changes, the previous version is saved as `config.txt.louder-backup`.
+- If a Louder board is already selected in Volumio, the script updates that board's overlay line below Volumio's banner in `/boot/config.txt` itself, because Volumio only rewrites that line when you switch to a different DAC. It keeps the line you already use, including its address and options such as `eq_mode` or `firmware`, and only changes the address if you set one of the address options below. It also switches Volumio's hardware volume control to `Digital` if it's still set to `Master`, the control's name in older driver versions. Then it tells you to reboot.
+- The old instructions had a single `Louder Raspberry` entry for every board. If your overlay line is for a Plus or 2X board but Volumio has `Louder Raspberry` selected, the script tells you which board to pick instead.
 
 Options go between `sudo` and `bash`, for example `... | sudo LOUDER_I2C_ADDRESS=0x2e bash`:
-- `LOUDER_I2C_ADDRESS`: I2C address for the `Louder Raspberry` entry (default `0x2d`). Some early 1X boards answer on `0x2e`. If no sound card appears, run `sudo i2cdetect -y 1`, and if the amplifier shows up as `2e`, re-run the script with `LOUDER_I2C_ADDRESS=0x2e` and reboot.
-- `LOUDER_PLUS_I2C_ADDRESS`: I2C address for the `Louder Raspberry Plus` entry (default `0x4c`). TAS5825M boards use `0x4c` to `0x4f`. If `i2cdetect` shows the amplifier at a different one of these, for example `4d`, re-run the script with `LOUDER_PLUS_I2C_ADDRESS=0x4d` and reboot.
+- `LOUDER_I2C_ADDRESS`: I2C address for the `Louder Raspberry` entry (default `0x2d`). Some early 1X boards answer on `0x2e`. If no sound card appears, run `sudo i2cdetect -y 1`, and if the amplifier shows up as `2e`, re-run the script with `LOUDER_I2C_ADDRESS=0x2e` and reboot. Later runs keep that address without the option.
+- `LOUDER_PLUS_I2C_ADDRESS`: I2C address for the `Louder Raspberry Plus` entry (default `0x4c`). TAS5825M boards use `0x4c` to `0x4f`. If `i2cdetect` shows the amplifier at a different one of these, for example `4d`, re-run the script with `LOUDER_PLUS_I2C_ADDRESS=0x4d` and reboot. Later runs keep that address without the option.
 - `TAS58XX_REF`: driver branch, tag or commit to build (default `main`).
-- `LOUDER_WORK_DIR`: where to download and build (default `/home/volumio/louder-build`).
-- `KEEP_BUILD=1`: keep the kernel source after a successful build.
+- `LOUDER_WORK_DIR`: folder to build in (default `/home/volumio`). The script creates a `louder-build` folder there and removes it afterwards.
+- `KEEP_BUILD=1`: keep the `louder-build` folder after a successful build.
 
 After reboot, you should be able to see the new sound card via `aplay -l` (the device name differs between Pi models)
 ```
