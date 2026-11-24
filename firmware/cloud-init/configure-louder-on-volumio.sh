@@ -193,8 +193,18 @@ install_packages() {
 # marks. Only a folder with that mark is ever deleted.
 remove_build_files() {
     [ -e "$BUILD_DIR" ] || return 0
-    [ -e "$BUILD_DIR/$BUILD_MARKER" ] ||
-        die "$BUILD_DIR exists but wasn't created by this script. Remove it, or set LOUDER_WORK_DIR to another folder."
+    if [ ! -e "$BUILD_DIR/$BUILD_MARKER" ]; then
+        # Earlier versions of this script didn't mark the folder. Accept one that
+        # holds nothing but the files they put there.
+        local entry
+        for entry in "$BUILD_DIR"/* "$BUILD_DIR"/.[!.]*; do
+            [ -e "$entry" ] || continue
+            case "${entry##*/}" in
+                linux-[0-9]* | linux.tar.gz | tas5805m-driver-for-raspbian) ;;
+                *) die "$BUILD_DIR exists but wasn't created by this script. Remove it, or set LOUDER_WORK_DIR to another folder." ;;
+            esac
+        done
+    fi
     rm -rf "$BUILD_DIR"
 }
 
@@ -294,15 +304,18 @@ CONFIG_BANNER='#### Volumio i2s setting below: do not alter ####'
 # Remove tas58xx lines that aren't directly below the banner, so the overlay
 # isn't loaded twice, and banners left without an overlay line (with the
 # commented-out lines below them). The line Volumio manages is kept.
-# Sets HAND_ADDED_OVERLAY to the last removed overlay, so register_dacs can
-# tell which board the old setup was for.
+# config.txt includes userconfig.txt, so a tas58xx line there counts as added
+# by hand too.
+# Sets HAND_ADDED_OVERLAY to the last removed overlay (config.txt's if it has
+# one), so register_dacs can keep it and tell which board the old setup was for.
 repair_config_txt() {
     HAND_ADDED_OVERLAY=""
-    local config="$BOOT_DIR/config.txt"
-    [ -f "$config" ] || return 0
-
-    local result removed
-    result="$(node - "$config" "$CONFIG_BANNER" <<'EOF'
+    local file result removed overlay
+    for file in "$BOOT_DIR/userconfig.txt" "$BOOT_DIR/config.txt"; do
+        if [ ! -f "$file" ]; then
+            continue
+        fi
+        result="$(node - "$file" "$CONFIG_BANNER" <<'EOF'
 const fs = require('fs');
 const [file, BANNER] = process.argv.slice(2);
 const lines = fs.readFileSync(file, 'utf8').split('\n');
@@ -322,15 +335,14 @@ if (out.length !== lines.length) fs.writeFileSync(file, out.join('\n'));
 console.log((lines.length - out.length) + '\t' + (removedOverlays.pop() || ''));
 EOF
 )"
-    IFS=$'\t' read -r removed HAND_ADDED_OVERLAY <<<"$result"
-    if [ "$removed" -gt 0 ]; then
-        log "Removed $removed line(s) added to $config by hand under the old instructions"
-    fi
-
-    if grep -qE '^\s*dtoverlay=tas58xx' "$BOOT_DIR/userconfig.txt" 2>/dev/null; then
-        log "WARNING: $BOOT_DIR/userconfig.txt also loads a tas58xx overlay. Remove that line,"
-        log "         or the amplifier is set up twice once you pick a board in Volumio."
-    fi
+        IFS=$'\t' read -r removed overlay <<<"$result"
+        if [ "$removed" -gt 0 ]; then
+            log "Removed $removed line(s) added to $file by hand, so the overlay isn't loaded twice"
+        fi
+        if [ -n "$overlay" ]; then
+            HAND_ADDED_OVERLAY="$overlay"
+        fi
+    done
 }
 
 # The old DAC entry had "modules":"tas58xx". For Pi DACs Volumio expects that
@@ -373,8 +385,10 @@ repair_etc_modules() {
 #   written and the user is told which board to pick. Volumio then writes the
 #   line itself, because the DAC name changes.
 # - The old entry named the "Master" volume control, which the driver has since
-#   renamed to "Digital Volume". A hardware mixer still set to another control
-#   is switched to the board's mixer.
+#   renamed to "Digital Volume". A hardware mixer still set to "Master" (or to
+#   nothing) is switched to the board's mixer.
+# - In the "pick" case, that board's entry gets the line in use, so Volumio
+#   writes it back (address and options included) when the user picks it.
 #
 # Sets SELECTED_BOARD (a Louder board is selected and its line is up to date)
 # or PICK_BOARD (the board the user should pick in Volumio).
@@ -457,6 +471,9 @@ if (selected) {
   const currentBoard = current ? boardOf(current) : null;
 
   if (current && currentBoard !== selected.id) {
+    // When the user picks that board, Volumio writes this entry's overlay:
+    // make it the line they already use, with its address and options.
+    byId(currentBoard).overlay = current;
     result = ['pick', byId(currentBoard).name, selected.name].join('\t');
   } else {
     let overlay = current || selected.overlay;
@@ -480,10 +497,12 @@ if (selected) {
       writeJson(i2sFile, i2s);
     }
 
+    // Only the old entry's "Master" (or no control at all) is replaced; a
+    // control the user chose, such as "Analog Gain", is kept.
     let oldMixer = '';
     const alsa = selected.mixer ? readJson(alsaFile) : null;
     if (alsa && alsa.mixer_type && alsa.mixer_type.value === 'Hardware' &&
-        alsa.mixer && alsa.mixer.value !== selected.mixer) {
+        alsa.mixer && ['', 'Master'].includes(alsa.mixer.value)) {
       oldMixer = alsa.mixer.value || '(none)';
       alsa.mixer.value = selected.mixer;
       writeJson(alsaFile, alsa);
@@ -531,24 +550,32 @@ EOF
     esac
 }
 
-# Back up config.txt once per run, before any change, and keep the backup only
-# if something changed. (Plain cp: /boot is FAT and can't keep ownership.)
+# Back up config.txt and userconfig.txt once per run, before any change, and
+# keep a backup only if its file changed. (Plain cp: /boot is FAT and can't
+# keep ownership.)
 update_volumio_settings() {
-    local config="$BOOT_DIR/config.txt" backup="$BOOT_DIR/config.txt.louder-backup"
-    [ -f "$config" ] && cp "$config" "$backup.new"
+    local file
+    for file in "$BOOT_DIR/config.txt" "$BOOT_DIR/userconfig.txt"; do
+        if [ -f "$file" ]; then
+            cp "$file" "$file.louder-backup.new"
+        fi
+    done
 
     repair_config_txt
     repair_etc_modules
     register_dacs
 
-    if [ -f "$backup.new" ]; then
-        if cmp -s "$config" "$backup.new"; then
-            rm -f "$backup.new"
-        else
-            mv -f "$backup.new" "$backup"
-            log "Saved the previous $config as $backup"
+    for file in "$BOOT_DIR/config.txt" "$BOOT_DIR/userconfig.txt"; do
+        if [ ! -f "$file.louder-backup.new" ]; then
+            continue
         fi
-    fi
+        if cmp -s "$file" "$file.louder-backup.new"; then
+            rm -f "$file.louder-backup.new"
+        else
+            mv -f "$file.louder-backup.new" "$file.louder-backup"
+            log "Saved the previous $file as $file.louder-backup"
+        fi
+    done
 }
 
 # ---------------------------------------------------------------------------
