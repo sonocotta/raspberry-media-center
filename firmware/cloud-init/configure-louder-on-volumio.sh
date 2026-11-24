@@ -304,23 +304,27 @@ CONFIG_BANNER='#### Volumio i2s setting below: do not alter ####'
 # Remove tas58xx lines that aren't directly below the banner, so the overlay
 # isn't loaded twice, and banners left without an overlay line (with the
 # commented-out lines below them). The line Volumio manages is kept.
-# config.txt includes userconfig.txt, so a tas58xx line there counts as added
-# by hand too.
+# config.txt includes userconfig.txt, so every tas58xx line there counts as
+# added by hand, even below a copy of the banner: Volumio only manages the
+# banner in config.txt.
 # Sets HAND_ADDED_OVERLAY to the last removed overlay (config.txt's if it has
 # one), so register_dacs can keep it and tell which board the old setup was for.
 repair_config_txt() {
     HAND_ADDED_OVERLAY=""
-    local file result removed overlay
-    for file in "$BOOT_DIR/userconfig.txt" "$BOOT_DIR/config.txt"; do
+    local spec file managed_by_volumio result removed overlay
+    for spec in userconfig.txt:no config.txt:yes; do
+        file="$BOOT_DIR/${spec%%:*}"
+        managed_by_volumio="${spec##*:}"
         if [ ! -f "$file" ]; then
             continue
         fi
-        result="$(node - "$file" "$CONFIG_BANNER" <<'EOF'
+        result="$(node - "$file" "$CONFIG_BANNER" "$managed_by_volumio" <<'EOF'
 const fs = require('fs');
-const [file, BANNER] = process.argv.slice(2);
+const [file, BANNER, managedByVolumio] = process.argv.slice(2);
 const lines = fs.readFileSync(file, 'utf8').split('\n');
 
-const handAdded = (line, i) => /^\s*dtoverlay=tas58xx/.test(line) && lines[i - 1] !== BANNER;
+const belowBanner = (i) => managedByVolumio === 'yes' && lines[i - 1] === BANNER;
+const handAdded = (line, i) => /^\s*dtoverlay=tas58xx/.test(line) && !belowBanner(i);
 const removedOverlays = lines.filter(handAdded).map((line) => line.trim().replace(/^dtoverlay=/, ''));
 const kept = lines.filter((line, i) => !handAdded(line, i));
 const out = [];
@@ -389,6 +393,8 @@ repair_etc_modules() {
 #   nothing) is switched to the board's mixer.
 # - In the "pick" case, that board's entry gets the line in use, so Volumio
 #   writes it back (address and options included) when the user picks it.
+#   The same happens when no Louder board is selected but repair_config_txt
+#   removed a line that was in use. Entries keep such a line on later runs.
 #
 # Sets SELECTED_BOARD (a Louder board is selected and its line is up to date)
 # or PICK_BOARD (the board the user should pick in Volumio).
@@ -443,12 +449,24 @@ const entry = (id, name, overlay, mixer) => ({
   alsanum: '2', alsacard: 'LouderRaspberry', mixer,
   modules: '', script: '', needsreboot: 'yes',
 });
+const data = JSON.parse(fs.readFileSync(dacsFile, 'utf8'));
+// Keep the overlay a previous run gave a Louder entry (such as a line carried
+// over for the user to pick), unless an address is set for that board.
+const previous = {};
+for (const group of data.devices) {
+  for (const dac of group.data) {
+    if (dac.id && dac.overlay && boardOf(dac.overlay) === dac.id) previous[dac.id] = dac.overlay;
+  }
+}
 const entries = [
-  entry('louder-raspberry', 'Louder Raspberry', overlay1x(address1x), 'Digital'),
-  entry('louder-raspberry-plus', 'Louder Raspberry Plus', overlayPlus(addressPlus), 'Digital'),
-  entry('louder-raspberry-2x', 'Louder Raspberry 2X', 'tas58xx-dual', ''),
+  entry('louder-raspberry', 'Louder Raspberry',
+        address1x ? overlay1x(address1x) : previous['louder-raspberry'] || overlay1x(''), 'Digital'),
+  entry('louder-raspberry-plus', 'Louder Raspberry Plus',
+        addressPlus ? overlayPlus(addressPlus) : previous['louder-raspberry-plus'] || overlayPlus(''), 'Digital'),
+  entry('louder-raspberry-2x', 'Louder Raspberry 2X',
+        previous['louder-raspberry-2x'] || 'tas58xx-dual', ''),
   entry('louder-raspberry-2x-plus', 'Louder Raspberry 2X Plus',
-        'tas58xx-dual,i2creg_primary=0x4c,i2creg_secondary=0x4d', ''),
+        previous['louder-raspberry-2x-plus'] || 'tas58xx-dual,i2creg_primary=0x4c,i2creg_secondary=0x4d', ''),
 ];
 const byId = (id) => entries.find((e) => e.id === id);
 const readJson = (file) => {
@@ -509,10 +527,16 @@ if (selected) {
     }
     result = ['selected', selected.name, changed ? 'updated' : 'unchanged', overlay, oldMixer].join('\t');
   }
+} else if (handAdded && boardOf(handAdded)) {
+  // No Louder board is selected, but repair_config_txt removed the line in use
+  // (for example from userconfig.txt, with Volumio's I2S DAC off). Carry it
+  // into its board's entry, so picking that board restores it.
+  const board = byId(boardOf(handAdded));
+  board.overlay = handAdded;
+  result = ['pick', board.name, enabled && i2s.i2s_dac ? i2s.i2s_dac.value : ''].join('\t');
 }
 
 // Add the entries at the top of the Raspberry Pi list, replacing older Louder entries
-const data = JSON.parse(fs.readFileSync(dacsFile, 'utf8'));
 const ids = new Set(entries.map((e) => e.id));
 for (const group of data.devices) {
   group.data = group.data.filter((dac) => !ids.has(dac.id));
@@ -545,7 +569,12 @@ EOF
             ;;
         pick)
             PICK_BOARD="$board"
-            log "Your overlay line is for the $board board, but Volumio has $detail selected."
+            if [ -n "$detail" ]; then
+                log "Your overlay line is for the $board board, but Volumio has $detail selected."
+            else
+                log "Your overlay line is for the $board board, but no I2S DAC is selected in Volumio."
+            fi
+            log "When you pick $board, Volumio writes that line back with its address and options."
             ;;
     esac
 }
